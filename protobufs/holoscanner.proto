@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+message Point3D {
+    float x = 1;
+    float y = 2;
+    float z = 3;
+}
+
+message Point4D {
+    float x = 1;
+    float y = 2;
+    float z = 3;
+    float w = 4;
+}
+
+message Face {
+    uint32 v1 = 1;
+    uint32 v2 = 2;
+    uint32 v3 = 3;
+}
+
+message Mesh {
+    uint32 mesh_id = 2;
+    uint64 timestamp = 3;
+
+    // We need the camera position in case we want to do space carving.
+    Point3D cam_position = 100;
+    Point4D cam_rotation = 101;
+
+    repeated Point3D vertices = 200;
+    repeated Face faces = 201;
+}
+
+message Message {
+    enum Type {
+        MESH = 0;
+    }
+
+    Type type = 1;
+    uint32 device_id = 2;
+
+    // One of the following will be filled in.
+    Mesh mesh = 100;
+}
