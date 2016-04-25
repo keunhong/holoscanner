@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='holoscanner.proto',
   package='',
   syntax='proto3',
-  serialized_pb=_b('\n\x11holoscanner.proto\"*\n\x07Point3D\x12\t\n\x01x\x18\x01 \x01(\x02\x12\t\n\x01y\x18\x02 \x01(\x02\x12\t\n\x01z\x18\x03 \x01(\x02\"5\n\x07Point4D\x12\t\n\x01x\x18\x01 \x01(\x02\x12\t\n\x01y\x18\x02 \x01(\x02\x12\t\n\x01z\x18\x03 \x01(\x02\x12\t\n\x01w\x18\x04 \x01(\x02\"*\n\x04\x46\x61\x63\x65\x12\n\n\x02v1\x18\x01 \x01(\r\x12\n\n\x02v2\x18\x02 \x01(\r\x12\n\n\x02v3\x18\x03 \x01(\r\"\x9e\x01\n\x04Mesh\x12\x0f\n\x07mesh_id\x18\x02 \x01(\r\x12\x11\n\ttimestamp\x18\x03 \x01(\x04\x12\x1e\n\x0c\x63\x61m_position\x18\x64 \x01(\x0b\x32\x08.Point3D\x12\x1e\n\x0c\x63\x61m_rotation\x18\x65 \x01(\x0b\x32\x08.Point4D\x12\x1b\n\x08vertices\x18\xc8\x01 \x03(\x0b\x32\x08.Point3D\x12\x15\n\x05\x66\x61\x63\x65s\x18\xc9\x01 \x03(\x0b\x32\x05.Face\"`\n\x07Message\x12\x1b\n\x04type\x18\x01 \x01(\x0e\x32\r.Message.Type\x12\x11\n\tdevice_id\x18\x02 \x01(\r\x12\x13\n\x04mesh\x18\x64 \x01(\x0b\x32\x05.Mesh\"\x10\n\x04Type\x12\x08\n\x04MESH\x10\x00\x62\x06proto3')
+  serialized_pb=_b('\n\x11holoscanner.proto\"(\n\x05Vec3D\x12\t\n\x01x\x18\x01 \x01(\x02\x12\t\n\x01y\x18\x02 \x01(\x02\x12\t\n\x01z\x18\x03 \x01(\x02\"3\n\x05Vec4D\x12\t\n\x01x\x18\x01 \x01(\x02\x12\t\n\x01y\x18\x02 \x01(\x02\x12\t\n\x01z\x18\x03 \x01(\x02\x12\t\n\x01w\x18\x04 \x01(\x02\"*\n\x04\x46\x61\x63\x65\x12\n\n\x02v1\x18\x01 \x01(\r\x12\n\n\x02v2\x18\x02 \x01(\r\x12\n\n\x02v3\x18\x03 \x01(\r\"\x98\x01\n\x04Mesh\x12\x0f\n\x07mesh_id\x18\x02 \x01(\r\x12\x11\n\ttimestamp\x18\x03 \x01(\x04\x12\x1c\n\x0c\x63\x61m_position\x18\x64 \x01(\x0b\x32\x06.Vec3D\x12\x1c\n\x0c\x63\x61m_rotation\x18\x65 \x01(\x0b\x32\x06.Vec4D\x12\x19\n\x08vertices\x18\xc8\x01 \x03(\x0b\x32\x06.Vec3D\x12\x15\n\x05\x66\x61\x63\x65s\x18\xc9\x01 \x03(\x0b\x32\x05.Face\"\x11\n\x0fLocationRequest\"I\n\x10LocationResponse\x12\x18\n\x08location\x18\x01 \x01(\x0b\x32\x06.Vec3D\x12\x1b\n\x0borientation\x18\x02 \x01(\x0b\x32\x06.Vec3D\"\xe9\x01\n\x07Message\x12\x1b\n\x04type\x18\x01 \x01(\x0e\x32\r.Message.Type\x12\x11\n\tdevice_id\x18\x02 \x01(\r\x12\x13\n\x04mesh\x18\x64 \x01(\x0b\x32\x05.Mesh\x12+\n\x10location_request\x18\xac\x02 \x01(\x0b\x32\x10.LocationRequest\x12-\n\x11location_response\x18\x90\x03 \x01(\x0b\x32\x11.LocationResponse\"=\n\x04Type\x12\x08\n\x04MESH\x10\x00\x12\x14\n\x10LOCATION_REQUEST\x10\x01\x12\x15\n\x11LOCATION_RESPONSE\x10\x02\x62\x06proto3')
 )
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
@@ -35,38 +35,46 @@ _MESSAGE_TYPE = _descriptor.EnumDescriptor(
       name='MESH', index=0, number=0,
       options=None,
       type=None),
+    _descriptor.EnumValueDescriptor(
+      name='LOCATION_REQUEST', index=1, number=1,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='LOCATION_RESPONSE', index=2, number=2,
+      options=None,
+      type=None),
   ],
   containing_type=None,
   options=None,
-  serialized_start=405,
-  serialized_end=421,
+  serialized_start=582,
+  serialized_end=643,
 )
 _sym_db.RegisterEnumDescriptor(_MESSAGE_TYPE)
 
 
-_POINT3D = _descriptor.Descriptor(
-  name='Point3D',
-  full_name='Point3D',
+_VEC3D = _descriptor.Descriptor(
+  name='Vec3D',
+  full_name='Vec3D',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='x', full_name='Point3D.x', index=0,
+      name='x', full_name='Vec3D.x', index=0,
       number=1, type=2, cpp_type=6, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='y', full_name='Point3D.y', index=1,
+      name='y', full_name='Vec3D.y', index=1,
       number=2, type=2, cpp_type=6, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='z', full_name='Point3D.z', index=2,
+      name='z', full_name='Vec3D.z', index=2,
       number=3, type=2, cpp_type=6, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
@@ -85,40 +93,40 @@ _POINT3D = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=21,
-  serialized_end=63,
+  serialized_end=61,
 )
 
 
-_POINT4D = _descriptor.Descriptor(
-  name='Point4D',
-  full_name='Point4D',
+_VEC4D = _descriptor.Descriptor(
+  name='Vec4D',
+  full_name='Vec4D',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='x', full_name='Point4D.x', index=0,
+      name='x', full_name='Vec4D.x', index=0,
       number=1, type=2, cpp_type=6, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='y', full_name='Point4D.y', index=1,
+      name='y', full_name='Vec4D.y', index=1,
       number=2, type=2, cpp_type=6, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='z', full_name='Point4D.z', index=2,
+      name='z', full_name='Vec4D.z', index=2,
       number=3, type=2, cpp_type=6, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='w', full_name='Point4D.w', index=3,
+      name='w', full_name='Vec4D.w', index=3,
       number=4, type=2, cpp_type=6, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
@@ -136,8 +144,8 @@ _POINT4D = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=65,
-  serialized_end=118,
+  serialized_start=63,
+  serialized_end=114,
 )
 
 
@@ -181,8 +189,8 @@ _FACE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=120,
-  serialized_end=162,
+  serialized_start=116,
+  serialized_end=158,
 )
 
 
@@ -247,8 +255,70 @@ _MESH = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=165,
-  serialized_end=323,
+  serialized_start=161,
+  serialized_end=313,
+)
+
+
+_LOCATIONREQUEST = _descriptor.Descriptor(
+  name='LocationRequest',
+  full_name='LocationRequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=315,
+  serialized_end=332,
+)
+
+
+_LOCATIONRESPONSE = _descriptor.Descriptor(
+  name='LocationResponse',
+  full_name='LocationResponse',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='location', full_name='LocationResponse.location', index=0,
+      number=1, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='orientation', full_name='LocationResponse.orientation', index=1,
+      number=2, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=334,
+  serialized_end=407,
 )
 
 
@@ -280,6 +350,20 @@ _MESSAGE = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
+    _descriptor.FieldDescriptor(
+      name='location_request', full_name='Message.location_request', index=3,
+      number=300, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='location_response', full_name='Message.location_response', index=4,
+      number=400, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
   ],
   extensions=[
   ],
@@ -293,36 +377,42 @@ _MESSAGE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=325,
-  serialized_end=421,
+  serialized_start=410,
+  serialized_end=643,
 )
 
-_MESH.fields_by_name['cam_position'].message_type = _POINT3D
-_MESH.fields_by_name['cam_rotation'].message_type = _POINT4D
-_MESH.fields_by_name['vertices'].message_type = _POINT3D
+_MESH.fields_by_name['cam_position'].message_type = _VEC3D
+_MESH.fields_by_name['cam_rotation'].message_type = _VEC4D
+_MESH.fields_by_name['vertices'].message_type = _VEC3D
 _MESH.fields_by_name['faces'].message_type = _FACE
+_LOCATIONRESPONSE.fields_by_name['location'].message_type = _VEC3D
+_LOCATIONRESPONSE.fields_by_name['orientation'].message_type = _VEC3D
 _MESSAGE.fields_by_name['type'].enum_type = _MESSAGE_TYPE
 _MESSAGE.fields_by_name['mesh'].message_type = _MESH
+_MESSAGE.fields_by_name['location_request'].message_type = _LOCATIONREQUEST
+_MESSAGE.fields_by_name['location_response'].message_type = _LOCATIONRESPONSE
 _MESSAGE_TYPE.containing_type = _MESSAGE
-DESCRIPTOR.message_types_by_name['Point3D'] = _POINT3D
-DESCRIPTOR.message_types_by_name['Point4D'] = _POINT4D
+DESCRIPTOR.message_types_by_name['Vec3D'] = _VEC3D
+DESCRIPTOR.message_types_by_name['Vec4D'] = _VEC4D
 DESCRIPTOR.message_types_by_name['Face'] = _FACE
 DESCRIPTOR.message_types_by_name['Mesh'] = _MESH
+DESCRIPTOR.message_types_by_name['LocationRequest'] = _LOCATIONREQUEST
+DESCRIPTOR.message_types_by_name['LocationResponse'] = _LOCATIONRESPONSE
 DESCRIPTOR.message_types_by_name['Message'] = _MESSAGE
 
-Point3D = _reflection.GeneratedProtocolMessageType('Point3D', (_message.Message,), dict(
-  DESCRIPTOR = _POINT3D,
+Vec3D = _reflection.GeneratedProtocolMessageType('Vec3D', (_message.Message,), dict(
+  DESCRIPTOR = _VEC3D,
   __module__ = 'holoscanner_pb2'
-  # @@protoc_insertion_point(class_scope:Point3D)
+  # @@protoc_insertion_point(class_scope:Vec3D)
   ))
-_sym_db.RegisterMessage(Point3D)
+_sym_db.RegisterMessage(Vec3D)
 
-Point4D = _reflection.GeneratedProtocolMessageType('Point4D', (_message.Message,), dict(
-  DESCRIPTOR = _POINT4D,
+Vec4D = _reflection.GeneratedProtocolMessageType('Vec4D', (_message.Message,), dict(
+  DESCRIPTOR = _VEC4D,
   __module__ = 'holoscanner_pb2'
-  # @@protoc_insertion_point(class_scope:Point4D)
+  # @@protoc_insertion_point(class_scope:Vec4D)
   ))
-_sym_db.RegisterMessage(Point4D)
+_sym_db.RegisterMessage(Vec4D)
 
 Face = _reflection.GeneratedProtocolMessageType('Face', (_message.Message,), dict(
   DESCRIPTOR = _FACE,
@@ -337,6 +427,20 @@ Mesh = _reflection.GeneratedProtocolMessageType('Mesh', (_message.Message,), dic
   # @@protoc_insertion_point(class_scope:Mesh)
   ))
 _sym_db.RegisterMessage(Mesh)
+
+LocationRequest = _reflection.GeneratedProtocolMessageType('LocationRequest', (_message.Message,), dict(
+  DESCRIPTOR = _LOCATIONREQUEST,
+  __module__ = 'holoscanner_pb2'
+  # @@protoc_insertion_point(class_scope:LocationRequest)
+  ))
+_sym_db.RegisterMessage(LocationRequest)
+
+LocationResponse = _reflection.GeneratedProtocolMessageType('LocationResponse', (_message.Message,), dict(
+  DESCRIPTOR = _LOCATIONRESPONSE,
+  __module__ = 'holoscanner_pb2'
+  # @@protoc_insertion_point(class_scope:LocationResponse)
+  ))
+_sym_db.RegisterMessage(LocationResponse)
 
 Message = _reflection.GeneratedProtocolMessageType('Message', (_message.Message,), dict(
   DESCRIPTOR = _MESSAGE,
