@@ -3,7 +3,7 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 PROTOC_VERSION="$(protoc --version)"
 
-SERVER_PROTO_DIR="../holoscanner-server/proto/"
+SERVER_PROTO_DIR="$DIR/holoscanner-server/holoscanner/proto/"
 
 if [[ "$PROTOC_VERSION" != "libprotoc 3."* ]]; then
   echo "Protobuf version >=3.0.0 required."

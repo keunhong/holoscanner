@@ -41,15 +41,16 @@ message LocationResponse {
 
 message Message {
     enum Type {
-        MESH = 0;
-        LOCATION_REQUEST = 1;
-        LOCATION_RESPONSE = 2;
+        ACK = 0;
+        MESH = 10;
+        LOCATION_REQUEST = 11;
+        LOCATION_RESPONSE = 12;
     }
 
     Type type = 1;
     uint32 device_id = 2;
 
-    // One of the following will be filled in.
+    // One or less of the following will be filled in.
     Mesh mesh = 100;
     LocationRequest location_request = 300;
     LocationResponse location_response = 400;
