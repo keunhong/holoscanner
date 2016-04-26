@@ -1,4 +1,5 @@
 import asyncio
+from holoscanner.stream import start_server
 
 @asyncio.coroutine
 def handle_message(reader, writer):
@@ -19,7 +20,7 @@ if __name__=='__main__':
     print('Hello World!')
 
     loop = asyncio.get_event_loop()
-    coro = asyncio.start_server(handle_message, '127.0.0.1', 8888, loop=loop)
+    coro = start_server(handle_message, '127.0.0.1', 8888, loop=loop)
     server = loop.run_until_complete(coro)
 
     # Serve requests until Ctrl+C is pressed
