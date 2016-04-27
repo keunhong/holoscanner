@@ -1,4 +1,5 @@
 syntax = "proto3";
+package Holoscanner.Proto;
 
 message Vec3D {
     float x = 1;

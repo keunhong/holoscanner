@@ -16,4 +16,6 @@ CURRENT_DIR="$(pwd)"
 cd $DIR/proto
 protoc holoscanner.proto --python_out=$SERVER_PROTO_DIR
 echo "Saved to $SERVER_PROTO_DIR"
+protoc holoscanner.proto --csharp_out=$CLIENT_PROTO_DIR
+echo "Saved to $CLIENT_PROTO_DIR"
 cd $CURRENT_DIR;
