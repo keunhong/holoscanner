@@ -75,3 +75,26 @@ class HsClientProtocol(asyncio.Protocol):
 #         print(header)
 #         # msg_type, msg_length = unpack header
 #         data = yield from self.readexactly(msg_length)
+
+
+from holoscanner.proto.holoscanner_pb2 import Vec3D, Mesh, Face
+
+def model_to_proto(model, mesh):
+    vertices = model.vertices
+    faces = model.faces
+
+    for row in range(vertices.shape[0]):
+        vec = Vec3D()
+        vec.x = float(vertices[row, 0])
+        vec.y = float(vertices[row, 1])
+        vec.z = float(vertices[row, 2])
+        mesh.vertices.extend([vec])
+    for f in faces:
+        face = Face()
+        face.v1 = f['vertices'][0]
+        face.v2 = f['vertices'][1]
+        face.v3 = f['vertices'][2]
+        mesh.faces.extend([face])
+        
+    return mesh
+
