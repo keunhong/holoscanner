@@ -142,14 +142,12 @@ namespace HoloToolkit.Unity
             // Status completed is successful.
             if (status == AsyncStatus.Completed)
             {
+                Debug.Log("network connected");
                 DataWriter networkDataWriter;
                 
                 // Since we are connected, we can send the data we set aside when establishing the connection.
                 using(networkDataWriter = new DataWriter(networkConnection.OutputStream))
                 {
-                    // Write how much data we are sending.
-                    networkDataWriter.WriteInt32(nextDataBufferToSend.Length);
-
                     // Then write the data.
                     networkDataWriter.WriteBytes(nextDataBufferToSend);
 
