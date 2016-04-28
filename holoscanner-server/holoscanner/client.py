@@ -1,7 +1,7 @@
 import asyncio
 from holoscanner.stream import HsClientProtocol, model_to_proto
 from holoscanner.proto.holoscanner_pb2 import Message
-from holoscanner.io import wavefront
+from holoscanner.meshio import wavefront
 
 
 if __name__=='__main__':
