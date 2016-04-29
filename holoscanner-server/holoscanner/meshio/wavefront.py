@@ -2,7 +2,7 @@ import re
 import logging
 import numpy as np
 
-from holoscanner.io.model3d import Material
+from holoscanner.meshio.model3d import Material
 from . import Model3D
 
 OBJ_COMMENT_MARKER = '#'
