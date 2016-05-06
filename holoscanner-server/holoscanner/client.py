@@ -15,7 +15,7 @@ if __name__=='__main__':
 
     loop = asyncio.get_event_loop()
     coro = loop.create_connection(lambda: HsClientProtocol(msg, loop),
-                                  '127.0.0.1', 8888)
+                                  '128.208.5.7', 8888)
     loop.run_until_complete(coro)
     loop.run_forever()
     loop.close()
