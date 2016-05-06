@@ -6,7 +6,7 @@ if __name__=='__main__':
     print('Starting server.')
 
     loop = asyncio.get_event_loop()
-    coro = loop.create_server(HsServerProtocol, '127.0.0.1', 8888)
+    coro = loop.create_server(HsServerProtocol, '128.208.5.7', 8888)
     server = loop.run_until_complete(coro)
 
     # Serve requests until Ctrl+C is pressed
