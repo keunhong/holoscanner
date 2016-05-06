@@ -1,4 +1,5 @@
 import asyncio
+import pickle
 from asyncio import streams
 import struct
 from enum import Enum
@@ -41,7 +42,14 @@ class HsServerProtocol(asyncio.Protocol):
         if self.datasize == len(self.data):
             msg = Message()
             msg.ParseFromString(self.data)
-            print('Received {}'.format(msg))
+            print('Received message of type {}'.format(msg.type))
+            print(Message.MESH)
+            if msg.type == Message.MESH:
+                print('Processing Mesh...')
+                with open('/home/kpar/src/team8/holoscanner-server/mesh.bin',
+                          'bw+') as f:
+                   f.write(msg.SerializeToString()) 
+
             self.data = []
             self.datasize = 0
             self.state = ServerStates.wait
