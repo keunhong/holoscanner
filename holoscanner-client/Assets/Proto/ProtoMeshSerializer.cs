@@ -24,6 +24,7 @@ public static class ProtoMeshSerializer {
         }
 
         Holoscanner.Proto.Message msg = new Holoscanner.Proto.Message();
+        msg.Type = Holoscanner.Proto.Message.Types.Type.MESH;
         msg.Mesh = new Holoscanner.Proto.Mesh();
         msg.Mesh.Vertices.Add(vertices);
         msg.Mesh.Faces.Add(faces);
