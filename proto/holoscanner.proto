@@ -43,6 +43,7 @@ message LocationResponse {
 message Message {
     enum Type {
         ACK = 0;
+        FIN = 1;
         MESH = 10;
         LOCATION_REQUEST = 11;
         LOCATION_RESPONSE = 12;

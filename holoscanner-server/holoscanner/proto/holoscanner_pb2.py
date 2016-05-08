@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='holoscanner.proto',
   package='Holoscanner.Proto',
   syntax='proto3',
-  serialized_pb=_b('\n\x11holoscanner.proto\x12\x11Holoscanner.Proto\"(\n\x05Vec3D\x12\t\n\x01x\x18\x01 \x01(\x02\x12\t\n\x01y\x18\x02 \x01(\x02\x12\t\n\x01z\x18\x03 \x01(\x02\"3\n\x05Vec4D\x12\t\n\x01x\x18\x01 \x01(\x02\x12\t\n\x01y\x18\x02 \x01(\x02\x12\t\n\x01z\x18\x03 \x01(\x02\x12\t\n\x01w\x18\x04 \x01(\x02\"*\n\x04\x46\x61\x63\x65\x12\n\n\x02v1\x18\x01 \x01(\r\x12\n\n\x02v2\x18\x02 \x01(\r\x12\n\n\x02v3\x18\x03 \x01(\r\"\xe0\x01\n\x04Mesh\x12\x0f\n\x07mesh_id\x18\x02 \x01(\r\x12\x11\n\ttimestamp\x18\x03 \x01(\x04\x12.\n\x0c\x63\x61m_position\x18\x64 \x01(\x0b\x32\x18.Holoscanner.Proto.Vec3D\x12.\n\x0c\x63\x61m_rotation\x18\x65 \x01(\x0b\x32\x18.Holoscanner.Proto.Vec4D\x12+\n\x08vertices\x18\xc8\x01 \x03(\x0b\x32\x18.Holoscanner.Proto.Vec3D\x12\'\n\x05\x66\x61\x63\x65s\x18\xc9\x01 \x03(\x0b\x32\x17.Holoscanner.Proto.Face\"\x11\n\x0fLocationRequest\"m\n\x10LocationResponse\x12*\n\x08location\x18\x01 \x01(\x0b\x32\x18.Holoscanner.Proto.Vec3D\x12-\n\x0borientation\x18\x02 \x01(\x0b\x32\x18.Holoscanner.Proto.Vec3D\"\xba\x02\n\x07Message\x12-\n\x04type\x18\x01 \x01(\x0e\x32\x1f.Holoscanner.Proto.Message.Type\x12\x11\n\tdevice_id\x18\x02 \x01(\r\x12%\n\x04mesh\x18\x64 \x01(\x0b\x32\x17.Holoscanner.Proto.Mesh\x12=\n\x10location_request\x18\xac\x02 \x01(\x0b\x32\".Holoscanner.Proto.LocationRequest\x12?\n\x11location_response\x18\x90\x03 \x01(\x0b\x32#.Holoscanner.Proto.LocationResponse\"F\n\x04Type\x12\x07\n\x03\x41\x43K\x10\x00\x12\x08\n\x04MESH\x10\n\x12\x14\n\x10LOCATION_REQUEST\x10\x0b\x12\x15\n\x11LOCATION_RESPONSE\x10\x0c\x62\x06proto3')
+  serialized_pb=_b('\n\x11holoscanner.proto\x12\x11Holoscanner.Proto\"(\n\x05Vec3D\x12\t\n\x01x\x18\x01 \x01(\x02\x12\t\n\x01y\x18\x02 \x01(\x02\x12\t\n\x01z\x18\x03 \x01(\x02\"3\n\x05Vec4D\x12\t\n\x01x\x18\x01 \x01(\x02\x12\t\n\x01y\x18\x02 \x01(\x02\x12\t\n\x01z\x18\x03 \x01(\x02\x12\t\n\x01w\x18\x04 \x01(\x02\"*\n\x04\x46\x61\x63\x65\x12\n\n\x02v1\x18\x01 \x01(\r\x12\n\n\x02v2\x18\x02 \x01(\r\x12\n\n\x02v3\x18\x03 \x01(\r\"\xe0\x01\n\x04Mesh\x12\x0f\n\x07mesh_id\x18\x02 \x01(\r\x12\x11\n\ttimestamp\x18\x03 \x01(\x04\x12.\n\x0c\x63\x61m_position\x18\x64 \x01(\x0b\x32\x18.Holoscanner.Proto.Vec3D\x12.\n\x0c\x63\x61m_rotation\x18\x65 \x01(\x0b\x32\x18.Holoscanner.Proto.Vec4D\x12+\n\x08vertices\x18\xc8\x01 \x03(\x0b\x32\x18.Holoscanner.Proto.Vec3D\x12\'\n\x05\x66\x61\x63\x65s\x18\xc9\x01 \x03(\x0b\x32\x17.Holoscanner.Proto.Face\"\x11\n\x0fLocationRequest\"m\n\x10LocationResponse\x12*\n\x08location\x18\x01 \x01(\x0b\x32\x18.Holoscanner.Proto.Vec3D\x12-\n\x0borientation\x18\x02 \x01(\x0b\x32\x18.Holoscanner.Proto.Vec3D\"\xc3\x02\n\x07Message\x12-\n\x04type\x18\x01 \x01(\x0e\x32\x1f.Holoscanner.Proto.Message.Type\x12\x11\n\tdevice_id\x18\x02 \x01(\r\x12%\n\x04mesh\x18\x64 \x01(\x0b\x32\x17.Holoscanner.Proto.Mesh\x12=\n\x10location_request\x18\xac\x02 \x01(\x0b\x32\".Holoscanner.Proto.LocationRequest\x12?\n\x11location_response\x18\x90\x03 \x01(\x0b\x32#.Holoscanner.Proto.LocationResponse\"O\n\x04Type\x12\x07\n\x03\x41\x43K\x10\x00\x12\x07\n\x03\x46IN\x10\x01\x12\x08\n\x04MESH\x10\n\x12\x14\n\x10LOCATION_REQUEST\x10\x0b\x12\x15\n\x11LOCATION_RESPONSE\x10\x0c\x62\x06proto3')
 )
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
@@ -36,22 +36,26 @@ _MESSAGE_TYPE = _descriptor.EnumDescriptor(
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='MESH', index=1, number=10,
+      name='FIN', index=1, number=1,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='LOCATION_REQUEST', index=2, number=11,
+      name='MESH', index=2, number=10,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='LOCATION_RESPONSE', index=3, number=12,
+      name='LOCATION_REQUEST', index=3, number=11,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='LOCATION_RESPONSE', index=4, number=12,
       options=None,
       type=None),
   ],
   containing_type=None,
   options=None,
   serialized_start=781,
-  serialized_end=851,
+  serialized_end=860,
 )
 _sym_db.RegisterEnumDescriptor(_MESSAGE_TYPE)
 
@@ -382,7 +386,7 @@ _MESSAGE = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=537,
-  serialized_end=851,
+  serialized_end=860,
 )
 
 _MESH.fields_by_name['cam_position'].message_type = _VEC3D
