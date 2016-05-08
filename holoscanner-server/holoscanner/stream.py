@@ -1,3 +1,4 @@
+import os
 import asyncio
 import pickle
 from asyncio import streams
@@ -14,6 +15,7 @@ HEADER_SIZE = 8
 HEADER_FMT = 'Q'
 
 ServerStates = Enum('ServerStates', 'wait receiving')
+
 
 class HsServerProtocol(asyncio.Protocol):
     def __init__(self):
@@ -46,9 +48,15 @@ class HsServerProtocol(asyncio.Protocol):
             print(Message.MESH)
             if msg.type == Message.MESH:
                 print('Processing Mesh...')
-                with open('/home/kpar/src/team8/holoscanner-server/mesh.bin',
-                          'bw+') as f:
-                   f.write(msg.SerializeToString()) 
+                mesh = msg.mesh
+                mesh_id = 0
+                filedir = '/home/kpar/src/team8/holoscanner-server/meshes/'
+                filename = 'mesh_{}.bin'.format(mesh_id)
+                while os.path.exists(os.path.join(filedir, filename)):
+                    mesh_id += 1
+                    filename = 'mesh_{}.bin'.format(mesh_id)
+                with open(os.path.join(filedir, filename), 'bw+') as f:
+                    f.write(msg.SerializeToString()) 
 
             self.data = []
             self.datasize = 0
