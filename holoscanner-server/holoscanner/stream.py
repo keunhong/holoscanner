@@ -110,6 +110,14 @@ class HsClientProtocol(asyncio.Protocol):
             transport.write(msg_bytes)
             logger.info('{} bytes sent'.format(len(msg_bytes)))
 
+        msg = Message()
+        msg.type = Message.FIN
+        msg_bytes = msg.SerializeToString()
+        header = struct.pack(HEADER_FMT, len(msg_bytes))
+        transport.write(header)
+        transport.write(msg_bytes)
+
+
     def data_received(self, data):
         msg = Message()
         msg.ParseFromString(data)

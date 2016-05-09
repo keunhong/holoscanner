@@ -1,0 +1,6 @@
+
+
+
+class GameState:
+    meshes = []
+    pass
