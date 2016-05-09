@@ -45,6 +45,6 @@ class RelayProtocol(WebSocketServerProtocol):
 
 def create_server_factory():
     factory = WebSocketServerFactory("ws://{}:{}".format(
-        config.WS_LISTEN_ADDR, config.WS_LISTEN_PORT))
+        config.RELAY_LISTEN_ADDR, config.RELAY_LISTEN_PORT))
     factory.protocol = RelayProtocol
     return factory

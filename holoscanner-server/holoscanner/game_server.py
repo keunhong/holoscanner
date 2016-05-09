@@ -13,6 +13,7 @@ logger = base_logger.getChild(__name__)
 HEADER_SIZE = 8
 HEADER_FMT = 'Q'
 
+
 class ServerState(Enum):
     WAITING = 1
     RECEIVING = 2
@@ -44,13 +45,6 @@ class HsServerProtocol(asyncio.Protocol):
         self.data = bytes()
         self.data_size = 0
 
-    def make_ack(self):
-        ack = Message()
-        ack.type = Message.ACK
-        ack.device_id = 1
-        ack_bytes = ack.SerializeToString()
-        return ack_bytes
-
     def connection_made(self, transport):
         peername = transport.get_extra_info('peername')
         logger.info('Connection from {}'.format(peername))
@@ -66,8 +60,8 @@ class HsServerProtocol(asyncio.Protocol):
             logger.info('Total message size is {}'.format(self.data_size))
             bytes_processed = HEADER_SIZE
         elif self.state == ServerState.RECEIVING:
-            logger.info("Receiving message part...")
-            logger.info('Data size {}'.format(len(data)))
+            logger.debug("Receiving message part...")
+            logger.debug('Data size {}'.format(len(data)))
             bytes_left = self.data_size - len(self.data)
             self.data += data[:bytes_left]
             bytes_processed += bytes_left
@@ -120,7 +114,6 @@ class HsClientProtocol(asyncio.Protocol):
         msg = Message()
         msg.type = Message.FIN
         transport.write(pack_message(msg))
-
 
     def data_received(self, data):
         msg = Message()

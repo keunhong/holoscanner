@@ -11,9 +11,6 @@ socket.onmessage = function (e) {
     if (e.data instanceof ArrayBuffer) {
         let message = Holoscanner.Proto.Message.decode(e.data);
         console.log(message);
-        // let mesh = message.getMesh()
-        // console.log(message.getDeviceId());
-        // console.log(mesh.getFacesList());
 
         let geometry = new THREE.Geometry();
         for (let vertex of message.mesh.vertices) {
