@@ -4,11 +4,10 @@ import struct
 from enum import Enum
 from holoscanner import base_logger
 from holoscanner.proto.holoscanner_pb2 import Message, Mesh
-from holoscanner.state import GameState
+from holoscanner.state import game_state
 
 
 logger = base_logger.getChild(__name__)
-state = GameState()
 
 
 HEADER_SIZE = 8
@@ -79,7 +78,7 @@ class HsServerProtocol(asyncio.Protocol):
             logger.info('Received message of type {}'.format(msg.type))
             if msg.type == Message.MESH:
                 logger.info('MESH RECEIVED')
-                state.new_mesh(msg.mesh)
+                game_state.new_mesh(msg.mesh)
                 ack = Message()
                 ack.type = Message.ACK
                 ack.device_id = 1
