@@ -1,6 +1,6 @@
 import os
 import asyncio
-from holoscanner.stream import HsClientProtocol
+from holoscanner.game_server import HsClientProtocol
 from holoscanner.proto.holoscanner_pb2 import Message
 from holoscanner import config, base_logger
 

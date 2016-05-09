@@ -19,6 +19,13 @@ class ServerState(Enum):
     RECEIVING = 2
 
 
+def pack_message(message):
+    msg_bytes = message.SerializeToString()
+    header = struct.pack(HEADER_FMT, len(msg_bytes))
+
+    return header + msg_bytes
+
+
 def save_mesh(mesh):
     print('Processing Mesh...')
     mesh_id = 0
@@ -72,10 +79,11 @@ class HsServerProtocol(asyncio.Protocol):
             logger.info('Received message of type {}'.format(msg.type))
             if msg.type == Message.MESH:
                 logger.info('MESH RECEIVED')
-                # save_mesh(msg.mesh)
-                ack_bytes = self.make_ack()
-                self.transport.write(struct.pack(HEADER_FMT, len(ack_bytes)))
-                self.transport.write(ack_bytes)
+                state.new_mesh(msg.mesh)
+                ack = Message()
+                ack.type = Message.ACK
+                ack.device_id = 1
+                self.transport.write(pack_message(ack))
             elif msg.type == Message.FIN:
                 logger.info('Closing the client socket')
                 self.transport.close()
@@ -112,10 +120,7 @@ class HsClientProtocol(asyncio.Protocol):
 
         msg = Message()
         msg.type = Message.FIN
-        msg_bytes = msg.SerializeToString()
-        header = struct.pack(HEADER_FMT, len(msg_bytes))
-        transport.write(header)
-        transport.write(msg_bytes)
+        transport.write(pack_message(msg))
 
 
     def data_received(self, data):
