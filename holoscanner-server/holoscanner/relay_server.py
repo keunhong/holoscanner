@@ -19,18 +19,11 @@ class RelayProtocol(WebSocketServerProtocol):
 
         with game_state.lock:
             for mesh in game_state.meshes:
-                msg = Message()
-                msg.type = Message.MESH
-                msg.device_id = 999
-                msg.mesh.MergeFrom(mesh)
-                msg_bytes = msg.SerializeToString()
-                logger.info('Sending mesh ({} bytes).'.format(len(msg_bytes)))
-                self.sendMessage(msg_bytes, isBinary=True)
+                self.sendMesh(mesh)
 
-        # while True:
-        #     mesh = yield from game_state.queue.get()
-        #     logger.info('Sending mesh.')
-        #     self.sendMessage(mesh.SerializeToString(), isBinary=True)
+        while True:
+            mesh = yield from game_state.queue.get()
+            self.sendMesh(mesh)
 
     @asyncio.coroutine
     def onMessage(self, payload, isBinary):
@@ -39,6 +32,15 @@ class RelayProtocol(WebSocketServerProtocol):
 
     def onClose(self, wasClean, code, reason):
         logger.info("WebSocket connection closed: {0}".format(reason))
+
+    def sendMesh(self, mesh):
+        msg = Message()
+        msg.type = Message.MESH
+        msg.device_id = 1
+        msg.mesh.MergeFrom(mesh)
+        msg_bytes = msg.SerializeToString()
+        logger.info('Sending mesh ({} bytes).'.format(len(msg_bytes)))
+        self.sendMessage(msg_bytes, isBinary=True)
 
 
 def create_server_factory():
