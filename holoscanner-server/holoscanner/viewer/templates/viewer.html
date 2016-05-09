@@ -2,12 +2,17 @@
 <html>
 <head>
     <title>Holoscanner Viewer</title>
+    <script   src="https://code.jquery.com/jquery-2.2.3.min.js"   integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo="   crossorigin="anonymous"></script>
     <script src="{{ url_for('static', filename='long.min.js') }}"></script>
     <script src="{{ url_for('static', filename='bytebuffer.min.js') }}"></script>
     <script src="{{ url_for('static', filename='protobuf.js') }}"></script>
+    <script src="{{ url_for('static', filename='three.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='OrbitControls.js') }}"></script>
     <script src="{{ url_for('static', filename='viewer.js') }}"></script>
+    <link rel="stylesheet" type="text/css"
+          href="{{ url_for('static', filename='viewer.css') }}" />
 </head>
 <body>
-Hi
+<div id="canvas"></div>
 </body>
 </html>
