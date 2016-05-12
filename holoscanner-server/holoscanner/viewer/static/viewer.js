@@ -5,7 +5,7 @@ let Holoscanner = builder.build("Holoscanner");
 let renderer = new THREE.WebGLRenderer();
 let scene = new THREE.Scene();
 
-var socket = new WebSocket('ws://127.0.0.1:8889');
+var socket = new WebSocket('ws://drell.cs.washington.edu:8889');
 socket.binaryType = "arraybuffer";
 socket.onmessage = function (e) {
     if (e.data instanceof ArrayBuffer) {

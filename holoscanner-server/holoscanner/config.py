@@ -13,3 +13,5 @@ MESHES_DIR = os.path.join(PROJECT_DIR, '..', 'meshes')
 
 LOG_FORMAT = '%(asctime)s\t%(levelname)s\t%(message)s\t[%(name)s]'
 LOG_LEVEL = logging.INFO
+
+MESH_PLANE_FINDING_BINS = 100
