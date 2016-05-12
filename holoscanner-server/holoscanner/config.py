@@ -1,6 +1,8 @@
 import os
 import logging
 
+SERVER_DEVICE_ID = 1
+
 GAME_LISTEN_ADDR = '0.0.0.0'
 GAME_LISTEN_PORT = 8888
 RELAY_LISTEN_ADDR = '0.0.0.0'

@@ -40,7 +40,7 @@ def find_planes(y_coords, nbins, sigma=None):
 def create_mesh_message(mesh_pb):
     msg = pb.Message()
     msg.type = pb.Message.MESH
-    msg.device_id = 1
+    msg.device_id = config.SERVER_DEVICE_ID
     msg.mesh.MergeFrom(mesh_pb)
     return msg
 
@@ -72,6 +72,13 @@ class GameState:
             y_coords, config.MESH_PLANE_FINDING_BINS, sigma)
         logger.info('Planes updates: floor={}, ceiling={}'.format(
             self.floor, self.ceiling))
+
+    def to_proto_message(self):
+        msg = pb.Message()
+        msg.type = pb.Message.GAME_STATE
+        msg.device_id = config.SERVER_DEVICE_ID
+        msg.game_state.floor_y = self.floor
+        msg.game_state.ceiling_y = self.ceiling
 
 
 game_state = GameState()

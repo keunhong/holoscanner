@@ -4,6 +4,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 PROTOC_VERSION="$(protoc --version)"
 
 SERVER_PROTO_DIR="$DIR/holoscanner-server/holoscanner/proto/"
+CLIENT_PROTO_DIR="$DIR/holoscanner-client/Assets/Proto/"
 JS_PROTO_DIR="$DIR/holoscanner-server/holoscanner/viewer/static/"
 
 if [[ "$PROTOC_VERSION" != "libprotoc 3."* ]]; then

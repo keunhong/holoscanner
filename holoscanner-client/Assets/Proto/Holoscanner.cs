@@ -32,17 +32,19 @@ namespace Holoscanner.Proto {
             "Ei4KDGNhbV9yb3RhdGlvbhhlIAEoCzIYLkhvbG9zY2FubmVyLlByb3RvLlZl",
             "YzREEisKCHZlcnRpY2VzGMgBIAMoCzIYLkhvbG9zY2FubmVyLlByb3RvLlZl",
             "YzNEEicKBWZhY2VzGMkBIAMoCzIXLkhvbG9zY2FubmVyLlByb3RvLkZhY2Ui",
-            "EQoPTG9jYXRpb25SZXF1ZXN0Im0KEExvY2F0aW9uUmVzcG9uc2USKgoIbG9j",
-            "YXRpb24YASABKAsyGC5Ib2xvc2Nhbm5lci5Qcm90by5WZWMzRBItCgtvcmll",
-            "bnRhdGlvbhgCIAEoCzIYLkhvbG9zY2FubmVyLlByb3RvLlZlYzNEIroCCgdN",
-            "ZXNzYWdlEi0KBHR5cGUYASABKA4yHy5Ib2xvc2Nhbm5lci5Qcm90by5NZXNz",
-            "YWdlLlR5cGUSEQoJZGV2aWNlX2lkGAIgASgNEiUKBG1lc2gYZCABKAsyFy5I",
-            "b2xvc2Nhbm5lci5Qcm90by5NZXNoEj0KEGxvY2F0aW9uX3JlcXVlc3QYrAIg",
-            "ASgLMiIuSG9sb3NjYW5uZXIuUHJvdG8uTG9jYXRpb25SZXF1ZXN0Ej8KEWxv",
-            "Y2F0aW9uX3Jlc3BvbnNlGJADIAEoCzIjLkhvbG9zY2FubmVyLlByb3RvLkxv",
-            "Y2F0aW9uUmVzcG9uc2UiRgoEVHlwZRIHCgNBQ0sQABIICgRNRVNIEAoSFAoQ",
-            "TE9DQVRJT05fUkVRVUVTVBALEhUKEUxPQ0FUSU9OX1JFU1BPTlNFEAxiBnBy",
-            "b3RvMw=="));
+            "LwoJR2FtZVN0YXRlEg8KB2Zsb29yX3kYASABKAISEQoJY2VpbGluZ195GAIg",
+            "ASgCIhEKD0xvY2F0aW9uUmVxdWVzdCJtChBMb2NhdGlvblJlc3BvbnNlEioK",
+            "CGxvY2F0aW9uGAEgASgLMhguSG9sb3NjYW5uZXIuUHJvdG8uVmVjM0QSLQoL",
+            "b3JpZW50YXRpb24YAiABKAsyGC5Ib2xvc2Nhbm5lci5Qcm90by5WZWMzRCKG",
+            "AwoHTWVzc2FnZRItCgR0eXBlGAEgASgOMh8uSG9sb3NjYW5uZXIuUHJvdG8u",
+            "TWVzc2FnZS5UeXBlEhEKCWRldmljZV9pZBgCIAEoDRIlCgRtZXNoGGQgASgL",
+            "MhcuSG9sb3NjYW5uZXIuUHJvdG8uTWVzaBI9ChBsb2NhdGlvbl9yZXF1ZXN0",
+            "GKwCIAEoCzIiLkhvbG9zY2FubmVyLlByb3RvLkxvY2F0aW9uUmVxdWVzdBI/",
+            "ChFsb2NhdGlvbl9yZXNwb25zZRiQAyABKAsyIy5Ib2xvc2Nhbm5lci5Qcm90",
+            "by5Mb2NhdGlvblJlc3BvbnNlEjEKCmdhbWVfc3RhdGUY9AMgASgLMhwuSG9s",
+            "b3NjYW5uZXIuUHJvdG8uR2FtZVN0YXRlIl8KBFR5cGUSBwoDQUNLEAASBwoD",
+            "RklOEAESCAoETUVTSBAKEhQKEExPQ0FUSU9OX1JFUVVFU1QQCxIVChFMT0NB",
+            "VElPTl9SRVNQT05TRRAMEg4KCkdBTUVfU1RBVEUQDWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedCodeInfo(null, new pbr::GeneratedCodeInfo[] {
@@ -50,9 +52,10 @@ namespace Holoscanner.Proto {
             new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.Vec4D), global::Holoscanner.Proto.Vec4D.Parser, new[]{ "X", "Y", "Z", "W" }, null, null, null),
             new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.Face), global::Holoscanner.Proto.Face.Parser, new[]{ "V1", "V2", "V3" }, null, null, null),
             new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.Mesh), global::Holoscanner.Proto.Mesh.Parser, new[]{ "MeshId", "Timestamp", "CamPosition", "CamRotation", "Vertices", "Faces" }, null, null, null),
+            new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.GameState), global::Holoscanner.Proto.GameState.Parser, new[]{ "FloorY", "CeilingY" }, null, null, null),
             new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.LocationRequest), global::Holoscanner.Proto.LocationRequest.Parser, null, null, null, null),
             new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.LocationResponse), global::Holoscanner.Proto.LocationResponse.Parser, new[]{ "Location", "Orientation" }, null, null, null),
-            new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.Message), global::Holoscanner.Proto.Message.Parser, new[]{ "Type", "DeviceId", "Mesh", "LocationRequest", "LocationResponse" }, null, new[]{ typeof(global::Holoscanner.Proto.Message.Types.Type) }, null)
+            new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.Message), global::Holoscanner.Proto.Message.Parser, new[]{ "Type", "DeviceId", "Mesh", "LocationRequest", "LocationResponse", "GameState" }, null, new[]{ typeof(global::Holoscanner.Proto.Message.Types.Type) }, null)
           }));
     }
     #endregion
@@ -795,12 +798,142 @@ namespace Holoscanner.Proto {
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+  public sealed partial class GameState : pb::IMessage<GameState> {
+    private static readonly pb::MessageParser<GameState> _parser = new pb::MessageParser<GameState>(() => new GameState());
+    public static pb::MessageParser<GameState> Parser { get { return _parser; } }
+
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Holoscanner.Proto.HoloscannerReflection.Descriptor.MessageTypes[4]; }
+    }
+
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    public GameState() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    public GameState(GameState other) : this() {
+      floorY_ = other.floorY_;
+      ceilingY_ = other.ceilingY_;
+    }
+
+    public GameState Clone() {
+      return new GameState(this);
+    }
+
+    /// <summary>Field number for the "floor_y" field.</summary>
+    public const int FloorYFieldNumber = 1;
+    private float floorY_;
+    public float FloorY {
+      get { return floorY_; }
+      set {
+        floorY_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "ceiling_y" field.</summary>
+    public const int CeilingYFieldNumber = 2;
+    private float ceilingY_;
+    public float CeilingY {
+      get { return ceilingY_; }
+      set {
+        ceilingY_ = value;
+      }
+    }
+
+    public override bool Equals(object other) {
+      return Equals(other as GameState);
+    }
+
+    public bool Equals(GameState other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (FloorY != other.FloorY) return false;
+      if (CeilingY != other.CeilingY) return false;
+      return true;
+    }
+
+    public override int GetHashCode() {
+      int hash = 1;
+      if (FloorY != 0F) hash ^= FloorY.GetHashCode();
+      if (CeilingY != 0F) hash ^= CeilingY.GetHashCode();
+      return hash;
+    }
+
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (FloorY != 0F) {
+        output.WriteRawTag(13);
+        output.WriteFloat(FloorY);
+      }
+      if (CeilingY != 0F) {
+        output.WriteRawTag(21);
+        output.WriteFloat(CeilingY);
+      }
+    }
+
+    public int CalculateSize() {
+      int size = 0;
+      if (FloorY != 0F) {
+        size += 1 + 4;
+      }
+      if (CeilingY != 0F) {
+        size += 1 + 4;
+      }
+      return size;
+    }
+
+    public void MergeFrom(GameState other) {
+      if (other == null) {
+        return;
+      }
+      if (other.FloorY != 0F) {
+        FloorY = other.FloorY;
+      }
+      if (other.CeilingY != 0F) {
+        CeilingY = other.CeilingY;
+      }
+    }
+
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            input.SkipLastField();
+            break;
+          case 13: {
+            FloorY = input.ReadFloat();
+            break;
+          }
+          case 21: {
+            CeilingY = input.ReadFloat();
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
   public sealed partial class LocationRequest : pb::IMessage<LocationRequest> {
     private static readonly pb::MessageParser<LocationRequest> _parser = new pb::MessageParser<LocationRequest>(() => new LocationRequest());
     public static pb::MessageParser<LocationRequest> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Holoscanner.Proto.HoloscannerReflection.Descriptor.MessageTypes[4]; }
+      get { return global::Holoscanner.Proto.HoloscannerReflection.Descriptor.MessageTypes[5]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -876,7 +1009,7 @@ namespace Holoscanner.Proto {
     public static pb::MessageParser<LocationResponse> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Holoscanner.Proto.HoloscannerReflection.Descriptor.MessageTypes[5]; }
+      get { return global::Holoscanner.Proto.HoloscannerReflection.Descriptor.MessageTypes[6]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -1018,7 +1151,7 @@ namespace Holoscanner.Proto {
     public static pb::MessageParser<Message> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Holoscanner.Proto.HoloscannerReflection.Descriptor.MessageTypes[6]; }
+      get { return global::Holoscanner.Proto.HoloscannerReflection.Descriptor.MessageTypes[7]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -1037,6 +1170,7 @@ namespace Holoscanner.Proto {
       Mesh = other.mesh_ != null ? other.Mesh.Clone() : null;
       LocationRequest = other.locationRequest_ != null ? other.LocationRequest.Clone() : null;
       LocationResponse = other.locationResponse_ != null ? other.LocationResponse.Clone() : null;
+      GameState = other.gameState_ != null ? other.GameState.Clone() : null;
     }
 
     public Message Clone() {
@@ -1096,6 +1230,16 @@ namespace Holoscanner.Proto {
       }
     }
 
+    /// <summary>Field number for the "game_state" field.</summary>
+    public const int GameStateFieldNumber = 500;
+    private global::Holoscanner.Proto.GameState gameState_;
+    public global::Holoscanner.Proto.GameState GameState {
+      get { return gameState_; }
+      set {
+        gameState_ = value;
+      }
+    }
+
     public override bool Equals(object other) {
       return Equals(other as Message);
     }
@@ -1112,6 +1256,7 @@ namespace Holoscanner.Proto {
       if (!object.Equals(Mesh, other.Mesh)) return false;
       if (!object.Equals(LocationRequest, other.LocationRequest)) return false;
       if (!object.Equals(LocationResponse, other.LocationResponse)) return false;
+      if (!object.Equals(GameState, other.GameState)) return false;
       return true;
     }
 
@@ -1122,6 +1267,7 @@ namespace Holoscanner.Proto {
       if (mesh_ != null) hash ^= Mesh.GetHashCode();
       if (locationRequest_ != null) hash ^= LocationRequest.GetHashCode();
       if (locationResponse_ != null) hash ^= LocationResponse.GetHashCode();
+      if (gameState_ != null) hash ^= GameState.GetHashCode();
       return hash;
     }
 
@@ -1150,6 +1296,10 @@ namespace Holoscanner.Proto {
         output.WriteRawTag(130, 25);
         output.WriteMessage(LocationResponse);
       }
+      if (gameState_ != null) {
+        output.WriteRawTag(162, 31);
+        output.WriteMessage(GameState);
+      }
     }
 
     public int CalculateSize() {
@@ -1168,6 +1318,9 @@ namespace Holoscanner.Proto {
       }
       if (locationResponse_ != null) {
         size += 2 + pb::CodedOutputStream.ComputeMessageSize(LocationResponse);
+      }
+      if (gameState_ != null) {
+        size += 2 + pb::CodedOutputStream.ComputeMessageSize(GameState);
       }
       return size;
     }
@@ -1199,6 +1352,12 @@ namespace Holoscanner.Proto {
           locationResponse_ = new global::Holoscanner.Proto.LocationResponse();
         }
         LocationResponse.MergeFrom(other.LocationResponse);
+      }
+      if (other.gameState_ != null) {
+        if (gameState_ == null) {
+          gameState_ = new global::Holoscanner.Proto.GameState();
+        }
+        GameState.MergeFrom(other.GameState);
       }
     }
 
@@ -1238,6 +1397,13 @@ namespace Holoscanner.Proto {
             input.ReadMessage(locationResponse_);
             break;
           }
+          case 4002: {
+            if (gameState_ == null) {
+              gameState_ = new global::Holoscanner.Proto.GameState();
+            }
+            input.ReadMessage(gameState_);
+            break;
+          }
         }
       }
     }
@@ -1248,9 +1414,11 @@ namespace Holoscanner.Proto {
     public static partial class Types {
       public enum Type {
         ACK = 0,
+        FIN = 1,
         MESH = 10,
         LOCATION_REQUEST = 11,
         LOCATION_RESPONSE = 12,
+        GAME_STATE = 13,
       }
 
     }
