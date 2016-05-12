@@ -73,12 +73,15 @@ class GameState:
         logger.info('Planes updates: floor={}, ceiling={}'.format(
             self.floor, self.ceiling))
 
+        self.message_queue.put_nowait(self.to_proto_message())
+
     def to_proto_message(self):
         msg = pb.Message()
         msg.type = pb.Message.GAME_STATE
         msg.device_id = config.SERVER_DEVICE_ID
         msg.game_state.floor_y = self.floor
         msg.game_state.ceiling_y = self.ceiling
+        return msg
 
 
 game_state = GameState()

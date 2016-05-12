@@ -8,29 +8,38 @@ let scene = new THREE.Scene();
 var socket = new WebSocket('ws://drell.cs.washington.edu:8889');
 socket.binaryType = "arraybuffer";
 socket.onmessage = function (e) {
-    if (e.data instanceof ArrayBuffer) {
-        let message = Holoscanner.Proto.Message.decode(e.data);
-        console.log(message);
+  if (e.data instanceof ArrayBuffer) {
+    let message = Holoscanner.Proto.Message.decode(e.data);
+    console.log(message);
 
-        let geometry = new THREE.Geometry();
-        for (let vertex of message.mesh.vertices) {
-            geometry.vertices.push(
-                new THREE.Vector3(vertex.x,vertex.y, vertex.z));
-        }
-        for (let face of message.mesh.faces) {
-            geometry.faces.push(
-                new THREE.Face3(face.v1, face.v2, face.v3));
-        }
-        let material = new THREE.MeshLambertMaterial({
-            color: 0xffffff,
-            side: THREE.DoubleSide
-        });
-        geometry.computeFaceNormals();
-        let mesh = new THREE.Mesh(geometry, material);
-        mesh.scale.x = mesh.scale.y = mesh.scale.z = 10.0;
-        scene.add(mesh);
+    if (message.type === Holoscanner.Proto.Message.Type.MESH) {
+      handleNewMesh(message.mesh);
+    } else if (message.type === Holoscanner.Proto.Message.Type.GAME_STATE) {
+      console.log(message.game_state);
     }
+  }
 };
+
+function handleNewMesh(pbMesh) {
+  let geometry = new THREE.Geometry();
+  for (let vertex of pbMesh.vertices) {
+    geometry.vertices.push(
+        new THREE.Vector3(vertex.x, vertex.y, vertex.z));
+  }
+  for (let face of pbMesh.faces) {
+    geometry.faces.push(
+        new THREE.Face3(face.v1, face.v2, face.v3));
+  }
+  let material = new THREE.MeshLambertMaterial({
+    color: 0xffffff,
+    side: THREE.DoubleSide
+  });
+  geometry.computeFaceNormals();
+  let mesh = new THREE.Mesh(geometry, material);
+  mesh.scale.x = mesh.scale.y = mesh.scale.z = 10.0;
+  scene.add(mesh);
+}
+
 
 $(document).ready(function () {
     let container = $('#canvas');
