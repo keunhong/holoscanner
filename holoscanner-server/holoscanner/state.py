@@ -4,6 +4,7 @@ import numpy as np
 from scipy.signal import argrelextrema
 from scipy.ndimage.filters import gaussian_filter1d
 from holoscanner import config
+from holoscanner.proto import holoscanner_pb2 as pb
 from holoscanner import base_logger
 
 logger = base_logger.getChild(__name__)
@@ -36,11 +37,19 @@ def find_planes(y_coords, nbins, sigma=None):
     return floor_y, ceiling_y
 
 
+def create_mesh_message(mesh_pb):
+    msg = pb.Message()
+    msg.type = pb.Message.MESH
+    msg.device_id = 1
+    msg.mesh.MergeFrom(mesh_pb)
+    return msg
+
+
 class GameState:
     mesh_pbs = []
     meshes = []
     lock = threading.RLock()
-    queue = asyncio.Queue()
+    message_queue = asyncio.Queue()
 
     floor = -10
     ceiling = 10
@@ -50,7 +59,8 @@ class GameState:
             self.mesh_pbs.append(mesh_pb)
             print(len(self.mesh_pbs))
             self.meshes.append(Mesh(mesh_pb))
-        self.queue.put_nowait(mesh_pb)
+
+        self.message_queue.put_nowait(create_mesh_message(mesh_pb))
 
         self.update_planes()
 

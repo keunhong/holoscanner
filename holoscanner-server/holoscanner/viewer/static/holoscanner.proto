@@ -32,6 +32,11 @@ message Mesh {
     repeated Face faces = 201;
 }
 
+message GameState {
+    float floor_y = 1;
+    float ceiling_y = 2;
+}
+
 message LocationRequest {
 
 }
@@ -47,6 +52,7 @@ message Message {
         MESH = 10;
         LOCATION_REQUEST = 11;
         LOCATION_RESPONSE = 12;
+        GAME_STATE = 13;
     }
 
     Type type = 1;
@@ -56,4 +62,5 @@ message Message {
     Mesh mesh = 100;
     LocationRequest location_request = 300;
     LocationResponse location_response = 400;
+    GameState game_state = 500;
 }
