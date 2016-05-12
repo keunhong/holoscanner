@@ -19,8 +19,9 @@ class RelayProtocol(WebSocketServerProtocol):
         logger.info('WebSocket connection established.')
 
         with game_state.lock:
+            self.send_message(game_state.create_game_state_message())
             for mesh_pb in game_state.mesh_pbs:
-                self.send_message(state.create_mesh_message(mesh_pb))
+                self.send_message(game_state.create_mesh_message(mesh_pb))
 
         while True:
             msg = yield from game_state.message_queue.get()

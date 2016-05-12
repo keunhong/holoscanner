@@ -37,12 +37,6 @@ def find_planes(y_coords, nbins, sigma=None):
     return floor_y, ceiling_y
 
 
-def create_mesh_message(mesh_pb):
-    msg = pb.Message()
-    msg.type = pb.Message.MESH
-    msg.device_id = config.SERVER_DEVICE_ID
-    msg.mesh.MergeFrom(mesh_pb)
-    return msg
 
 
 class GameState:
@@ -60,7 +54,7 @@ class GameState:
             print(len(self.mesh_pbs))
             self.meshes.append(Mesh(mesh_pb))
 
-        self.message_queue.put_nowait(create_mesh_message(mesh_pb))
+        self.message_queue.put_nowait(self.create_mesh_message(mesh_pb))
 
         self.update_planes()
 
@@ -73,14 +67,21 @@ class GameState:
         logger.info('Planes updates: floor={}, ceiling={}'.format(
             self.floor, self.ceiling))
 
-        self.message_queue.put_nowait(self.to_proto_message())
+        self.message_queue.put_nowait(self.create_game_state_message())
 
-    def to_proto_message(self):
+    def create_game_state_message(self):
         msg = pb.Message()
         msg.type = pb.Message.GAME_STATE
         msg.device_id = config.SERVER_DEVICE_ID
         msg.game_state.floor_y = self.floor
         msg.game_state.ceiling_y = self.ceiling
+        return msg
+
+    def create_mesh_message(self, mesh_pb):
+        msg = pb.Message()
+        msg.type = pb.Message.MESH
+        msg.device_id = config.SERVER_DEVICE_ID
+        msg.mesh.MergeFrom(mesh_pb)
         return msg
 
 
