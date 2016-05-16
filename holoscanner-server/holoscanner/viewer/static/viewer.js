@@ -5,6 +5,16 @@ let Holoscanner = builder.build("Holoscanner");
 let renderer = new THREE.WebGLRenderer();
 let scene = new THREE.Scene();
 
+let meshes = [];
+let targets = [];
+let floorPlane = new THREE.Mesh(
+    new THREE.PlaneGeometry(10, 10),
+    new THREE.MeshLambertMaterial({
+      color: 0x55ff55,
+      side: THREE.DoubleSide
+    }));
+floorPlane.rotation.x = Math.PI / 2;
+
 var socket = new WebSocket('ws://drell.cs.washington.edu:8889');
 socket.binaryType = "arraybuffer";
 socket.onmessage = function (e) {
@@ -15,7 +25,7 @@ socket.onmessage = function (e) {
     if (message.type === Holoscanner.Proto.Message.Type.MESH) {
       handleNewMesh(message.mesh);
     } else if (message.type === Holoscanner.Proto.Message.Type.GAME_STATE) {
-      console.log(message.game_state);
+      handleGameState(message.game_state);
     }
   }
 };
@@ -36,51 +46,76 @@ function handleNewMesh(pbMesh) {
   });
   geometry.computeFaceNormals();
   let mesh = new THREE.Mesh(geometry, material);
-  mesh.scale.x = mesh.scale.y = mesh.scale.z = 10.0;
+  mesh.scale.x = mesh.scale.y = mesh.scale.z = 1.0;
   scene.add(mesh);
+  meshes.push(mesh);
+}
+
+function handleGameState(pbGameState) {
+  console.log(pbGameState);
+  floorPlane.position.y = pbGameState.floor_y;
+
+  for (let target of targets) {
+    scene.remove(target);
+  }
+  targets.length = 0;
+
+  for (let target of pbGameState.targets) {
+    console.log(target);
+    let targetMesh = new THREE.Mesh(
+        new THREE.SphereGeometry(0.1, 32, 32),
+        new THREE.MeshLambertMaterial({
+          color: 0xffff00
+        }));
+    targetMesh.position.set(target.x, target.y, target.z);
+    scene.add(targetMesh);
+    targets.push(targetMesh);
+  }
 }
 
 
 $(document).ready(function () {
-    let container = $('#canvas');
-    renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize(container.width(), container.height());
-    container.append(renderer.domElement);
-    
-    var sphere = new THREE.SphereGeometry( 0.5, 16, 8 );
+  let container = $('#canvas');
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(container.width(), container.height());
+  container.append(renderer.domElement);
 
-    let ambientLight = new THREE.AmbientLight(0x333333);
-    scene.add(ambientLight);
+  var sphere = new THREE.SphereGeometry(0.5, 16, 8);
 
-    let light = new THREE.PointLight(0xffffff, 0.5, 0);
-    light.add(new THREE.Mesh(sphere, new THREE.MeshBasicMaterial({ color: 0xff0040 })));
-    light.position.set(0, 10, 0);
-    scene.add(light);
+  let ambientLight = new THREE.AmbientLight(0x333333);
+  scene.add(ambientLight);
 
-    let light2 = new THREE.PointLight(0xffffff, 0.5, 0);
-    light2.add(new THREE.Mesh(sphere, new THREE.MeshBasicMaterial({ color: 0xff0040 })));
-    light2.position.set(100, 100, 0);
-    scene.add(light2);
+  let light = new THREE.PointLight(0xffffff, 0.5, 0);
+  light.add(new THREE.Mesh(sphere, new THREE.MeshBasicMaterial({color: 0xff0040})));
+  light.position.set(0, 10, 0);
+  scene.add(light);
 
-    let light3 = new THREE.PointLight(0xffffff, 0.5, 0);
-    light3.add(new THREE.Mesh(sphere, new THREE.MeshBasicMaterial({ color: 0xff0040 })));
-    light3.position.set(-100, 100, 0);
-    scene.add(light3);
+  let light2 = new THREE.PointLight(0xffffff, 0.5, 0);
+  light2.add(new THREE.Mesh(sphere, new THREE.MeshBasicMaterial({color: 0xff0040})));
+  light2.position.set(100, 100, 0);
+  scene.add(light2);
 
-    let camera = new THREE.PerspectiveCamera(
-        75, container.width() / container.height(), 0.1, 1000);
-    camera.position.x = 0;
-    camera.position.y = 0;
-    camera.position.z = 50;
-    scene.add(camera);
+  let light3 = new THREE.PointLight(0xffffff, 0.5, 0);
+  light3.add(new THREE.Mesh(sphere, new THREE.MeshBasicMaterial({color: 0xff0040})));
+  light3.position.set(-100, 100, 0);
+  scene.add(light3);
 
-    controls = new THREE.OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.25;
+  let camera = new THREE.PerspectiveCamera(
+      75, container.width() / container.height(), 0.1, 1000);
+  camera.position.x = 0;
+  camera.position.y = 0;
+  camera.position.z = 5;
+  scene.add(camera);
+  scene.add(floorPlane);
 
-    function render() {
-        requestAnimationFrame(render);
-        renderer.render(scene, camera);
-    }
-    render();
+  controls = new THREE.OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.25;
+
+  function render() {
+    requestAnimationFrame(render);
+    renderer.render(scene, camera);
+  }
+
+  render();
 });

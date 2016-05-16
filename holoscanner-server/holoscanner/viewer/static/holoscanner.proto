@@ -35,6 +35,7 @@ message Mesh {
 message GameState {
     float floor_y = 1;
     float ceiling_y = 2;
+    repeated Vec3D targets = 10;
 }
 
 message LocationRequest {

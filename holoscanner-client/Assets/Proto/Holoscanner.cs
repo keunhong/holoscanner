@@ -32,19 +32,20 @@ namespace Holoscanner.Proto {
             "Ei4KDGNhbV9yb3RhdGlvbhhlIAEoCzIYLkhvbG9zY2FubmVyLlByb3RvLlZl",
             "YzREEisKCHZlcnRpY2VzGMgBIAMoCzIYLkhvbG9zY2FubmVyLlByb3RvLlZl",
             "YzNEEicKBWZhY2VzGMkBIAMoCzIXLkhvbG9zY2FubmVyLlByb3RvLkZhY2Ui",
-            "LwoJR2FtZVN0YXRlEg8KB2Zsb29yX3kYASABKAISEQoJY2VpbGluZ195GAIg",
-            "ASgCIhEKD0xvY2F0aW9uUmVxdWVzdCJtChBMb2NhdGlvblJlc3BvbnNlEioK",
-            "CGxvY2F0aW9uGAEgASgLMhguSG9sb3NjYW5uZXIuUHJvdG8uVmVjM0QSLQoL",
-            "b3JpZW50YXRpb24YAiABKAsyGC5Ib2xvc2Nhbm5lci5Qcm90by5WZWMzRCKG",
-            "AwoHTWVzc2FnZRItCgR0eXBlGAEgASgOMh8uSG9sb3NjYW5uZXIuUHJvdG8u",
-            "TWVzc2FnZS5UeXBlEhEKCWRldmljZV9pZBgCIAEoDRIlCgRtZXNoGGQgASgL",
-            "MhcuSG9sb3NjYW5uZXIuUHJvdG8uTWVzaBI9ChBsb2NhdGlvbl9yZXF1ZXN0",
-            "GKwCIAEoCzIiLkhvbG9zY2FubmVyLlByb3RvLkxvY2F0aW9uUmVxdWVzdBI/",
-            "ChFsb2NhdGlvbl9yZXNwb25zZRiQAyABKAsyIy5Ib2xvc2Nhbm5lci5Qcm90",
-            "by5Mb2NhdGlvblJlc3BvbnNlEjEKCmdhbWVfc3RhdGUY9AMgASgLMhwuSG9s",
-            "b3NjYW5uZXIuUHJvdG8uR2FtZVN0YXRlIl8KBFR5cGUSBwoDQUNLEAASBwoD",
-            "RklOEAESCAoETUVTSBAKEhQKEExPQ0FUSU9OX1JFUVVFU1QQCxIVChFMT0NB",
-            "VElPTl9SRVNQT05TRRAMEg4KCkdBTUVfU1RBVEUQDWIGcHJvdG8z"));
+            "WgoJR2FtZVN0YXRlEg8KB2Zsb29yX3kYASABKAISEQoJY2VpbGluZ195GAIg",
+            "ASgCEikKB3RhcmdldHMYCiADKAsyGC5Ib2xvc2Nhbm5lci5Qcm90by5WZWMz",
+            "RCIRCg9Mb2NhdGlvblJlcXVlc3QibQoQTG9jYXRpb25SZXNwb25zZRIqCghs",
+            "b2NhdGlvbhgBIAEoCzIYLkhvbG9zY2FubmVyLlByb3RvLlZlYzNEEi0KC29y",
+            "aWVudGF0aW9uGAIgASgLMhguSG9sb3NjYW5uZXIuUHJvdG8uVmVjM0QihgMK",
+            "B01lc3NhZ2USLQoEdHlwZRgBIAEoDjIfLkhvbG9zY2FubmVyLlByb3RvLk1l",
+            "c3NhZ2UuVHlwZRIRCglkZXZpY2VfaWQYAiABKA0SJQoEbWVzaBhkIAEoCzIX",
+            "LkhvbG9zY2FubmVyLlByb3RvLk1lc2gSPQoQbG9jYXRpb25fcmVxdWVzdBis",
+            "AiABKAsyIi5Ib2xvc2Nhbm5lci5Qcm90by5Mb2NhdGlvblJlcXVlc3QSPwoR",
+            "bG9jYXRpb25fcmVzcG9uc2UYkAMgASgLMiMuSG9sb3NjYW5uZXIuUHJvdG8u",
+            "TG9jYXRpb25SZXNwb25zZRIxCgpnYW1lX3N0YXRlGPQDIAEoCzIcLkhvbG9z",
+            "Y2FubmVyLlByb3RvLkdhbWVTdGF0ZSJfCgRUeXBlEgcKA0FDSxAAEgcKA0ZJ",
+            "ThABEggKBE1FU0gQChIUChBMT0NBVElPTl9SRVFVRVNUEAsSFQoRTE9DQVRJ",
+            "T05fUkVTUE9OU0UQDBIOCgpHQU1FX1NUQVRFEA1iBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedCodeInfo(null, new pbr::GeneratedCodeInfo[] {
@@ -52,7 +53,7 @@ namespace Holoscanner.Proto {
             new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.Vec4D), global::Holoscanner.Proto.Vec4D.Parser, new[]{ "X", "Y", "Z", "W" }, null, null, null),
             new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.Face), global::Holoscanner.Proto.Face.Parser, new[]{ "V1", "V2", "V3" }, null, null, null),
             new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.Mesh), global::Holoscanner.Proto.Mesh.Parser, new[]{ "MeshId", "Timestamp", "CamPosition", "CamRotation", "Vertices", "Faces" }, null, null, null),
-            new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.GameState), global::Holoscanner.Proto.GameState.Parser, new[]{ "FloorY", "CeilingY" }, null, null, null),
+            new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.GameState), global::Holoscanner.Proto.GameState.Parser, new[]{ "FloorY", "CeilingY", "Targets" }, null, null, null),
             new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.LocationRequest), global::Holoscanner.Proto.LocationRequest.Parser, null, null, null, null),
             new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.LocationResponse), global::Holoscanner.Proto.LocationResponse.Parser, new[]{ "Location", "Orientation" }, null, null, null),
             new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.Message), global::Holoscanner.Proto.Message.Parser, new[]{ "Type", "DeviceId", "Mesh", "LocationRequest", "LocationResponse", "GameState" }, null, new[]{ typeof(global::Holoscanner.Proto.Message.Types.Type) }, null)
@@ -819,6 +820,7 @@ namespace Holoscanner.Proto {
     public GameState(GameState other) : this() {
       floorY_ = other.floorY_;
       ceilingY_ = other.ceilingY_;
+      targets_ = other.targets_.Clone();
     }
 
     public GameState Clone() {
@@ -845,6 +847,15 @@ namespace Holoscanner.Proto {
       }
     }
 
+    /// <summary>Field number for the "targets" field.</summary>
+    public const int TargetsFieldNumber = 10;
+    private static readonly pb::FieldCodec<global::Holoscanner.Proto.Vec3D> _repeated_targets_codec
+        = pb::FieldCodec.ForMessage(82, global::Holoscanner.Proto.Vec3D.Parser);
+    private readonly pbc::RepeatedField<global::Holoscanner.Proto.Vec3D> targets_ = new pbc::RepeatedField<global::Holoscanner.Proto.Vec3D>();
+    public pbc::RepeatedField<global::Holoscanner.Proto.Vec3D> Targets {
+      get { return targets_; }
+    }
+
     public override bool Equals(object other) {
       return Equals(other as GameState);
     }
@@ -858,6 +869,7 @@ namespace Holoscanner.Proto {
       }
       if (FloorY != other.FloorY) return false;
       if (CeilingY != other.CeilingY) return false;
+      if(!targets_.Equals(other.targets_)) return false;
       return true;
     }
 
@@ -865,6 +877,7 @@ namespace Holoscanner.Proto {
       int hash = 1;
       if (FloorY != 0F) hash ^= FloorY.GetHashCode();
       if (CeilingY != 0F) hash ^= CeilingY.GetHashCode();
+      hash ^= targets_.GetHashCode();
       return hash;
     }
 
@@ -881,6 +894,7 @@ namespace Holoscanner.Proto {
         output.WriteRawTag(21);
         output.WriteFloat(CeilingY);
       }
+      targets_.WriteTo(output, _repeated_targets_codec);
     }
 
     public int CalculateSize() {
@@ -891,6 +905,7 @@ namespace Holoscanner.Proto {
       if (CeilingY != 0F) {
         size += 1 + 4;
       }
+      size += targets_.CalculateSize(_repeated_targets_codec);
       return size;
     }
 
@@ -904,6 +919,7 @@ namespace Holoscanner.Proto {
       if (other.CeilingY != 0F) {
         CeilingY = other.CeilingY;
       }
+      targets_.Add(other.targets_);
     }
 
     public void MergeFrom(pb::CodedInputStream input) {
@@ -919,6 +935,10 @@ namespace Holoscanner.Proto {
           }
           case 21: {
             CeilingY = input.ReadFloat();
+            break;
+          }
+          case 82: {
+            targets_.AddEntriesFrom(input, _repeated_targets_codec);
             break;
           }
         }

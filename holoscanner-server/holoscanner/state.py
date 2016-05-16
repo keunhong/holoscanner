@@ -1,4 +1,5 @@
 import threading
+import random
 import asyncio
 import numpy as np
 from scipy.signal import argrelextrema
@@ -37,8 +38,6 @@ def find_planes(y_coords, nbins, sigma=None):
     return floor_y, ceiling_y
 
 
-
-
 class GameState:
     mesh_pbs = []
     meshes = []
@@ -47,6 +46,7 @@ class GameState:
 
     floor = -10
     ceiling = 10
+    targets = []
 
     def new_mesh(self, mesh_pb):
         with self.lock:
@@ -56,7 +56,10 @@ class GameState:
 
         self.message_queue.put_nowait(self.create_mesh_message(mesh_pb))
 
+        self.update_targets(10)
         self.update_planes()
+
+        self.message_queue.put_nowait(self.create_game_state_message())
 
     def update_planes(self):
         y_coords = np.sort(np.vstack(
@@ -67,7 +70,13 @@ class GameState:
         logger.info('Planes updates: floor={}, ceiling={}'.format(
             self.floor, self.ceiling))
 
-        self.message_queue.put_nowait(self.create_game_state_message())
+    def update_targets(self, num_targets):
+        self.targets.clear()
+        coords = np.sort(np.vstack([m.vertices for m in self.meshes]))
+        for i in range(num_targets):
+            x = random.uniform(coords[:, 0].min(), coords[:, 0].max())
+            z = random.uniform(coords[:, 2].min(), coords[:, 2].max())
+            self.targets.append([x, self.floor + 0.1, z])
 
     def create_game_state_message(self):
         msg = pb.Message()
@@ -75,6 +84,12 @@ class GameState:
         msg.device_id = config.SERVER_DEVICE_ID
         msg.game_state.floor_y = self.floor
         msg.game_state.ceiling_y = self.ceiling
+        for target in self.targets:
+            vec = pb.Vec3D()
+            vec.x = target[0]
+            vec.y = target[1]
+            vec.z = target[2]
+            msg.game_state.targets.extend([vec])
         return msg
 
     def create_mesh_message(self, mesh_pb):
