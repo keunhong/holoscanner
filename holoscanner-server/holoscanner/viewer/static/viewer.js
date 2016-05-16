@@ -79,7 +79,8 @@ function handleGameState(pbGameState) {
         new THREE.MeshLambertMaterial({
           color: 0xffff00
         }));
-    targetMesh.position.set(target.x, target.y, target.z);
+    targetMesh.position.set(
+        target.position.x, target.position.y, target.position.z);
     scene.add(targetMesh);
     targets.push(targetMesh);
   }

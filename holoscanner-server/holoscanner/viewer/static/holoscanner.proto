@@ -32,10 +32,15 @@ message Mesh {
     repeated Face faces = 201;
 }
 
+message Target {
+    uint32 target_id = 1;
+    Vec3D position = 2;
+}
+
 message GameState {
     float floor_y = 1;
     float ceiling_y = 2;
-    repeated Vec3D targets = 10;
+    repeated Target targets = 10;
 }
 
 message LocationRequest {

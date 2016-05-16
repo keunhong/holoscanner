@@ -32,20 +32,22 @@ namespace Holoscanner.Proto {
             "Ei4KDGNhbV9yb3RhdGlvbhhlIAEoCzIYLkhvbG9zY2FubmVyLlByb3RvLlZl",
             "YzREEisKCHZlcnRpY2VzGMgBIAMoCzIYLkhvbG9zY2FubmVyLlByb3RvLlZl",
             "YzNEEicKBWZhY2VzGMkBIAMoCzIXLkhvbG9zY2FubmVyLlByb3RvLkZhY2Ui",
-            "WgoJR2FtZVN0YXRlEg8KB2Zsb29yX3kYASABKAISEQoJY2VpbGluZ195GAIg",
-            "ASgCEikKB3RhcmdldHMYCiADKAsyGC5Ib2xvc2Nhbm5lci5Qcm90by5WZWMz",
-            "RCIRCg9Mb2NhdGlvblJlcXVlc3QibQoQTG9jYXRpb25SZXNwb25zZRIqCghs",
-            "b2NhdGlvbhgBIAEoCzIYLkhvbG9zY2FubmVyLlByb3RvLlZlYzNEEi0KC29y",
-            "aWVudGF0aW9uGAIgASgLMhguSG9sb3NjYW5uZXIuUHJvdG8uVmVjM0QihgMK",
-            "B01lc3NhZ2USLQoEdHlwZRgBIAEoDjIfLkhvbG9zY2FubmVyLlByb3RvLk1l",
-            "c3NhZ2UuVHlwZRIRCglkZXZpY2VfaWQYAiABKA0SJQoEbWVzaBhkIAEoCzIX",
-            "LkhvbG9zY2FubmVyLlByb3RvLk1lc2gSPQoQbG9jYXRpb25fcmVxdWVzdBis",
-            "AiABKAsyIi5Ib2xvc2Nhbm5lci5Qcm90by5Mb2NhdGlvblJlcXVlc3QSPwoR",
-            "bG9jYXRpb25fcmVzcG9uc2UYkAMgASgLMiMuSG9sb3NjYW5uZXIuUHJvdG8u",
-            "TG9jYXRpb25SZXNwb25zZRIxCgpnYW1lX3N0YXRlGPQDIAEoCzIcLkhvbG9z",
-            "Y2FubmVyLlByb3RvLkdhbWVTdGF0ZSJfCgRUeXBlEgcKA0FDSxAAEgcKA0ZJ",
-            "ThABEggKBE1FU0gQChIUChBMT0NBVElPTl9SRVFVRVNUEAsSFQoRTE9DQVRJ",
-            "T05fUkVTUE9OU0UQDBIOCgpHQU1FX1NUQVRFEA1iBnByb3RvMw=="));
+            "RwoGVGFyZ2V0EhEKCXRhcmdldF9pZBgBIAEoDRIqCghwb3NpdGlvbhgCIAEo",
+            "CzIYLkhvbG9zY2FubmVyLlByb3RvLlZlYzNEIlsKCUdhbWVTdGF0ZRIPCgdm",
+            "bG9vcl95GAEgASgCEhEKCWNlaWxpbmdfeRgCIAEoAhIqCgd0YXJnZXRzGAog",
+            "AygLMhkuSG9sb3NjYW5uZXIuUHJvdG8uVGFyZ2V0IhEKD0xvY2F0aW9uUmVx",
+            "dWVzdCJtChBMb2NhdGlvblJlc3BvbnNlEioKCGxvY2F0aW9uGAEgASgLMhgu",
+            "SG9sb3NjYW5uZXIuUHJvdG8uVmVjM0QSLQoLb3JpZW50YXRpb24YAiABKAsy",
+            "GC5Ib2xvc2Nhbm5lci5Qcm90by5WZWMzRCKGAwoHTWVzc2FnZRItCgR0eXBl",
+            "GAEgASgOMh8uSG9sb3NjYW5uZXIuUHJvdG8uTWVzc2FnZS5UeXBlEhEKCWRl",
+            "dmljZV9pZBgCIAEoDRIlCgRtZXNoGGQgASgLMhcuSG9sb3NjYW5uZXIuUHJv",
+            "dG8uTWVzaBI9ChBsb2NhdGlvbl9yZXF1ZXN0GKwCIAEoCzIiLkhvbG9zY2Fu",
+            "bmVyLlByb3RvLkxvY2F0aW9uUmVxdWVzdBI/ChFsb2NhdGlvbl9yZXNwb25z",
+            "ZRiQAyABKAsyIy5Ib2xvc2Nhbm5lci5Qcm90by5Mb2NhdGlvblJlc3BvbnNl",
+            "EjEKCmdhbWVfc3RhdGUY9AMgASgLMhwuSG9sb3NjYW5uZXIuUHJvdG8uR2Ft",
+            "ZVN0YXRlIl8KBFR5cGUSBwoDQUNLEAASBwoDRklOEAESCAoETUVTSBAKEhQK",
+            "EExPQ0FUSU9OX1JFUVVFU1QQCxIVChFMT0NBVElPTl9SRVNQT05TRRAMEg4K",
+            "CkdBTUVfU1RBVEUQDWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedCodeInfo(null, new pbr::GeneratedCodeInfo[] {
@@ -53,6 +55,7 @@ namespace Holoscanner.Proto {
             new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.Vec4D), global::Holoscanner.Proto.Vec4D.Parser, new[]{ "X", "Y", "Z", "W" }, null, null, null),
             new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.Face), global::Holoscanner.Proto.Face.Parser, new[]{ "V1", "V2", "V3" }, null, null, null),
             new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.Mesh), global::Holoscanner.Proto.Mesh.Parser, new[]{ "MeshId", "Timestamp", "CamPosition", "CamRotation", "Vertices", "Faces" }, null, null, null),
+            new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.Target), global::Holoscanner.Proto.Target.Parser, new[]{ "TargetId", "Position" }, null, null, null),
             new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.GameState), global::Holoscanner.Proto.GameState.Parser, new[]{ "FloorY", "CeilingY", "Targets" }, null, null, null),
             new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.LocationRequest), global::Holoscanner.Proto.LocationRequest.Parser, null, null, null, null),
             new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.LocationResponse), global::Holoscanner.Proto.LocationResponse.Parser, new[]{ "Location", "Orientation" }, null, null, null),
@@ -799,12 +802,148 @@ namespace Holoscanner.Proto {
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+  public sealed partial class Target : pb::IMessage<Target> {
+    private static readonly pb::MessageParser<Target> _parser = new pb::MessageParser<Target>(() => new Target());
+    public static pb::MessageParser<Target> Parser { get { return _parser; } }
+
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Holoscanner.Proto.HoloscannerReflection.Descriptor.MessageTypes[4]; }
+    }
+
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    public Target() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    public Target(Target other) : this() {
+      targetId_ = other.targetId_;
+      Position = other.position_ != null ? other.Position.Clone() : null;
+    }
+
+    public Target Clone() {
+      return new Target(this);
+    }
+
+    /// <summary>Field number for the "target_id" field.</summary>
+    public const int TargetIdFieldNumber = 1;
+    private uint targetId_;
+    public uint TargetId {
+      get { return targetId_; }
+      set {
+        targetId_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "position" field.</summary>
+    public const int PositionFieldNumber = 2;
+    private global::Holoscanner.Proto.Vec3D position_;
+    public global::Holoscanner.Proto.Vec3D Position {
+      get { return position_; }
+      set {
+        position_ = value;
+      }
+    }
+
+    public override bool Equals(object other) {
+      return Equals(other as Target);
+    }
+
+    public bool Equals(Target other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (TargetId != other.TargetId) return false;
+      if (!object.Equals(Position, other.Position)) return false;
+      return true;
+    }
+
+    public override int GetHashCode() {
+      int hash = 1;
+      if (TargetId != 0) hash ^= TargetId.GetHashCode();
+      if (position_ != null) hash ^= Position.GetHashCode();
+      return hash;
+    }
+
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (TargetId != 0) {
+        output.WriteRawTag(8);
+        output.WriteUInt32(TargetId);
+      }
+      if (position_ != null) {
+        output.WriteRawTag(18);
+        output.WriteMessage(Position);
+      }
+    }
+
+    public int CalculateSize() {
+      int size = 0;
+      if (TargetId != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(TargetId);
+      }
+      if (position_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Position);
+      }
+      return size;
+    }
+
+    public void MergeFrom(Target other) {
+      if (other == null) {
+        return;
+      }
+      if (other.TargetId != 0) {
+        TargetId = other.TargetId;
+      }
+      if (other.position_ != null) {
+        if (position_ == null) {
+          position_ = new global::Holoscanner.Proto.Vec3D();
+        }
+        Position.MergeFrom(other.Position);
+      }
+    }
+
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            input.SkipLastField();
+            break;
+          case 8: {
+            TargetId = input.ReadUInt32();
+            break;
+          }
+          case 18: {
+            if (position_ == null) {
+              position_ = new global::Holoscanner.Proto.Vec3D();
+            }
+            input.ReadMessage(position_);
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
   public sealed partial class GameState : pb::IMessage<GameState> {
     private static readonly pb::MessageParser<GameState> _parser = new pb::MessageParser<GameState>(() => new GameState());
     public static pb::MessageParser<GameState> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Holoscanner.Proto.HoloscannerReflection.Descriptor.MessageTypes[4]; }
+      get { return global::Holoscanner.Proto.HoloscannerReflection.Descriptor.MessageTypes[5]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -849,10 +988,10 @@ namespace Holoscanner.Proto {
 
     /// <summary>Field number for the "targets" field.</summary>
     public const int TargetsFieldNumber = 10;
-    private static readonly pb::FieldCodec<global::Holoscanner.Proto.Vec3D> _repeated_targets_codec
-        = pb::FieldCodec.ForMessage(82, global::Holoscanner.Proto.Vec3D.Parser);
-    private readonly pbc::RepeatedField<global::Holoscanner.Proto.Vec3D> targets_ = new pbc::RepeatedField<global::Holoscanner.Proto.Vec3D>();
-    public pbc::RepeatedField<global::Holoscanner.Proto.Vec3D> Targets {
+    private static readonly pb::FieldCodec<global::Holoscanner.Proto.Target> _repeated_targets_codec
+        = pb::FieldCodec.ForMessage(82, global::Holoscanner.Proto.Target.Parser);
+    private readonly pbc::RepeatedField<global::Holoscanner.Proto.Target> targets_ = new pbc::RepeatedField<global::Holoscanner.Proto.Target>();
+    public pbc::RepeatedField<global::Holoscanner.Proto.Target> Targets {
       get { return targets_; }
     }
 
@@ -953,7 +1092,7 @@ namespace Holoscanner.Proto {
     public static pb::MessageParser<LocationRequest> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Holoscanner.Proto.HoloscannerReflection.Descriptor.MessageTypes[5]; }
+      get { return global::Holoscanner.Proto.HoloscannerReflection.Descriptor.MessageTypes[6]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -1029,7 +1168,7 @@ namespace Holoscanner.Proto {
     public static pb::MessageParser<LocationResponse> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Holoscanner.Proto.HoloscannerReflection.Descriptor.MessageTypes[6]; }
+      get { return global::Holoscanner.Proto.HoloscannerReflection.Descriptor.MessageTypes[7]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -1171,7 +1310,7 @@ namespace Holoscanner.Proto {
     public static pb::MessageParser<Message> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Holoscanner.Proto.HoloscannerReflection.Descriptor.MessageTypes[7]; }
+      get { return global::Holoscanner.Proto.HoloscannerReflection.Descriptor.MessageTypes[8]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {

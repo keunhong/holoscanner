@@ -46,7 +46,8 @@ class GameState:
 
     floor = -10
     ceiling = 10
-    targets = []
+    target_counter = 0
+    target_pbs = []
 
     def new_mesh(self, mesh_pb):
         with self.lock:
@@ -71,7 +72,7 @@ class GameState:
             self.floor, self.ceiling))
 
     def update_targets(self, num_targets):
-        self.targets.clear()
+        self.target_pbs.clear()
         coords = np.sort(np.vstack([m.vertices for m in self.meshes]))
         for i in range(num_targets):
             x = random.uniform(coords[:, 0].min() - 1, coords[:, 0].max() + 1)
@@ -79,7 +80,13 @@ class GameState:
             y = (self.floor + 0.1
                  if random.uniform(0, 1) > 0.5
                  else self.ceiling - 0.1)
-            self.targets.append([x, y, z])
+            target_pb = pb.Target()
+            target_pb.target_id = self.target_counter
+            target_pb.position.x = x
+            target_pb.position.y = y
+            target_pb.position.z = z
+            self.target_counter += 1
+            self.target_pbs.append(target_pb)
 
     def create_game_state_message(self):
         msg = pb.Message()
@@ -87,12 +94,7 @@ class GameState:
         msg.device_id = config.SERVER_DEVICE_ID
         msg.game_state.floor_y = self.floor
         msg.game_state.ceiling_y = self.ceiling
-        for target in self.targets:
-            vec = pb.Vec3D()
-            vec.x = target[0]
-            vec.y = target[1]
-            vec.z = target[2]
-            msg.game_state.targets.extend([vec])
+        msg.game_state.targets.extend(self.target_pbs)
         return msg
 
     def create_mesh_message(self, mesh_pb):
