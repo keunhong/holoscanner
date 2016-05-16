@@ -38,16 +38,17 @@ namespace Holoscanner.Proto {
             "AygLMhkuSG9sb3NjYW5uZXIuUHJvdG8uVGFyZ2V0IhEKD0xvY2F0aW9uUmVx",
             "dWVzdCJtChBMb2NhdGlvblJlc3BvbnNlEioKCGxvY2F0aW9uGAEgASgLMhgu",
             "SG9sb3NjYW5uZXIuUHJvdG8uVmVjM0QSLQoLb3JpZW50YXRpb24YAiABKAsy",
-            "GC5Ib2xvc2Nhbm5lci5Qcm90by5WZWMzRCKGAwoHTWVzc2FnZRItCgR0eXBl",
+            "GC5Ib2xvc2Nhbm5lci5Qcm90by5WZWMzRCKsAwoHTWVzc2FnZRItCgR0eXBl",
             "GAEgASgOMh8uSG9sb3NjYW5uZXIuUHJvdG8uTWVzc2FnZS5UeXBlEhEKCWRl",
             "dmljZV9pZBgCIAEoDRIlCgRtZXNoGGQgASgLMhcuSG9sb3NjYW5uZXIuUHJv",
             "dG8uTWVzaBI9ChBsb2NhdGlvbl9yZXF1ZXN0GKwCIAEoCzIiLkhvbG9zY2Fu",
             "bmVyLlByb3RvLkxvY2F0aW9uUmVxdWVzdBI/ChFsb2NhdGlvbl9yZXNwb25z",
             "ZRiQAyABKAsyIy5Ib2xvc2Nhbm5lci5Qcm90by5Mb2NhdGlvblJlc3BvbnNl",
             "EjEKCmdhbWVfc3RhdGUY9AMgASgLMhwuSG9sb3NjYW5uZXIuUHJvdG8uR2Ft",
-            "ZVN0YXRlIl8KBFR5cGUSBwoDQUNLEAASBwoDRklOEAESCAoETUVTSBAKEhQK",
-            "EExPQ0FUSU9OX1JFUVVFU1QQCxIVChFMT0NBVElPTl9SRVNQT05TRRAMEg4K",
-            "CkdBTUVfU1RBVEUQDWIGcHJvdG8z"));
+            "ZVN0YXRlEhIKCXRhcmdldF9pZBjYBCABKA0icQoEVHlwZRIHCgNBQ0sQABIH",
+            "CgNGSU4QARIICgRNRVNIEAoSFAoQTE9DQVRJT05fUkVRVUVTVBALEhUKEUxP",
+            "Q0FUSU9OX1JFU1BPTlNFEAwSDgoKR0FNRV9TVEFURRANEhAKDFRBUkdFVF9G",
+            "T1VORBAUYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedCodeInfo(null, new pbr::GeneratedCodeInfo[] {
@@ -59,7 +60,7 @@ namespace Holoscanner.Proto {
             new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.GameState), global::Holoscanner.Proto.GameState.Parser, new[]{ "FloorY", "CeilingY", "Targets" }, null, null, null),
             new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.LocationRequest), global::Holoscanner.Proto.LocationRequest.Parser, null, null, null, null),
             new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.LocationResponse), global::Holoscanner.Proto.LocationResponse.Parser, new[]{ "Location", "Orientation" }, null, null, null),
-            new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.Message), global::Holoscanner.Proto.Message.Parser, new[]{ "Type", "DeviceId", "Mesh", "LocationRequest", "LocationResponse", "GameState" }, null, new[]{ typeof(global::Holoscanner.Proto.Message.Types.Type) }, null)
+            new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.Message), global::Holoscanner.Proto.Message.Parser, new[]{ "Type", "DeviceId", "Mesh", "LocationRequest", "LocationResponse", "GameState", "TargetId" }, null, new[]{ typeof(global::Holoscanner.Proto.Message.Types.Type) }, null)
           }));
     }
     #endregion
@@ -1330,6 +1331,7 @@ namespace Holoscanner.Proto {
       LocationRequest = other.locationRequest_ != null ? other.LocationRequest.Clone() : null;
       LocationResponse = other.locationResponse_ != null ? other.LocationResponse.Clone() : null;
       GameState = other.gameState_ != null ? other.GameState.Clone() : null;
+      targetId_ = other.targetId_;
     }
 
     public Message Clone() {
@@ -1399,6 +1401,16 @@ namespace Holoscanner.Proto {
       }
     }
 
+    /// <summary>Field number for the "target_id" field.</summary>
+    public const int TargetIdFieldNumber = 600;
+    private uint targetId_;
+    public uint TargetId {
+      get { return targetId_; }
+      set {
+        targetId_ = value;
+      }
+    }
+
     public override bool Equals(object other) {
       return Equals(other as Message);
     }
@@ -1416,6 +1428,7 @@ namespace Holoscanner.Proto {
       if (!object.Equals(LocationRequest, other.LocationRequest)) return false;
       if (!object.Equals(LocationResponse, other.LocationResponse)) return false;
       if (!object.Equals(GameState, other.GameState)) return false;
+      if (TargetId != other.TargetId) return false;
       return true;
     }
 
@@ -1427,6 +1440,7 @@ namespace Holoscanner.Proto {
       if (locationRequest_ != null) hash ^= LocationRequest.GetHashCode();
       if (locationResponse_ != null) hash ^= LocationResponse.GetHashCode();
       if (gameState_ != null) hash ^= GameState.GetHashCode();
+      if (TargetId != 0) hash ^= TargetId.GetHashCode();
       return hash;
     }
 
@@ -1459,6 +1473,10 @@ namespace Holoscanner.Proto {
         output.WriteRawTag(162, 31);
         output.WriteMessage(GameState);
       }
+      if (TargetId != 0) {
+        output.WriteRawTag(192, 37);
+        output.WriteUInt32(TargetId);
+      }
     }
 
     public int CalculateSize() {
@@ -1480,6 +1498,9 @@ namespace Holoscanner.Proto {
       }
       if (gameState_ != null) {
         size += 2 + pb::CodedOutputStream.ComputeMessageSize(GameState);
+      }
+      if (TargetId != 0) {
+        size += 2 + pb::CodedOutputStream.ComputeUInt32Size(TargetId);
       }
       return size;
     }
@@ -1517,6 +1538,9 @@ namespace Holoscanner.Proto {
           gameState_ = new global::Holoscanner.Proto.GameState();
         }
         GameState.MergeFrom(other.GameState);
+      }
+      if (other.TargetId != 0) {
+        TargetId = other.TargetId;
       }
     }
 
@@ -1563,6 +1587,10 @@ namespace Holoscanner.Proto {
             input.ReadMessage(gameState_);
             break;
           }
+          case 4800: {
+            TargetId = input.ReadUInt32();
+            break;
+          }
         }
       }
     }
@@ -1578,6 +1606,7 @@ namespace Holoscanner.Proto {
         LOCATION_REQUEST = 11,
         LOCATION_RESPONSE = 12,
         GAME_STATE = 13,
+        TARGET_FOUND = 20,
       }
 
     }

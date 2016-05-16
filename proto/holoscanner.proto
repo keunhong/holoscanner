@@ -59,6 +59,7 @@ message Message {
         LOCATION_REQUEST = 11;
         LOCATION_RESPONSE = 12;
         GAME_STATE = 13;
+        TARGET_FOUND = 20;
     }
 
     Type type = 1;
@@ -69,4 +70,5 @@ message Message {
     LocationRequest location_request = 300;
     LocationResponse location_response = 400;
     GameState game_state = 500;
+    uint32 target_id = 600;
 }
