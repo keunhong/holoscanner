@@ -11,9 +11,20 @@ let floorPlane = new THREE.Mesh(
     new THREE.PlaneGeometry(10, 10),
     new THREE.MeshLambertMaterial({
       color: 0x55ff55,
-      side: THREE.DoubleSide
+      side: THREE.DoubleSide,
+      transparent: true,
+      opacity: 0.5
     }));
 floorPlane.rotation.x = Math.PI / 2;
+let ceilingPlane = new THREE.Mesh(
+    new THREE.PlaneGeometry(10, 10),
+    new THREE.MeshLambertMaterial({
+      color: 0x5555ff,
+      side: THREE.DoubleSide,
+      transparent: true,
+      opacity: 0.5
+    }));
+ceilingPlane.rotation.x = Math.PI / 2;
 
 var socket = new WebSocket('ws://drell.cs.washington.edu:8889');
 socket.binaryType = "arraybuffer";
@@ -54,6 +65,7 @@ function handleNewMesh(pbMesh) {
 function handleGameState(pbGameState) {
   console.log(pbGameState);
   floorPlane.position.y = pbGameState.floor_y;
+  ceilingPlane.position.y = pbGameState.ceiling_y;
 
   for (let target of targets) {
     scene.remove(target);
@@ -107,6 +119,7 @@ $(document).ready(function () {
   camera.position.z = 5;
   scene.add(camera);
   scene.add(floorPlane);
+  scene.add(ceilingPlane);
 
   controls = new THREE.OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;

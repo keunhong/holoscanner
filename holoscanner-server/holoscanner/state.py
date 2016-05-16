@@ -32,7 +32,7 @@ def find_planes(y_coords, nbins, sigma=None):
         y_coords,
         bins=nbins)
 
-    candate_planes = bin_edges[argrelextrema(hist, np.greater, order=5)]
+    candate_planes = bin_edges[argrelextrema(hist, np.greater, order=2)]
     floor_y, ceiling_y = candate_planes.min(), candate_planes.max()
 
     return floor_y, ceiling_y
@@ -56,7 +56,7 @@ class GameState:
 
         self.message_queue.put_nowait(self.create_mesh_message(mesh_pb))
 
-        self.update_targets(10)
+        self.update_targets(20)
         self.update_planes()
 
         self.message_queue.put_nowait(self.create_game_state_message())
@@ -66,7 +66,7 @@ class GameState:
             [m.vertices for m in self.meshes])[:, 1])
         sigma = len(y_coords) / config.MESH_PLANE_FINDING_BINS
         self.floor, self.ceiling = find_planes(
-            y_coords, config.MESH_PLANE_FINDING_BINS, sigma)
+            y_coords, config.MESH_PLANE_FINDING_BINS, sigma / 5)
         logger.info('Planes updates: floor={}, ceiling={}'.format(
             self.floor, self.ceiling))
 
@@ -74,9 +74,12 @@ class GameState:
         self.targets.clear()
         coords = np.sort(np.vstack([m.vertices for m in self.meshes]))
         for i in range(num_targets):
-            x = random.uniform(coords[:, 0].min(), coords[:, 0].max())
-            z = random.uniform(coords[:, 2].min(), coords[:, 2].max())
-            self.targets.append([x, self.floor + 0.1, z])
+            x = random.uniform(coords[:, 0].min() - 1, coords[:, 0].max() + 1)
+            z = random.uniform(coords[:, 2].min() - 1, coords[:, 2].max() + 1)
+            y = (self.floor + 0.1
+                 if random.uniform(0, 1) > 0.5
+                 else self.ceiling - 0.1)
+            self.targets.append([x, y, z])
 
     def create_game_state_message(self):
         msg = pb.Message()
