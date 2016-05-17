@@ -12,10 +12,11 @@ logger = base_logger.getChild(__name__)
 
 
 class Mesh:
-    def __init__(self, mesh_pb):
+    def __init__(self, mesh_pb, client):
         self.nvertices = len(mesh_pb.vertices)
         self.nfaces = len(mesh_pb.faces)
         self.vertices = np.ndarray((self.nvertices, 3))
+        self.client = client
         for i, vert_pb in enumerate(mesh_pb.vertices):
             self.vertices[i, :] = (vert_pb.x, vert_pb.y, vert_pb.z)
 
@@ -38,7 +39,15 @@ def find_planes(y_coords, nbins, sigma=None):
     return floor_y, ceiling_y
 
 
+class Client:
+    def __init__(self, ip):
+        self.ip = ip
+        self.score = 0
+
+
 class GameState:
+    clients = {}
+
     mesh_pbs = []
     meshes = []
     lock = threading.RLock()
@@ -49,11 +58,16 @@ class GameState:
     target_counter = 0
     target_pbs = []
 
-    def new_mesh(self, mesh_pb):
+    def new_client(self, ip):
+        if ip not in self.clients:
+            logger.info('Adding client with IP {}'.format(ip))
+            self.clients[ip] = Client(ip)
+        return self.clients[ip]
+
+    def new_mesh(self, mesh_pb, client):
         with self.lock:
             self.mesh_pbs.append(mesh_pb)
-            print(len(self.mesh_pbs))
-            self.meshes.append(Mesh(mesh_pb))
+            self.meshes.append(Mesh(mesh_pb, client))
 
         self.message_queue.put_nowait(self.create_mesh_message(mesh_pb))
 
@@ -68,8 +82,8 @@ class GameState:
         sigma = len(y_coords) / config.MESH_PLANE_FINDING_BINS
         self.floor, self.ceiling = find_planes(
             y_coords, config.MESH_PLANE_FINDING_BINS, sigma / 5)
-        logger.info('Planes updates: floor={}, ceiling={}'.format(
-            self.floor, self.ceiling))
+        # logger.info('Planes updates: floor={}, ceiling={}'.format(
+        #     self.floor, self.ceiling))
 
     def update_targets(self, num_targets):
         self.target_pbs.clear()

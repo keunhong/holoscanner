@@ -44,20 +44,20 @@ class HsServerProtocol(asyncio.Protocol):
         self.state = ServerState.WAITING
         self.data = bytes()
         self.data_size = 0
+        self.client = None
 
     def connection_made(self, transport):
-        peername = transport.get_extra_info('peername')
-        logger.info('Connection from {}'.format(peername))
+        ip, port = transport.get_extra_info('peername')
+        logger.info('Hololense connection from {}:{}'.format(ip, port))
         self.transport = transport
+        self.client = game_state.new_client(ip)
 
     def handle_bytes(self, data):
         bytes_processed = 0
         if self.state == ServerState.WAITING:
-            logger.info("Receiving new message...")
             header_bytes = data[:HEADER_SIZE]
             self.data_size = struct.unpack(HEADER_FMT, header_bytes)[0]
             self.state = ServerState.RECEIVING
-            logger.info('Total message size is {}'.format(self.data_size))
             bytes_processed = HEADER_SIZE
         elif self.state == ServerState.RECEIVING:
             logger.debug("Receiving message part...")
@@ -69,10 +69,9 @@ class HsServerProtocol(asyncio.Protocol):
         if len(self.data) == self.data_size:
             msg = Message()
             msg.ParseFromString(self.data)
-            logger.info('Received message of type {}'.format(msg.type))
+            logger.info('Received message of type {}, size {}'.format(msg.type, self.data_size))
             if msg.type == Message.MESH:
-                logger.info('MESH RECEIVED')
-                game_state.new_mesh(msg.mesh)
+                game_state.new_mesh(msg.mesh, self.client)
                 message = game_state.create_game_state_message()
                 self.transport.write(pack_message(message))
             elif msg.type == Message.FIN:

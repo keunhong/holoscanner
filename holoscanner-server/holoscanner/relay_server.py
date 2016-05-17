@@ -13,7 +13,7 @@ logger = base_logger.getChild(__name__)
 class RelayProtocol(WebSocketServerProtocol):
 
     def onConnect(self, request):
-        logger.info("Client connecting: {0}".format(request.peer))
+        logger.info("New WebSocket connection: {0}".format(request.peer))
 
     def onOpen(self):
         logger.info('WebSocket connection established.')
