@@ -47,9 +47,9 @@ function handleNewMesh(pbMesh) {
     geometry.vertices.push(
         new THREE.Vector3(vertex.x, vertex.y, vertex.z));
   }
-  for (let face of pbMesh.faces) {
+  for (let i = 0; i < pbMesh.triangles.length / 3; i++) {
     geometry.faces.push(
-        new THREE.Face3(face.v1, face.v2, face.v3));
+        new THREE.Face3(pbMesh.triangles[i*3], pbMesh.triangles[i*3+1], pbMesh.triangles[i*3+2]));
   }
   let material = new THREE.MeshLambertMaterial({
     color: 0xffffff,

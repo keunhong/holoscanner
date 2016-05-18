@@ -11,20 +11,6 @@ from holoscanner import base_logger
 logger = base_logger.getChild(__name__)
 
 
-class Mesh:
-    def __init__(self, mesh_pb, client):
-        self.nvertices = len(mesh_pb.vertices)
-        self.nfaces = len(mesh_pb.faces)
-        self.vertices = np.ndarray((self.nvertices, 3))
-        self.client = client
-        for i, vert_pb in enumerate(mesh_pb.vertices):
-            self.vertices[i, :] = (vert_pb.x, vert_pb.y, vert_pb.z)
-
-    def __repr__(self):
-        return 'Mesh(nvertices={}, nfaces={})'.format(
-            self.nvertices, self.nfaces)
-
-
 def find_planes(y_coords, nbins, sigma=None):
     if sigma:
         y_coords = gaussian_filter1d(y_coords, sigma)
@@ -37,6 +23,21 @@ def find_planes(y_coords, nbins, sigma=None):
     floor_y, ceiling_y = candate_planes.min(), candate_planes.max()
 
     return floor_y, ceiling_y
+
+
+class Mesh:
+    def __init__(self, mesh_pb, client):
+        self.nvertices = len(mesh_pb.vertices)
+        self.nfaces = len(mesh_pb.triangles) / 3
+        self.vertices = np.ndarray((self.nvertices, 3))
+        self.client = client
+        self.mesh_id = mesh_pb.mesh_id
+        for i, vert_pb in enumerate(mesh_pb.vertices):
+            self.vertices[i, :] = (vert_pb.x, vert_pb.y, vert_pb.z)
+
+    def __repr__(self):
+        return 'Mesh(nvertices={}, nfaces={})'.format(
+            self.nvertices, self.nfaces)
 
 
 class Client:

@@ -14,12 +14,6 @@ message Vec4D {
     float w = 4;
 }
 
-message Face {
-    uint32 v1 = 1;
-    uint32 v2 = 2;
-    uint32 v3 = 3;
-}
-
 message Mesh {
     uint32 mesh_id = 2;
     uint64 timestamp = 3;
@@ -29,7 +23,7 @@ message Mesh {
     Vec4D cam_rotation = 101;
 
     repeated Vec3D vertices = 200;
-    repeated Face faces = 201;
+    repeated int32 triangles = 201;
 }
 
 message Target {
