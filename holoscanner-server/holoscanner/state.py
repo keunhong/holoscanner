@@ -81,7 +81,13 @@ class GameState:
         # self.update_targets(40)
         self.update_planes()
 
-        self.message_queue.put_nowait(self.create_game_state_message())
+        # self.message_queue.put_nowait(self.create_game_state_message())
+
+    def clear_meshes(self):
+        logger.info('Clearing meshes.')
+        with self.lock:
+            del self.meshes[:]
+            del self.mesh_pbs[:]
 
     def update_planes(self):
         y_coords = np.sort(np.vstack(
@@ -124,6 +130,11 @@ class GameState:
         msg.device_id = config.SERVER_DEVICE_ID
         msg.mesh.MergeFrom(mesh_pb)
         print(len(msg.mesh.triangles))
+        return msg
+
+    def create_ack(self):
+        msg = pb.Message()
+        msg.type = pb.Message.ACK
         return msg
 
 

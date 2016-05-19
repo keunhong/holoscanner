@@ -32,8 +32,9 @@ class RelayProtocol(WebSocketServerProtocol):
         if not isBinary:
             logger.info('Not Binary {}'.format(payload.decode('utf8')))
         message = Message()
-        print(payload)
-        logger.info(message.ParseFromString(payload))
+        message.ParseFromString(payload)
+        if message.type == Message.CLEAR_MESHES:
+            game_state.clear_meshes()
 
     def onClose(self, wasClean, code, reason):
         logger.info("WebSocket connection closed: {0}".format(reason))

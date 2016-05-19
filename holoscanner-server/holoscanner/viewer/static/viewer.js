@@ -152,5 +152,10 @@ $(document).ready(function () {
     message.type = Holoscanner.Proto.Message.Type.CLEAR_MESHES;
     test = message;
     socket.send(message.toArrayBuffer());
+    for (let mesh of meshes) {
+      scene.remove(mesh);
+    }
+    meshes.length = 0;
+    console.log('Meshes cleared.');
   })
 });

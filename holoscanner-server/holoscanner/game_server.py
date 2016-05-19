@@ -72,7 +72,7 @@ class HsServerProtocol(asyncio.Protocol):
             logger.info('Received message of type {}, size {}'.format(msg.type, self.data_size))
             if msg.type == Message.MESH:
                 game_state.new_mesh(msg.mesh, self.client)
-                message = game_state.create_game_state_message()
+                message = game_state.create_ack()
                 self.transport.write(pack_message(message))
             elif msg.type == Message.FIN:
                 logger.info('Closing the client socket')
