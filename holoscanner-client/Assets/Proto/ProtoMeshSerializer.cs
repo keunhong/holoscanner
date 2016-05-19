@@ -13,21 +13,31 @@ public static class ProtoMeshSerializer {
             ret.Z = x.z;
             return ret;
         });
-        List<Holoscanner.Proto.Face> faces = new List<Holoscanner.Proto.Face>();
-        for (int i = 0; i < mesh.triangles.Length; i+=3)
-        {
-            Holoscanner.Proto.Face f = new Holoscanner.Proto.Face();
-            f.V1 = (uint) mesh.triangles[i];
-            f.V2 = (uint) mesh.triangles[i + 1];
-            f.V3 = (uint) mesh.triangles[i + 2];
-            faces.Add(f);
-        }
+// List<Holoscanner.Proto.Face> faces = new List<Holoscanner.Proto.Face>(mesh.triangles.Length/3);
+
+        Debug.Log("Serializing " + mesh.triangles.Length + " faces");
 
         Holoscanner.Proto.Message msg = new Holoscanner.Proto.Message();
         msg.Type = Holoscanner.Proto.Message.Types.Type.MESH;
         msg.Mesh = new Holoscanner.Proto.Mesh();
+        msg.Mesh.Triangles.Add(mesh.triangles);
+
+       // Holoscanner.Proto.Face[] face = new Holoscanner.Proto.Face[mesh.triangles.Length/3]; 
+
+       //for (int i = 0; i < mesh.triangles.Length/3; i++)
+       // {
+       //     //  Debug.Log(mesh.triangles[i] + " " + mesh.triangles[i + 1] + " " + mesh.triangles[i + 2]);
+       //     face[i] = new Holoscanner.Proto.Face();
+       //      face[i].V1 = mesh.triangles[i*3];
+       //      face[i].V2 =  mesh.triangles[i*3 + 1];
+       //      face[i].V3 = mesh.triangles[i*3 + 2];
+            
+       // }
+       // msg.Mesh.Triangles.Add(face);
+        //face = null;
+
         msg.Mesh.Vertices.Add(vertices);
-        msg.Mesh.Faces.Add(faces);
+
         // FIXME - Fill in fields properly -------------------------------------------------------
 #if !UNITY_EDITOR
         //msg.DeviceId = Windows.System.Profile.HardwareIdentification.getPackageSpecificToken().Id;
@@ -37,14 +47,25 @@ public static class ProtoMeshSerializer {
         msg.Mesh.Timestamp = (ulong)(System.DateTime.UtcNow - new System.DateTime(1970, 1, 1)).TotalMilliseconds;
         msg.Mesh.MeshId = 0;
         //msg.Mesh.CamPosition;
-        //msg.Mesh.CamRotation;
         // end FIXME -----------------------------------------------------------------------------
-
+    
         byte[] msgbytes = Google.Protobuf.MessageExtensions.ToByteArray(msg);
         byte[] lenbytes = System.BitConverter.GetBytes((ulong) msgbytes.Length);
         byte[] retbytes = new byte[lenbytes.Length + msgbytes.Length];
+        
         lenbytes.CopyTo(retbytes, 0);
         msgbytes.CopyTo(retbytes, lenbytes.Length);
+        Debug.Log("msgbyte of size : " + msgbytes.Length);
+        Debug.Log("lenbyte of size : " + lenbytes.Length);
+        Debug.Log("Returning byte of size : " + retbytes.Length);
+        
+        msgbytes = null;
+        //msg.Mesh.CamRotation;
+        lenbytes = null;
+
+
+        System.GC.Collect();
+        System.GC.WaitForPendingFinalizers();
         return retbytes;
     }
 
