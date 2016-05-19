@@ -3,7 +3,6 @@ from autobahn.asyncio.websocket import (WebSocketServerProtocol,
                                         WebSocketServerFactory)
 from holoscanner import config, base_logger
 from holoscanner.proto.holoscanner_pb2 import Message
-from holoscanner import state
 from holoscanner.state import game_state
 
 
@@ -11,6 +10,10 @@ logger = base_logger.getChild(__name__)
 
 
 class RelayProtocol(WebSocketServerProtocol):
+
+    def __init__(self):
+        self.message_queue = asyncio.Queue()
+        game_state.new_websocket_client(self.message_queue)
 
     def onConnect(self, request):
         logger.info("New WebSocket connection: {0}".format(request.peer))
@@ -24,7 +27,7 @@ class RelayProtocol(WebSocketServerProtocol):
                 self.send_message(game_state.create_mesh_message(mesh_pb))
 
         while True:
-            msg = yield from game_state.message_queue.get()
+            msg = yield from self.message_queue.get()
             self.send_message(msg)
 
     @asyncio.coroutine

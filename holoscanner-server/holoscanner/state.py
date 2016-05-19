@@ -53,18 +53,21 @@ class GameState:
     mesh_pbs = []
     meshes = []
     lock = threading.RLock()
-    message_queue = asyncio.Queue()
+    listeners = []
 
     floor = -10
     ceiling = 10
     target_counter = 0
     target_pbs = []
 
-    def new_client(self, ip):
+    def new_hololens_client(self, ip):
         if ip not in self.clients:
             logger.info('Adding client with IP {}'.format(ip))
             self.clients[ip] = Client(ip)
         return self.clients[ip]
+
+    def new_websocket_client(self, queue):
+        self.listeners.append(queue)
 
     def new_mesh(self, mesh_pb, client):
         with self.lock:
@@ -76,7 +79,8 @@ class GameState:
             # with open(save_path, 'wb') as f:
             #     f.write(mesh_pb.SerializeToString())
 
-        self.message_queue.put_nowait(self.create_mesh_message(mesh_pb))
+        for queue in self.listeners:
+            queue.put_nowait(self.create_mesh_message(mesh_pb))
 
         # self.update_targets(40)
         self.update_planes()
@@ -129,7 +133,6 @@ class GameState:
         msg.type = pb.Message.MESH
         msg.device_id = config.SERVER_DEVICE_ID
         msg.mesh.MergeFrom(mesh_pb)
-        print(len(msg.mesh.triangles))
         return msg
 
     def create_ack(self):

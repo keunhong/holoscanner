@@ -50,7 +50,7 @@ class HsServerProtocol(asyncio.Protocol):
         ip, port = transport.get_extra_info('peername')
         logger.info('Hololense connection from {}:{}'.format(ip, port))
         self.transport = transport
-        self.client = game_state.new_client(ip)
+        self.client = game_state.new_hololens_client(ip)
 
     def handle_bytes(self, data):
         bytes_processed = 0
