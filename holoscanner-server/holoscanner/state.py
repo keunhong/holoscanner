@@ -30,11 +30,23 @@ class Mesh:
     def __init__(self, mesh_pb, client):
         self.nvertices = len(mesh_pb.vertices)
         self.nfaces = len(mesh_pb.triangles) / 3
-        self.vertices = np.ndarray((self.nvertices, 3))
+        self.vertices = np.ndarray((self.nvertices, 3), dtype=float)
         self.client = client
         self.mesh_id = mesh_pb.mesh_id
+        self.faces = np.array(mesh_pb.triangles, dtype=int)
         for i, vert_pb in enumerate(mesh_pb.vertices):
             self.vertices[i, :] = (vert_pb.x, vert_pb.y, vert_pb.z)
+
+    def to_proto(self):
+        mesh_pb = pb.Mesh()
+        for i in range(self.nvertices):
+            v = pb.Vec3D()
+            v.x = self.vertices[i, 0]
+            v.y = self.vertices[i, 1]
+            v.z = self.vertices[i, 2]
+            mesh_pb.vertices.extend([v])
+        mesh_pb.triangles.extend(self.faces.tolist())
+        return mesh_pb
 
     def __repr__(self):
         return 'Mesh(nvertices={}, nfaces={})'.format(
@@ -50,7 +62,6 @@ class Client:
 class GameState:
     clients = {}
 
-    mesh_pbs = []
     meshes = []
     lock = threading.RLock()
     listeners = []
@@ -71,8 +82,8 @@ class GameState:
 
     def new_mesh(self, mesh_pb, client):
         with self.lock:
-            self.mesh_pbs.append(mesh_pb)
-            self.meshes.append(Mesh(mesh_pb, client))
+            mesh = Mesh(mesh_pb, client)
+            self.meshes.append(mesh)
             # save_dir = config.MESHES_SAVE_DIR
             # save_path = os.path.join(save_dir, '{}_{}.bin'.format(
             #     client.ip, len(self.mesh_pbs)))
@@ -80,7 +91,7 @@ class GameState:
             #     f.write(mesh_pb.SerializeToString())
 
         for queue in self.listeners:
-            queue.put_nowait(self.create_mesh_message(mesh_pb))
+            queue.put_nowait(self.create_mesh_message(mesh.to_proto()))
 
         if mesh_pb.is_last:
             self.update_targets(40)
@@ -91,7 +102,6 @@ class GameState:
         logger.info('Clearing meshes.')
         with self.lock:
             del self.meshes[:]
-            del self.mesh_pbs[:]
 
     def update_planes(self):
         y_coords = np.sort(np.vstack(
