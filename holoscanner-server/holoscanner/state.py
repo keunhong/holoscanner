@@ -26,6 +26,24 @@ def find_planes(y_coords, nbins, sigma=None):
     return floor_y, ceiling_y
 
 
+def quat_to_mat(x, y, z, w):
+    n = w * w + x * x + y * y + z * z
+    s = 0 if n == 0 else (2 / n)
+    wx = s * w * x
+    wy = s * w * y
+    wz = s * w * z
+    xx = s * x * x
+    xy = s * x * y
+    xz = s * x * z
+    yy = s * y * y
+    yz = s * y * z
+    zz = s * z * z
+    return np.array([
+        [1 - (yy + zz), xy - wz, xz + wy],
+        [xy + wz, 1 - (xx + zz), yz - wx],
+        [xz - wy, yz + wx, 1 - (xx + yy)]])
+
+
 class Mesh:
     def __init__(self, mesh_pb, client):
         self.nvertices = len(mesh_pb.vertices)
@@ -36,6 +54,16 @@ class Mesh:
         self.faces = np.array(mesh_pb.triangles, dtype=int)
         for i, vert_pb in enumerate(mesh_pb.vertices):
             self.vertices[i, :] = (vert_pb.x, vert_pb.y, vert_pb.z)
+
+        if mesh_pb.cam_rotation:
+            rotation_mat = quat_to_mat(mesh_pb.cam_rotation.x,
+                                       mesh_pb.cam_rotation.y,
+                                       mesh_pb.cam_rotation.z,
+                                       mesh_pb.cam_rotation.w)
+            self.vertices = rotation_mat.dot(self.vertices.T).T
+            self.vertices[:, 0] += mesh_pb.cam_position.x
+            self.vertices[:, 1] += mesh_pb.cam_position.y
+            self.vertices[:, 2] += mesh_pb.cam_position.z
 
     def to_proto(self):
         mesh_pb = pb.Mesh()
@@ -84,11 +112,11 @@ class GameState:
         with self.lock:
             mesh = Mesh(mesh_pb, client)
             self.meshes.append(mesh)
-            # save_dir = config.MESHES_SAVE_DIR
-            # save_path = os.path.join(save_dir, '{}_{}.bin'.format(
-            #     client.ip, len(self.mesh_pbs)))
-            # with open(save_path, 'wb') as f:
-            #     f.write(mesh_pb.SerializeToString())
+            save_dir = config.MESHES_SAVE_DIR
+            save_path = os.path.join(save_dir, '{}_{}.bin'.format(
+                client.ip, len(self.mesh_pbs)))
+            with open(save_path, 'wb') as f:
+                f.write(mesh_pb.SerializeToString())
 
         for queue in self.listeners:
             queue.put_nowait(self.create_mesh_message(mesh.to_proto()))
