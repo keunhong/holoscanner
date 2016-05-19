@@ -10,6 +10,7 @@ logger = base_logger.getChild(__name__)
 
 class RelayProtocol(WebSocketServerProtocol):
     def __init__(self):
+        super().__init__()
         self.message_queue = asyncio.Queue()
         game_state.new_websocket_client(self.message_queue)
 

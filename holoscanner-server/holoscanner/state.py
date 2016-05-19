@@ -90,8 +90,8 @@ class Client:
 class GameState:
     clients = {}
 
-    meshes = []
     lock = threading.RLock()
+    meshes = []
     listeners = []
 
     floor = -10
