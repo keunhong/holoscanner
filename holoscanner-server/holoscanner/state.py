@@ -1,3 +1,4 @@
+import os
 import threading
 import random
 import asyncio
@@ -69,10 +70,15 @@ class GameState:
         with self.lock:
             self.mesh_pbs.append(mesh_pb)
             self.meshes.append(Mesh(mesh_pb, client))
+            # save_dir = config.MESHES_SAVE_DIR
+            # save_path = os.path.join(save_dir, '{}_{}.bin'.format(
+            #     client.ip, len(self.mesh_pbs)))
+            # with open(save_path, 'wb') as f:
+            #     f.write(mesh_pb.SerializeToString())
 
         self.message_queue.put_nowait(self.create_mesh_message(mesh_pb))
 
-        self.update_targets(20)
+        # self.update_targets(40)
         self.update_planes()
 
         self.message_queue.put_nowait(self.create_game_state_message())
@@ -117,6 +123,7 @@ class GameState:
         msg.type = pb.Message.MESH
         msg.device_id = config.SERVER_DEVICE_ID
         msg.mesh.MergeFrom(mesh_pb)
+        print(len(msg.mesh.triangles))
         return msg
 
 

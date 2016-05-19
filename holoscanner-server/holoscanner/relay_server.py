@@ -30,14 +30,17 @@ class RelayProtocol(WebSocketServerProtocol):
     @asyncio.coroutine
     def onMessage(self, payload, isBinary):
         if not isBinary:
-            logger.info(payload.decode('utf8'))
+            logger.info('Not Binary {}'.format(payload.decode('utf8')))
+        message = Message()
+        print(payload)
+        logger.info(message.ParseFromString(payload))
 
     def onClose(self, wasClean, code, reason):
         logger.info("WebSocket connection closed: {0}".format(reason))
 
     def send_message(self, msg):
         msg_bytes = msg.SerializeToString()
-        logger.info('Sending message ({} bytes).'.format(len(msg_bytes)))
+        # logger.info('Sending message ({} bytes).'.format(len(msg_bytes)))
         self.sendMessage(msg_bytes, isBinary=True)
 
 

@@ -23,7 +23,7 @@ message Mesh {
     Vec4D cam_rotation = 101;
 
     repeated Vec3D vertices = 200;
-    repeated int32 triangles = 201;
+    repeated int32 triangles = 201 [packed=true];
 }
 
 message Target {
@@ -54,6 +54,7 @@ message Message {
         LOCATION_RESPONSE = 12;
         GAME_STATE = 13;
         TARGET_FOUND = 20;
+        CLEAR_MESHES = 100;
     }
 
     Type type = 1;

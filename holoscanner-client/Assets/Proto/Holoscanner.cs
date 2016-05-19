@@ -37,16 +37,17 @@ namespace Holoscanner.Proto {
             "b3RvLlRhcmdldCIRCg9Mb2NhdGlvblJlcXVlc3QibQoQTG9jYXRpb25SZXNw",
             "b25zZRIqCghsb2NhdGlvbhgBIAEoCzIYLkhvbG9zY2FubmVyLlByb3RvLlZl",
             "YzNEEi0KC29yaWVudGF0aW9uGAIgASgLMhguSG9sb3NjYW5uZXIuUHJvdG8u",
-            "VmVjM0QirAMKB01lc3NhZ2USLQoEdHlwZRgBIAEoDjIfLkhvbG9zY2FubmVy",
+            "VmVjM0QivwMKB01lc3NhZ2USLQoEdHlwZRgBIAEoDjIfLkhvbG9zY2FubmVy",
             "LlByb3RvLk1lc3NhZ2UuVHlwZRIRCglkZXZpY2VfaWQYAiABKA0SJQoEbWVz",
             "aBhkIAEoCzIXLkhvbG9zY2FubmVyLlByb3RvLk1lc2gSPQoQbG9jYXRpb25f",
             "cmVxdWVzdBisAiABKAsyIi5Ib2xvc2Nhbm5lci5Qcm90by5Mb2NhdGlvblJl",
             "cXVlc3QSPwoRbG9jYXRpb25fcmVzcG9uc2UYkAMgASgLMiMuSG9sb3NjYW5u",
             "ZXIuUHJvdG8uTG9jYXRpb25SZXNwb25zZRIxCgpnYW1lX3N0YXRlGPQDIAEo",
             "CzIcLkhvbG9zY2FubmVyLlByb3RvLkdhbWVTdGF0ZRISCgl0YXJnZXRfaWQY",
-            "2AQgASgNInEKBFR5cGUSBwoDQUNLEAASBwoDRklOEAESCAoETUVTSBAKEhQK",
-            "EExPQ0FUSU9OX1JFUVVFU1QQCxIVChFMT0NBVElPTl9SRVNQT05TRRAMEg4K",
-            "CkdBTUVfU1RBVEUQDRIQCgxUQVJHRVRfRk9VTkQQFGIGcHJvdG8z"));
+            "2AQgASgNIoMBCgRUeXBlEgcKA0FDSxAAEgcKA0ZJThABEggKBE1FU0gQChIU",
+            "ChBMT0NBVElPTl9SRVFVRVNUEAsSFQoRTE9DQVRJT05fUkVTUE9OU0UQDBIO",
+            "CgpHQU1FX1NUQVRFEA0SEAoMVEFSR0VUX0ZPVU5EEBQSEAoMQ0xFQVJfTUVT",
+            "SEVTEGRiBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedCodeInfo(null, new pbr::GeneratedCodeInfo[] {
@@ -1448,6 +1449,7 @@ namespace Holoscanner.Proto {
         LOCATION_RESPONSE = 12,
         GAME_STATE = 13,
         TARGET_FOUND = 20,
+        CLEAR_MESHES = 100,
       }
 
     }

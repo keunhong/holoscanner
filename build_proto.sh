@@ -20,5 +20,5 @@ protoc holoscanner.proto --python_out=$SERVER_PROTO_DIR
 echo "Saved to $SERVER_PROTO_DIR"
 protoc holoscanner.proto --csharp_out=$CLIENT_PROTO_DIR
 echo "Saved to $CLIENT_PROTO_DIR"
-cp holoscanner.proto $JS_PROTO_DIR
+sed 's/triangles = 201;/triangles = 201 [packed=true];/g' < holoscanner.proto > $JS_PROTO_DIR/holoscanner.proto
 cd $CURRENT_DIR;

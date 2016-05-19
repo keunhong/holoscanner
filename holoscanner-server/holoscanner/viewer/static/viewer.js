@@ -86,8 +86,7 @@ function handleGameState(pbGameState) {
   }
 }
 
-
-$(document).ready(function () {
+function initRenderer() {
   let container = $('#canvas');
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(container.width(), container.height());
@@ -113,6 +112,16 @@ $(document).ready(function () {
   light3.position.set(-100, 100, 0);
   scene.add(light3);
 
+  let light4 = new THREE.PointLight(0xffffff, 0.5, 0);
+  light4.add(new THREE.Mesh(sphere, new THREE.MeshBasicMaterial({color: 0xff0040})));
+  light4.position.set(-100, -100, 0);
+  scene.add(light4);
+
+  let light5 = new THREE.PointLight(0xffffff, 0.5, 0);
+  light5.add(new THREE.Mesh(sphere, new THREE.MeshBasicMaterial({color: 0xff0040})));
+  light5.position.set(100, -100, 0);
+  scene.add(light5);
+
   let camera = new THREE.PerspectiveCamera(
       75, container.width() / container.height(), 0.1, 1000);
   camera.position.x = 0;
@@ -132,4 +141,16 @@ $(document).ready(function () {
   }
 
   render();
+}
+
+let test;
+$(document).ready(function () {
+  initRenderer();
+
+  $('#reset-meshes').click(function () {
+    let message = new Holoscanner.Proto.Message();
+    message.type = Holoscanner.Proto.Message.Type.CLEAR_MESHES;
+    test = message;
+    socket.send(message.toArrayBuffer());
+  })
 });
