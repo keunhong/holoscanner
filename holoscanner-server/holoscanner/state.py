@@ -82,9 +82,9 @@ class GameState:
         for queue in self.listeners:
             queue.put_nowait(self.create_mesh_message(mesh_pb))
 
-        # self.update_targets(40)
+        if mesh_pb.is_last:
+            self.update_targets(40)
         self.update_planes()
-
         # self.message_queue.put_nowait(self.create_game_state_message())
 
     def clear_meshes(self):
