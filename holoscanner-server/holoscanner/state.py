@@ -108,23 +108,26 @@ class GameState:
     def new_websocket_client(self, queue):
         self.listeners.append(queue)
 
+    def send_to_websocket_clients(self, message):
+        for queue in self.listeners:
+            queue.put_nowait(message)
+
     def new_mesh(self, mesh_pb, client):
         with self.lock:
             mesh = Mesh(mesh_pb, client)
             self.meshes.append(mesh)
-            save_dir = config.MESHES_SAVE_DIR
-            save_path = os.path.join(save_dir, '{}_{}.bin'.format(
-                client.ip, len(self.mesh_pbs)))
-            with open(save_path, 'wb') as f:
-                f.write(mesh_pb.SerializeToString())
+            # save_dir = config.MESHES_SAVE_DIR
+            # save_path = os.path.join(save_dir, '{}_{}.bin'.format(
+            #     client.ip, len(self.meshes)))
+            # with open(save_path, 'wb') as f:
+            #     f.write(mesh_pb.SerializeToString())
 
-        for queue in self.listeners:
-            queue.put_nowait(self.create_mesh_message(mesh.to_proto()))
+        self.send_to_websocket_clients(self.create_mesh_message(mesh.to_proto()))
 
         if mesh_pb.is_last:
             self.update_targets(40)
+            self.send_to_websocket_clients(self.create_game_state_message())
         self.update_planes()
-        # self.message_queue.put_nowait(self.create_game_state_message())
 
     def clear_meshes(self):
         logger.info('Clearing meshes.')

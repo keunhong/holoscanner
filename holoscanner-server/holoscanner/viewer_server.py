@@ -23,6 +23,7 @@ class RelayProtocol(WebSocketServerProtocol):
             self.send_message(game_state.create_game_state_message())
             for mesh in game_state.meshes:
                 self.send_message(game_state.create_mesh_message(mesh.to_proto()))
+            self.send_message(game_state.create_game_state_message())
 
         while True:
             msg = yield from self.message_queue.get()
@@ -39,6 +40,7 @@ class RelayProtocol(WebSocketServerProtocol):
 
     def onClose(self, wasClean, code, reason):
         logger.info("WebSocket connection closed: {0}".format(reason))
+        game_state.listeners.remove(self.message_queue)
 
     def send_message(self, msg):
         msg_bytes = msg.SerializeToString()
