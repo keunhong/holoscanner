@@ -57,8 +57,6 @@ namespace HoloToolkit.Unity
    
         public void Update()
         {
-            Debug.Log("Called update...");
-            Debug.Log("Length of queue is " + dataQueue.Count);
             // Check to see if deferTime has been set.  
             // DeferUpdates will set the Sending flag to true for 
             // deferTime seconds.  
@@ -86,7 +84,6 @@ namespace HoloToolkit.Unity
             Invoke("EnableUpdates", timeout);
         }
 
-
         /// <summary>
         /// Stops waiting to reconnect.
         /// </summary>
@@ -102,8 +99,6 @@ namespace HoloToolkit.Unity
         public void SendData(byte[] dataBufferToSend)
         {
             dataQueue.Enqueue(dataBufferToSend);
-            //SendDataOverNetwork(dataBufferToSend);
-            
         }
 
         /// <summary>
@@ -169,8 +164,7 @@ namespace HoloToolkit.Unity
 
                 // Didn't send, so requeue the data.
                 dataQueue.Enqueue(nextDataBufferToSend);
-                //Sending = false;
-               // SendData(nextDataBufferToSend);
+
                 // And set the defer time so the update loop can do the 'Unity things' 
                 // on the main Unity thread.
                 deferTime = timeToDeferFailedConnections;
@@ -190,8 +184,6 @@ namespace HoloToolkit.Unity
             {
                 // didn't send, so requeue
                 dataQueue.Enqueue(nextDataBufferToSend);
-                //Sending = false;
-               // SendData(nextDataBufferToSend);
                 deferTime = timeToDeferFailedConnections;
             }
             else
