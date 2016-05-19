@@ -30,7 +30,7 @@ namespace Holoscanner
         {
             // Create our keyword collection.
             keywordCollection = new Dictionary<string, System.Action>();
-            keywordCollection.Add("send meshes", () => SendMeshes());
+            keywordCollection.Add("send meshes", () => StartCoroutine(SendMeshes()));
 
             // Tell the KeywordRecognizer about our keywords.
             keywordRecognizer = new KeywordRecognizer(keywordCollection.Keys.ToArray());
@@ -69,64 +69,17 @@ namespace Holoscanner
             // FIXME: Send meshes at regular intervals
         }
 
-        private void SendMeshes()
+        private IEnumerator SendMeshes()
         {
 #if !UNITY_EDITOR
             List<MeshFilter> MeshFilters = SpatialMappingManager.Instance.GetMeshFilters();
-            int num_faces = 0;
-            int num_verts = 0;
-            Debug.Log("Loop iterations: " + MeshFilters.Count);
-
             for (int index = 0; index < MeshFilters.Count; index++)
             {
-                
-                List<Mesh> meshesToSend = new List<Mesh>();
-               MeshFilter filter = MeshFilters[index];
-                Mesh source = filter.sharedMesh;
-                Mesh clone = new Mesh();
-                List<Vector3> verts = new List<Vector3>();
-                verts.AddRange(source.vertices);
-                num_verts += verts.Count;
-                
-                
-                for (int vertIndex = 0; vertIndex < verts.Count; vertIndex++)
-                {
-                    verts[vertIndex] = filter.transform.TransformPoint(verts[vertIndex]);
-                }
-
-
-                num_faces += source.triangles.Length;
-               clone.SetVertices(verts);
-                
-                clone.SetTriangles(source.triangles, 0);
-                meshesToSend.Add(clone);
-
-                byte[] serialized = ProtoMeshSerializer.Serialize(meshesToSend[0]);
- 
-             
-                
-                RemoteMeshSource.Instance.SendData(serialized);
-
-                //RemoteMeshSource.Instance.Update();
-                
-                clone.Clear();
-                clone = null;
-
-                meshesToSend.Clear();
-                meshesToSend = null;
-                serialized = null;
-                verts.Clear();
-                verts = null;
-
-                System.GC.Collect();
-                System.GC.WaitForPendingFinalizers();
-
-
-                // meshesToSend.Clear();
-
-
+                RemoteMeshSource.Instance.SendData(ProtoMeshSerializer.Serialize(MeshFilters[index].sharedMesh));
+                yield return null;
             }
 #endif
+            yield return null;
         }
     }
 
