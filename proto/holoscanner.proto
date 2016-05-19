@@ -17,6 +17,7 @@ message Vec4D {
 message Mesh {
     uint32 mesh_id = 2;
     uint64 timestamp = 3;
+    bool is_last = 4;
 
     // We need the camera position in case we want to do space carving.
     Vec3D cam_position = 100;

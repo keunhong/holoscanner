@@ -3,12 +3,10 @@ import asyncio
 import struct
 from enum import Enum
 from holoscanner import base_logger
-from holoscanner.proto.holoscanner_pb2 import Message, Mesh
+from holoscanner.proto.holoscanner_pb2 import Message
 from holoscanner.state import game_state
 
-
 logger = base_logger.getChild(__name__)
-
 
 HEADER_SIZE = 8
 HEADER_FMT = 'Q'
@@ -69,7 +67,8 @@ class HsServerProtocol(asyncio.Protocol):
         if len(self.data) == self.data_size:
             msg = Message()
             msg.ParseFromString(self.data)
-            logger.info('Received message of type {}, size {}'.format(msg.type, self.data_size))
+            logger.info('Received message of type {}, size {}'.format(msg.type,
+                                                                      self.data_size))
             if msg.type == Message.MESH:
                 game_state.new_mesh(msg.mesh, self.client)
                 message = game_state.create_ack()
@@ -94,7 +93,6 @@ class HsServerProtocol(asyncio.Protocol):
 
 
 class HsClientProtocol(asyncio.Protocol):
-
     def __init__(self, messages, loop):
         self.messages = messages
         self.loop = loop
@@ -116,12 +114,10 @@ class HsClientProtocol(asyncio.Protocol):
         data = data[HEADER_SIZE:]
         msg = Message()
         msg.ParseFromString(data)
-        logger.info('Data received: type={}'.format(msg.type))
+        logger.info('Data received: length={}, type={}'.format(
+            len(data), msg.type))
 
     def connection_lost(self, exc):
         logger.info('The server closed the connection')
         logger.info('Stop the event loop')
         self.loop.stop()
-
-
-
