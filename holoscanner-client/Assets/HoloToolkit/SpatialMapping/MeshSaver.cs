@@ -1,7 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT License. See LICENSE in the project root for license information.
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -44,7 +41,7 @@ namespace HoloToolkit.Unity
         /// <param name="fileName">Name to give the saved mesh file. Exclude path and extension.</param>
         /// <param name="meshes">The collection of Mesh objects to save.</param>
         /// <returns>Fully qualified name of the saved mesh file.</returns>
-        /// <remarks>Determines the save path to use and automatically applys the file extension.</remarks>
+        /// <remarks>Determines the save path to use and automatically applies the file extension.</remarks>
         public static string Save(string fileName, IEnumerable<Mesh> meshes)
         {
             if (string.IsNullOrEmpty(fileName))
@@ -79,7 +76,7 @@ namespace HoloToolkit.Unity
         /// </summary>
         /// <param name="fileName">Name of the saved mesh file. Exclude path and extension.</param>
         /// <returns>Collection of Mesh objects read from the file.</returns>
-        /// <remarks>Determines the path from which to load and automatically applys the file extension.</remarks>
+        /// <remarks>Determines the path from which to load and automatically applies the file extension.</remarks>
         public static IEnumerable<Mesh> Load(string fileName)
         {
             if (string.IsNullOrEmpty(fileName))

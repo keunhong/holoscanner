@@ -15,7 +15,6 @@ public static class ProtoMeshSerializer {
         });
 // List<Holoscanner.Proto.Face> faces = new List<Holoscanner.Proto.Face>(mesh.triangles.Length/3);
 
-        Debug.Log("Serializing " + mesh.triangles.Length + " faces");
 
         Holoscanner.Proto.Message msg = new Holoscanner.Proto.Message();
         msg.Type = Holoscanner.Proto.Message.Types.Type.MESH;
@@ -55,9 +54,6 @@ public static class ProtoMeshSerializer {
         
         lenbytes.CopyTo(retbytes, 0);
         msgbytes.CopyTo(retbytes, lenbytes.Length);
-        Debug.Log("msgbyte of size : " + msgbytes.Length);
-        Debug.Log("lenbyte of size : " + lenbytes.Length);
-        Debug.Log("Returning byte of size : " + retbytes.Length);
         
         msgbytes = null;
         //msg.Mesh.CamRotation;

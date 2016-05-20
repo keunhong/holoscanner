@@ -1,7 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT License. See LICENSE in the project root for license information.
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 #if !UNITY_EDITOR
@@ -57,8 +54,6 @@ namespace HoloToolkit.Unity
    
         public void Update()
         {
-            Debug.Log("Called update...");
-            Debug.Log("Length of queue is " + dataQueue.Count);
             // Check to see if deferTime has been set.  
             // DeferUpdates will set the Sending flag to true for 
             // deferTime seconds.  
@@ -86,7 +81,6 @@ namespace HoloToolkit.Unity
             Invoke("EnableUpdates", timeout);
         }
 
-
         /// <summary>
         /// Stops waiting to reconnect.
         /// </summary>
@@ -102,8 +96,6 @@ namespace HoloToolkit.Unity
         public void SendData(byte[] dataBufferToSend)
         {
             dataQueue.Enqueue(dataBufferToSend);
-            //SendDataOverNetwork(dataBufferToSend);
-            
         }
 
         /// <summary>
@@ -147,12 +139,14 @@ namespace HoloToolkit.Unity
             // Status completed is successful.
             if (status == AsyncStatus.Completed)
             {
-                Debug.Log("network connected");
                 DataWriter networkDataWriter;
                 
                 // Since we are connected, we can send the data we set aside when establishing the connection.
                 using(networkDataWriter = new DataWriter(networkConnection.OutputStream))
                 {
+                    // Write how much data we are sending.
+                    networkDataWriter.WriteInt32(nextDataBufferToSend.Length);
+
                     // Then write the data.
                     networkDataWriter.WriteBytes(nextDataBufferToSend);
 
@@ -169,8 +163,7 @@ namespace HoloToolkit.Unity
 
                 // Didn't send, so requeue the data.
                 dataQueue.Enqueue(nextDataBufferToSend);
-                //Sending = false;
-               // SendData(nextDataBufferToSend);
+
                 // And set the defer time so the update loop can do the 'Unity things' 
                 // on the main Unity thread.
                 deferTime = timeToDeferFailedConnections;
@@ -190,8 +183,6 @@ namespace HoloToolkit.Unity
             {
                 // didn't send, so requeue
                 dataQueue.Enqueue(nextDataBufferToSend);
-                //Sending = false;
-               // SendData(nextDataBufferToSend);
                 deferTime = timeToDeferFailedConnections;
             }
             else

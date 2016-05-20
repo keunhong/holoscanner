@@ -71,6 +71,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 4000010267160112}
   - 108: {fileID: 108000011213487996}
+  - 114: {fileID: 114000011545086728}
   m_Layer: 2
   m_Name: Point light
   m_TagString: Untagged
@@ -234,6 +235,22 @@ Light:
   m_BounceIntensity: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!114 &114000011545086728
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000013763932778}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5336c01760772346ae70a78b2b377ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  InitializingColor: {r: 0.43746862, g: 0.15787198, b: 0.53676474, a: 1}
+  ImportingOrExportingColor: {r: 1, g: 0.9724138, b: 0, a: 1}
+  UploadingColor: {r: 0.19746451, g: 0.10845588, b: 0.86764705, a: 1}
+  DownloadingColor: {r: 0, g: 1, b: 0.13103461, a: 1}
+  FailureColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!114 &114000014146313642
 MonoBehaviour:
   m_ObjectHideFlags: 1

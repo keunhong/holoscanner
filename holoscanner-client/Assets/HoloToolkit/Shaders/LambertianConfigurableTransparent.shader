@@ -1,6 +1,6 @@
 //Very fast shader that uses the Unity lighting model
 //Compiles down to only performing the operations you're actually using
-//Uses material property drawers rather than a custom editor for ease of maintainance
+//Uses material property drawers rather than a custom editor for ease of maintenance
 
 Shader "HoloToolkit/Lambertian Configurable Transparent"
 {
@@ -61,7 +61,7 @@ Shader "HoloToolkit/Lambertian Configurable Transparent"
 		#pragma shader_feature _USEMAINTEX_ON
 		#pragma shader_feature _USEBUMPMAP_ON
 		#pragma shader_feature _USEEMISSIONTEX_ON
-		#pragma shader_feature _NEAR_PLANE_FADE_ON
+		#pragma multi_compile __ _NEAR_PLANE_FADE_ON
 
 		#include "HoloToolkitCommon.cginc"	
         #include "LambertianConfigurable.cginc"
