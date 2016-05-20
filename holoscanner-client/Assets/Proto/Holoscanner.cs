@@ -25,40 +25,36 @@ namespace Holoscanner.Proto {
           string.Concat(
             "ChFob2xvc2Nhbm5lci5wcm90bxIRSG9sb3NjYW5uZXIuUHJvdG8iKAoFVmVj",
             "M0QSCQoBeBgBIAEoAhIJCgF5GAIgASgCEgkKAXoYAyABKAIiMwoFVmVjNEQS",
-            "CQoBeBgBIAEoAhIJCgF5GAIgASgCEgkKAXoYAyABKAISCQoBdxgEIAEoAiLL",
-            "AQoETWVzaBIPCgdtZXNoX2lkGAIgASgNEhEKCXRpbWVzdGFtcBgDIAEoBBIu",
-            "CgxjYW1fcG9zaXRpb24YZCABKAsyGC5Ib2xvc2Nhbm5lci5Qcm90by5WZWMz",
-            "RBIuCgxjYW1fcm90YXRpb24YZSABKAsyGC5Ib2xvc2Nhbm5lci5Qcm90by5W",
-            "ZWM0RBIrCgh2ZXJ0aWNlcxjIASADKAsyGC5Ib2xvc2Nhbm5lci5Qcm90by5W",
-            "ZWMzRBISCgl0cmlhbmdsZXMYyQEgAygFIkcKBlRhcmdldBIRCgl0YXJnZXRf",
-            "aWQYASABKA0SKgoIcG9zaXRpb24YAiABKAsyGC5Ib2xvc2Nhbm5lci5Qcm90",
-            "by5WZWMzRCJbCglHYW1lU3RhdGUSDwoHZmxvb3JfeRgBIAEoAhIRCgljZWls",
-            "aW5nX3kYAiABKAISKgoHdGFyZ2V0cxgKIAMoCzIZLkhvbG9zY2FubmVyLlBy",
-            "b3RvLlRhcmdldCIRCg9Mb2NhdGlvblJlcXVlc3QibQoQTG9jYXRpb25SZXNw",
-            "b25zZRIqCghsb2NhdGlvbhgBIAEoCzIYLkhvbG9zY2FubmVyLlByb3RvLlZl",
-            "YzNEEi0KC29yaWVudGF0aW9uGAIgASgLMhguSG9sb3NjYW5uZXIuUHJvdG8u",
-            "VmVjM0QivwMKB01lc3NhZ2USLQoEdHlwZRgBIAEoDjIfLkhvbG9zY2FubmVy",
-            "LlByb3RvLk1lc3NhZ2UuVHlwZRIRCglkZXZpY2VfaWQYAiABKA0SJQoEbWVz",
-            "aBhkIAEoCzIXLkhvbG9zY2FubmVyLlByb3RvLk1lc2gSPQoQbG9jYXRpb25f",
-            "cmVxdWVzdBisAiABKAsyIi5Ib2xvc2Nhbm5lci5Qcm90by5Mb2NhdGlvblJl",
-            "cXVlc3QSPwoRbG9jYXRpb25fcmVzcG9uc2UYkAMgASgLMiMuSG9sb3NjYW5u",
-            "ZXIuUHJvdG8uTG9jYXRpb25SZXNwb25zZRIxCgpnYW1lX3N0YXRlGPQDIAEo",
-            "CzIcLkhvbG9zY2FubmVyLlByb3RvLkdhbWVTdGF0ZRISCgl0YXJnZXRfaWQY",
-            "2AQgASgNIoMBCgRUeXBlEgcKA0FDSxAAEgcKA0ZJThABEggKBE1FU0gQChIU",
-            "ChBMT0NBVElPTl9SRVFVRVNUEAsSFQoRTE9DQVRJT05fUkVTUE9OU0UQDBIO",
-            "CgpHQU1FX1NUQVRFEA0SEAoMVEFSR0VUX0ZPVU5EEBQSEAoMQ0xFQVJfTUVT",
-            "SEVTEGRiBnByb3RvMw=="));
+            "CQoBeBgBIAEoAhIJCgF5GAIgASgCEgkKAXoYAyABKAISCQoBdxgEIAEoAiIq",
+            "CgZDbGllbnQSEQoJZGV2aWNlX2lkGAEgASgJEg0KBXNjb3JlGAogASgNItwB",
+            "CgRNZXNoEg8KB21lc2hfaWQYAiABKA0SEQoJdGltZXN0YW1wGAMgASgEEg8K",
+            "B2lzX2xhc3QYBCABKAgSLgoMY2FtX3Bvc2l0aW9uGGQgASgLMhguSG9sb3Nj",
+            "YW5uZXIuUHJvdG8uVmVjM0QSLgoMY2FtX3JvdGF0aW9uGGUgASgLMhguSG9s",
+            "b3NjYW5uZXIuUHJvdG8uVmVjNEQSKwoIdmVydGljZXMYyAEgAygLMhguSG9s",
+            "b3NjYW5uZXIuUHJvdG8uVmVjM0QSEgoJdHJpYW5nbGVzGMkBIAMoBSJHCgZU",
+            "YXJnZXQSEQoJdGFyZ2V0X2lkGAEgASgNEioKCHBvc2l0aW9uGAIgASgLMhgu",
+            "SG9sb3NjYW5uZXIuUHJvdG8uVmVjM0QihwEKCUdhbWVTdGF0ZRIPCgdmbG9v",
+            "cl95GAEgASgCEhEKCWNlaWxpbmdfeRgCIAEoAhIqCgd0YXJnZXRzGAogAygL",
+            "MhkuSG9sb3NjYW5uZXIuUHJvdG8uVGFyZ2V0EioKB2NsaWVudHMYFCADKAsy",
+            "GS5Ib2xvc2Nhbm5lci5Qcm90by5DbGllbnQiygIKB01lc3NhZ2USLQoEdHlw",
+            "ZRgBIAEoDjIfLkhvbG9zY2FubmVyLlByb3RvLk1lc3NhZ2UuVHlwZRIRCglk",
+            "ZXZpY2VfaWQYAiABKAkSJQoEbWVzaBhkIAEoCzIXLkhvbG9zY2FubmVyLlBy",
+            "b3RvLk1lc2gSMQoKZ2FtZV9zdGF0ZRj0AyABKAsyHC5Ib2xvc2Nhbm5lci5Q",
+            "cm90by5HYW1lU3RhdGUSEgoJdGFyZ2V0X2lkGNgEIAEoDSKOAQoEVHlwZRIH",
+            "CgNBQ0sQABIHCgNGSU4QARIICgRNRVNIEAoSDgoKR0FNRV9TVEFURRANEhYK",
+            "EkdBTUVfU1RBVEVfUkVRVUVTVBAOEhAKDFRBUkdFVF9GT1VORBAUEg4KCkFO",
+            "Q0hPUl9TRVQQHhIOCgpBTkNIT1JfR0VUEB8SEAoMQ0xFQVJfTUVTSEVTEGRi",
+            "BnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedCodeInfo(null, new pbr::GeneratedCodeInfo[] {
             new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.Vec3D), global::Holoscanner.Proto.Vec3D.Parser, new[]{ "X", "Y", "Z" }, null, null, null),
             new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.Vec4D), global::Holoscanner.Proto.Vec4D.Parser, new[]{ "X", "Y", "Z", "W" }, null, null, null),
-            new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.Mesh), global::Holoscanner.Proto.Mesh.Parser, new[]{ "MeshId", "Timestamp", "CamPosition", "CamRotation", "Vertices", "Triangles" }, null, null, null),
+            new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.Client), global::Holoscanner.Proto.Client.Parser, new[]{ "DeviceId", "Score" }, null, null, null),
+            new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.Mesh), global::Holoscanner.Proto.Mesh.Parser, new[]{ "MeshId", "Timestamp", "IsLast", "CamPosition", "CamRotation", "Vertices", "Triangles" }, null, null, null),
             new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.Target), global::Holoscanner.Proto.Target.Parser, new[]{ "TargetId", "Position" }, null, null, null),
-            new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.GameState), global::Holoscanner.Proto.GameState.Parser, new[]{ "FloorY", "CeilingY", "Targets" }, null, null, null),
-            new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.LocationRequest), global::Holoscanner.Proto.LocationRequest.Parser, null, null, null, null),
-            new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.LocationResponse), global::Holoscanner.Proto.LocationResponse.Parser, new[]{ "Location", "Orientation" }, null, null, null),
-            new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.Message), global::Holoscanner.Proto.Message.Parser, new[]{ "Type", "DeviceId", "Mesh", "LocationRequest", "LocationResponse", "GameState", "TargetId" }, null, new[]{ typeof(global::Holoscanner.Proto.Message.Types.Type) }, null)
+            new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.GameState), global::Holoscanner.Proto.GameState.Parser, new[]{ "FloorY", "CeilingY", "Targets", "Clients" }, null, null, null),
+            new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.Message), global::Holoscanner.Proto.Message.Parser, new[]{ "Type", "DeviceId", "Mesh", "GameState", "TargetId" }, null, new[]{ typeof(global::Holoscanner.Proto.Message.Types.Type) }, null)
           }));
     }
     #endregion
@@ -407,12 +403,142 @@ namespace Holoscanner.Proto {
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+  public sealed partial class Client : pb::IMessage<Client> {
+    private static readonly pb::MessageParser<Client> _parser = new pb::MessageParser<Client>(() => new Client());
+    public static pb::MessageParser<Client> Parser { get { return _parser; } }
+
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Holoscanner.Proto.HoloscannerReflection.Descriptor.MessageTypes[2]; }
+    }
+
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    public Client() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    public Client(Client other) : this() {
+      deviceId_ = other.deviceId_;
+      score_ = other.score_;
+    }
+
+    public Client Clone() {
+      return new Client(this);
+    }
+
+    /// <summary>Field number for the "device_id" field.</summary>
+    public const int DeviceIdFieldNumber = 1;
+    private string deviceId_ = "";
+    public string DeviceId {
+      get { return deviceId_; }
+      set {
+        deviceId_ = pb::Preconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "score" field.</summary>
+    public const int ScoreFieldNumber = 10;
+    private uint score_;
+    public uint Score {
+      get { return score_; }
+      set {
+        score_ = value;
+      }
+    }
+
+    public override bool Equals(object other) {
+      return Equals(other as Client);
+    }
+
+    public bool Equals(Client other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (DeviceId != other.DeviceId) return false;
+      if (Score != other.Score) return false;
+      return true;
+    }
+
+    public override int GetHashCode() {
+      int hash = 1;
+      if (DeviceId.Length != 0) hash ^= DeviceId.GetHashCode();
+      if (Score != 0) hash ^= Score.GetHashCode();
+      return hash;
+    }
+
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (DeviceId.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(DeviceId);
+      }
+      if (Score != 0) {
+        output.WriteRawTag(80);
+        output.WriteUInt32(Score);
+      }
+    }
+
+    public int CalculateSize() {
+      int size = 0;
+      if (DeviceId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(DeviceId);
+      }
+      if (Score != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(Score);
+      }
+      return size;
+    }
+
+    public void MergeFrom(Client other) {
+      if (other == null) {
+        return;
+      }
+      if (other.DeviceId.Length != 0) {
+        DeviceId = other.DeviceId;
+      }
+      if (other.Score != 0) {
+        Score = other.Score;
+      }
+    }
+
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            input.SkipLastField();
+            break;
+          case 10: {
+            DeviceId = input.ReadString();
+            break;
+          }
+          case 80: {
+            Score = input.ReadUInt32();
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
   public sealed partial class Mesh : pb::IMessage<Mesh> {
     private static readonly pb::MessageParser<Mesh> _parser = new pb::MessageParser<Mesh>(() => new Mesh());
     public static pb::MessageParser<Mesh> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Holoscanner.Proto.HoloscannerReflection.Descriptor.MessageTypes[2]; }
+      get { return global::Holoscanner.Proto.HoloscannerReflection.Descriptor.MessageTypes[3]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -428,6 +554,7 @@ namespace Holoscanner.Proto {
     public Mesh(Mesh other) : this() {
       meshId_ = other.meshId_;
       timestamp_ = other.timestamp_;
+      isLast_ = other.isLast_;
       CamPosition = other.camPosition_ != null ? other.CamPosition.Clone() : null;
       CamRotation = other.camRotation_ != null ? other.CamRotation.Clone() : null;
       vertices_ = other.vertices_.Clone();
@@ -455,6 +582,16 @@ namespace Holoscanner.Proto {
       get { return timestamp_; }
       set {
         timestamp_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "is_last" field.</summary>
+    public const int IsLastFieldNumber = 4;
+    private bool isLast_;
+    public bool IsLast {
+      get { return isLast_; }
+      set {
+        isLast_ = value;
       }
     }
 
@@ -512,6 +649,7 @@ namespace Holoscanner.Proto {
       }
       if (MeshId != other.MeshId) return false;
       if (Timestamp != other.Timestamp) return false;
+      if (IsLast != other.IsLast) return false;
       if (!object.Equals(CamPosition, other.CamPosition)) return false;
       if (!object.Equals(CamRotation, other.CamRotation)) return false;
       if(!vertices_.Equals(other.vertices_)) return false;
@@ -523,6 +661,7 @@ namespace Holoscanner.Proto {
       int hash = 1;
       if (MeshId != 0) hash ^= MeshId.GetHashCode();
       if (Timestamp != 0UL) hash ^= Timestamp.GetHashCode();
+      if (IsLast != false) hash ^= IsLast.GetHashCode();
       if (camPosition_ != null) hash ^= CamPosition.GetHashCode();
       if (camRotation_ != null) hash ^= CamRotation.GetHashCode();
       hash ^= vertices_.GetHashCode();
@@ -542,6 +681,10 @@ namespace Holoscanner.Proto {
       if (Timestamp != 0UL) {
         output.WriteRawTag(24);
         output.WriteUInt64(Timestamp);
+      }
+      if (IsLast != false) {
+        output.WriteRawTag(32);
+        output.WriteBool(IsLast);
       }
       if (camPosition_ != null) {
         output.WriteRawTag(162, 6);
@@ -563,6 +706,9 @@ namespace Holoscanner.Proto {
       if (Timestamp != 0UL) {
         size += 1 + pb::CodedOutputStream.ComputeUInt64Size(Timestamp);
       }
+      if (IsLast != false) {
+        size += 1 + 1;
+      }
       if (camPosition_ != null) {
         size += 2 + pb::CodedOutputStream.ComputeMessageSize(CamPosition);
       }
@@ -583,6 +729,9 @@ namespace Holoscanner.Proto {
       }
       if (other.Timestamp != 0UL) {
         Timestamp = other.Timestamp;
+      }
+      if (other.IsLast != false) {
+        IsLast = other.IsLast;
       }
       if (other.camPosition_ != null) {
         if (camPosition_ == null) {
@@ -613,6 +762,10 @@ namespace Holoscanner.Proto {
           }
           case 24: {
             Timestamp = input.ReadUInt64();
+            break;
+          }
+          case 32: {
+            IsLast = input.ReadBool();
             break;
           }
           case 802: {
@@ -650,7 +803,7 @@ namespace Holoscanner.Proto {
     public static pb::MessageParser<Target> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Holoscanner.Proto.HoloscannerReflection.Descriptor.MessageTypes[3]; }
+      get { return global::Holoscanner.Proto.HoloscannerReflection.Descriptor.MessageTypes[4]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -786,7 +939,7 @@ namespace Holoscanner.Proto {
     public static pb::MessageParser<GameState> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Holoscanner.Proto.HoloscannerReflection.Descriptor.MessageTypes[4]; }
+      get { return global::Holoscanner.Proto.HoloscannerReflection.Descriptor.MessageTypes[5]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -803,6 +956,7 @@ namespace Holoscanner.Proto {
       floorY_ = other.floorY_;
       ceilingY_ = other.ceilingY_;
       targets_ = other.targets_.Clone();
+      clients_ = other.clients_.Clone();
     }
 
     public GameState Clone() {
@@ -838,6 +992,15 @@ namespace Holoscanner.Proto {
       get { return targets_; }
     }
 
+    /// <summary>Field number for the "clients" field.</summary>
+    public const int ClientsFieldNumber = 20;
+    private static readonly pb::FieldCodec<global::Holoscanner.Proto.Client> _repeated_clients_codec
+        = pb::FieldCodec.ForMessage(162, global::Holoscanner.Proto.Client.Parser);
+    private readonly pbc::RepeatedField<global::Holoscanner.Proto.Client> clients_ = new pbc::RepeatedField<global::Holoscanner.Proto.Client>();
+    public pbc::RepeatedField<global::Holoscanner.Proto.Client> Clients {
+      get { return clients_; }
+    }
+
     public override bool Equals(object other) {
       return Equals(other as GameState);
     }
@@ -852,6 +1015,7 @@ namespace Holoscanner.Proto {
       if (FloorY != other.FloorY) return false;
       if (CeilingY != other.CeilingY) return false;
       if(!targets_.Equals(other.targets_)) return false;
+      if(!clients_.Equals(other.clients_)) return false;
       return true;
     }
 
@@ -860,6 +1024,7 @@ namespace Holoscanner.Proto {
       if (FloorY != 0F) hash ^= FloorY.GetHashCode();
       if (CeilingY != 0F) hash ^= CeilingY.GetHashCode();
       hash ^= targets_.GetHashCode();
+      hash ^= clients_.GetHashCode();
       return hash;
     }
 
@@ -877,6 +1042,7 @@ namespace Holoscanner.Proto {
         output.WriteFloat(CeilingY);
       }
       targets_.WriteTo(output, _repeated_targets_codec);
+      clients_.WriteTo(output, _repeated_clients_codec);
     }
 
     public int CalculateSize() {
@@ -888,6 +1054,7 @@ namespace Holoscanner.Proto {
         size += 1 + 4;
       }
       size += targets_.CalculateSize(_repeated_targets_codec);
+      size += clients_.CalculateSize(_repeated_clients_codec);
       return size;
     }
 
@@ -902,6 +1069,7 @@ namespace Holoscanner.Proto {
         CeilingY = other.CeilingY;
       }
       targets_.Add(other.targets_);
+      clients_.Add(other.clients_);
     }
 
     public void MergeFrom(pb::CodedInputStream input) {
@@ -923,222 +1091,8 @@ namespace Holoscanner.Proto {
             targets_.AddEntriesFrom(input, _repeated_targets_codec);
             break;
           }
-        }
-      }
-    }
-
-  }
-
-  [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-  public sealed partial class LocationRequest : pb::IMessage<LocationRequest> {
-    private static readonly pb::MessageParser<LocationRequest> _parser = new pb::MessageParser<LocationRequest>(() => new LocationRequest());
-    public static pb::MessageParser<LocationRequest> Parser { get { return _parser; } }
-
-    public static pbr::MessageDescriptor Descriptor {
-      get { return global::Holoscanner.Proto.HoloscannerReflection.Descriptor.MessageTypes[5]; }
-    }
-
-    pbr::MessageDescriptor pb::IMessage.Descriptor {
-      get { return Descriptor; }
-    }
-
-    public LocationRequest() {
-      OnConstruction();
-    }
-
-    partial void OnConstruction();
-
-    public LocationRequest(LocationRequest other) : this() {
-    }
-
-    public LocationRequest Clone() {
-      return new LocationRequest(this);
-    }
-
-    public override bool Equals(object other) {
-      return Equals(other as LocationRequest);
-    }
-
-    public bool Equals(LocationRequest other) {
-      if (ReferenceEquals(other, null)) {
-        return false;
-      }
-      if (ReferenceEquals(other, this)) {
-        return true;
-      }
-      return true;
-    }
-
-    public override int GetHashCode() {
-      int hash = 1;
-      return hash;
-    }
-
-    public override string ToString() {
-      return pb::JsonFormatter.ToDiagnosticString(this);
-    }
-
-    public void WriteTo(pb::CodedOutputStream output) {
-    }
-
-    public int CalculateSize() {
-      int size = 0;
-      return size;
-    }
-
-    public void MergeFrom(LocationRequest other) {
-      if (other == null) {
-        return;
-      }
-    }
-
-    public void MergeFrom(pb::CodedInputStream input) {
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
-          default:
-            input.SkipLastField();
-            break;
-        }
-      }
-    }
-
-  }
-
-  [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-  public sealed partial class LocationResponse : pb::IMessage<LocationResponse> {
-    private static readonly pb::MessageParser<LocationResponse> _parser = new pb::MessageParser<LocationResponse>(() => new LocationResponse());
-    public static pb::MessageParser<LocationResponse> Parser { get { return _parser; } }
-
-    public static pbr::MessageDescriptor Descriptor {
-      get { return global::Holoscanner.Proto.HoloscannerReflection.Descriptor.MessageTypes[6]; }
-    }
-
-    pbr::MessageDescriptor pb::IMessage.Descriptor {
-      get { return Descriptor; }
-    }
-
-    public LocationResponse() {
-      OnConstruction();
-    }
-
-    partial void OnConstruction();
-
-    public LocationResponse(LocationResponse other) : this() {
-      Location = other.location_ != null ? other.Location.Clone() : null;
-      Orientation = other.orientation_ != null ? other.Orientation.Clone() : null;
-    }
-
-    public LocationResponse Clone() {
-      return new LocationResponse(this);
-    }
-
-    /// <summary>Field number for the "location" field.</summary>
-    public const int LocationFieldNumber = 1;
-    private global::Holoscanner.Proto.Vec3D location_;
-    public global::Holoscanner.Proto.Vec3D Location {
-      get { return location_; }
-      set {
-        location_ = value;
-      }
-    }
-
-    /// <summary>Field number for the "orientation" field.</summary>
-    public const int OrientationFieldNumber = 2;
-    private global::Holoscanner.Proto.Vec3D orientation_;
-    public global::Holoscanner.Proto.Vec3D Orientation {
-      get { return orientation_; }
-      set {
-        orientation_ = value;
-      }
-    }
-
-    public override bool Equals(object other) {
-      return Equals(other as LocationResponse);
-    }
-
-    public bool Equals(LocationResponse other) {
-      if (ReferenceEquals(other, null)) {
-        return false;
-      }
-      if (ReferenceEquals(other, this)) {
-        return true;
-      }
-      if (!object.Equals(Location, other.Location)) return false;
-      if (!object.Equals(Orientation, other.Orientation)) return false;
-      return true;
-    }
-
-    public override int GetHashCode() {
-      int hash = 1;
-      if (location_ != null) hash ^= Location.GetHashCode();
-      if (orientation_ != null) hash ^= Orientation.GetHashCode();
-      return hash;
-    }
-
-    public override string ToString() {
-      return pb::JsonFormatter.ToDiagnosticString(this);
-    }
-
-    public void WriteTo(pb::CodedOutputStream output) {
-      if (location_ != null) {
-        output.WriteRawTag(10);
-        output.WriteMessage(Location);
-      }
-      if (orientation_ != null) {
-        output.WriteRawTag(18);
-        output.WriteMessage(Orientation);
-      }
-    }
-
-    public int CalculateSize() {
-      int size = 0;
-      if (location_ != null) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Location);
-      }
-      if (orientation_ != null) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Orientation);
-      }
-      return size;
-    }
-
-    public void MergeFrom(LocationResponse other) {
-      if (other == null) {
-        return;
-      }
-      if (other.location_ != null) {
-        if (location_ == null) {
-          location_ = new global::Holoscanner.Proto.Vec3D();
-        }
-        Location.MergeFrom(other.Location);
-      }
-      if (other.orientation_ != null) {
-        if (orientation_ == null) {
-          orientation_ = new global::Holoscanner.Proto.Vec3D();
-        }
-        Orientation.MergeFrom(other.Orientation);
-      }
-    }
-
-    public void MergeFrom(pb::CodedInputStream input) {
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
-          default:
-            input.SkipLastField();
-            break;
-          case 10: {
-            if (location_ == null) {
-              location_ = new global::Holoscanner.Proto.Vec3D();
-            }
-            input.ReadMessage(location_);
-            break;
-          }
-          case 18: {
-            if (orientation_ == null) {
-              orientation_ = new global::Holoscanner.Proto.Vec3D();
-            }
-            input.ReadMessage(orientation_);
+          case 162: {
+            clients_.AddEntriesFrom(input, _repeated_clients_codec);
             break;
           }
         }
@@ -1153,7 +1107,7 @@ namespace Holoscanner.Proto {
     public static pb::MessageParser<Message> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Holoscanner.Proto.HoloscannerReflection.Descriptor.MessageTypes[7]; }
+      get { return global::Holoscanner.Proto.HoloscannerReflection.Descriptor.MessageTypes[6]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -1170,8 +1124,6 @@ namespace Holoscanner.Proto {
       type_ = other.type_;
       deviceId_ = other.deviceId_;
       Mesh = other.mesh_ != null ? other.Mesh.Clone() : null;
-      LocationRequest = other.locationRequest_ != null ? other.LocationRequest.Clone() : null;
-      LocationResponse = other.locationResponse_ != null ? other.LocationResponse.Clone() : null;
       GameState = other.gameState_ != null ? other.GameState.Clone() : null;
       targetId_ = other.targetId_;
     }
@@ -1192,11 +1144,11 @@ namespace Holoscanner.Proto {
 
     /// <summary>Field number for the "device_id" field.</summary>
     public const int DeviceIdFieldNumber = 2;
-    private uint deviceId_;
-    public uint DeviceId {
+    private string deviceId_ = "";
+    public string DeviceId {
       get { return deviceId_; }
       set {
-        deviceId_ = value;
+        deviceId_ = pb::Preconditions.CheckNotNull(value, "value");
       }
     }
 
@@ -1210,26 +1162,6 @@ namespace Holoscanner.Proto {
       get { return mesh_; }
       set {
         mesh_ = value;
-      }
-    }
-
-    /// <summary>Field number for the "location_request" field.</summary>
-    public const int LocationRequestFieldNumber = 300;
-    private global::Holoscanner.Proto.LocationRequest locationRequest_;
-    public global::Holoscanner.Proto.LocationRequest LocationRequest {
-      get { return locationRequest_; }
-      set {
-        locationRequest_ = value;
-      }
-    }
-
-    /// <summary>Field number for the "location_response" field.</summary>
-    public const int LocationResponseFieldNumber = 400;
-    private global::Holoscanner.Proto.LocationResponse locationResponse_;
-    public global::Holoscanner.Proto.LocationResponse LocationResponse {
-      get { return locationResponse_; }
-      set {
-        locationResponse_ = value;
       }
     }
 
@@ -1267,8 +1199,6 @@ namespace Holoscanner.Proto {
       if (Type != other.Type) return false;
       if (DeviceId != other.DeviceId) return false;
       if (!object.Equals(Mesh, other.Mesh)) return false;
-      if (!object.Equals(LocationRequest, other.LocationRequest)) return false;
-      if (!object.Equals(LocationResponse, other.LocationResponse)) return false;
       if (!object.Equals(GameState, other.GameState)) return false;
       if (TargetId != other.TargetId) return false;
       return true;
@@ -1277,10 +1207,8 @@ namespace Holoscanner.Proto {
     public override int GetHashCode() {
       int hash = 1;
       if (Type != global::Holoscanner.Proto.Message.Types.Type.ACK) hash ^= Type.GetHashCode();
-      if (DeviceId != 0) hash ^= DeviceId.GetHashCode();
+      if (DeviceId.Length != 0) hash ^= DeviceId.GetHashCode();
       if (mesh_ != null) hash ^= Mesh.GetHashCode();
-      if (locationRequest_ != null) hash ^= LocationRequest.GetHashCode();
-      if (locationResponse_ != null) hash ^= LocationResponse.GetHashCode();
       if (gameState_ != null) hash ^= GameState.GetHashCode();
       if (TargetId != 0) hash ^= TargetId.GetHashCode();
       return hash;
@@ -1295,21 +1223,13 @@ namespace Holoscanner.Proto {
         output.WriteRawTag(8);
         output.WriteEnum((int) Type);
       }
-      if (DeviceId != 0) {
-        output.WriteRawTag(16);
-        output.WriteUInt32(DeviceId);
+      if (DeviceId.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(DeviceId);
       }
       if (mesh_ != null) {
         output.WriteRawTag(162, 6);
         output.WriteMessage(Mesh);
-      }
-      if (locationRequest_ != null) {
-        output.WriteRawTag(226, 18);
-        output.WriteMessage(LocationRequest);
-      }
-      if (locationResponse_ != null) {
-        output.WriteRawTag(130, 25);
-        output.WriteMessage(LocationResponse);
       }
       if (gameState_ != null) {
         output.WriteRawTag(162, 31);
@@ -1326,17 +1246,11 @@ namespace Holoscanner.Proto {
       if (Type != global::Holoscanner.Proto.Message.Types.Type.ACK) {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Type);
       }
-      if (DeviceId != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(DeviceId);
+      if (DeviceId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(DeviceId);
       }
       if (mesh_ != null) {
         size += 2 + pb::CodedOutputStream.ComputeMessageSize(Mesh);
-      }
-      if (locationRequest_ != null) {
-        size += 2 + pb::CodedOutputStream.ComputeMessageSize(LocationRequest);
-      }
-      if (locationResponse_ != null) {
-        size += 2 + pb::CodedOutputStream.ComputeMessageSize(LocationResponse);
       }
       if (gameState_ != null) {
         size += 2 + pb::CodedOutputStream.ComputeMessageSize(GameState);
@@ -1354,7 +1268,7 @@ namespace Holoscanner.Proto {
       if (other.Type != global::Holoscanner.Proto.Message.Types.Type.ACK) {
         Type = other.Type;
       }
-      if (other.DeviceId != 0) {
+      if (other.DeviceId.Length != 0) {
         DeviceId = other.DeviceId;
       }
       if (other.mesh_ != null) {
@@ -1362,18 +1276,6 @@ namespace Holoscanner.Proto {
           mesh_ = new global::Holoscanner.Proto.Mesh();
         }
         Mesh.MergeFrom(other.Mesh);
-      }
-      if (other.locationRequest_ != null) {
-        if (locationRequest_ == null) {
-          locationRequest_ = new global::Holoscanner.Proto.LocationRequest();
-        }
-        LocationRequest.MergeFrom(other.LocationRequest);
-      }
-      if (other.locationResponse_ != null) {
-        if (locationResponse_ == null) {
-          locationResponse_ = new global::Holoscanner.Proto.LocationResponse();
-        }
-        LocationResponse.MergeFrom(other.LocationResponse);
       }
       if (other.gameState_ != null) {
         if (gameState_ == null) {
@@ -1397,8 +1299,8 @@ namespace Holoscanner.Proto {
             type_ = (global::Holoscanner.Proto.Message.Types.Type) input.ReadEnum();
             break;
           }
-          case 16: {
-            DeviceId = input.ReadUInt32();
+          case 18: {
+            DeviceId = input.ReadString();
             break;
           }
           case 802: {
@@ -1406,20 +1308,6 @@ namespace Holoscanner.Proto {
               mesh_ = new global::Holoscanner.Proto.Mesh();
             }
             input.ReadMessage(mesh_);
-            break;
-          }
-          case 2402: {
-            if (locationRequest_ == null) {
-              locationRequest_ = new global::Holoscanner.Proto.LocationRequest();
-            }
-            input.ReadMessage(locationRequest_);
-            break;
-          }
-          case 3202: {
-            if (locationResponse_ == null) {
-              locationResponse_ = new global::Holoscanner.Proto.LocationResponse();
-            }
-            input.ReadMessage(locationResponse_);
             break;
           }
           case 4002: {
@@ -1445,10 +1333,11 @@ namespace Holoscanner.Proto {
         ACK = 0,
         FIN = 1,
         MESH = 10,
-        LOCATION_REQUEST = 11,
-        LOCATION_RESPONSE = 12,
         GAME_STATE = 13,
+        GAME_STATE_REQUEST = 14,
         TARGET_FOUND = 20,
+        ANCHOR_SET = 30,
+        ANCHOR_GET = 31,
         CLEAR_MESHES = 100,
       }
 

@@ -14,9 +14,15 @@ message Vec4D {
     float w = 4;
 }
 
+message Client {
+    string device_id = 1;
+    uint32 score = 10;
+}
+
 message Mesh {
     uint32 mesh_id = 2;
     uint64 timestamp = 3;
+    bool is_last = 4;
 
     // We need the camera position in case we want to do space carving.
     Vec3D cam_position = 100;
@@ -35,14 +41,7 @@ message GameState {
     float floor_y = 1;
     float ceiling_y = 2;
     repeated Target targets = 10;
-}
-
-message LocationRequest {
-
-}
-message LocationResponse {
-    Vec3D location = 1;
-    Vec3D orientation = 2;
+    repeated Client clients = 20;
 }
 
 message Message {
@@ -59,12 +58,10 @@ message Message {
     }
 
     Type type = 1;
-    uint32 device_id = 2;
+    string device_id = 2;
 
     // One or less of the following will be filled in.
     Mesh mesh = 100;
-    LocationRequest location_request = 300;
-    LocationResponse location_response = 400;
     GameState game_state = 500;
     uint32 target_id = 600;
 }

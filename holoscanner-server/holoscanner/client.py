@@ -4,20 +4,16 @@ from holoscanner.game_server import HsClientProtocol
 from holoscanner.proto.holoscanner_pb2 import Message
 from holoscanner import config, base_logger
 
-from holoscanner.proto.holoscanner_pb2 import Vec3D, Mesh
-
-
 logger = base_logger.getChild(__name__)
 
-
-if __name__=='__main__':
+if __name__ == '__main__':
     messages = []
     for filename in os.listdir(config.MESHES_DIR):
         filepath = os.path.join(config.MESHES_DIR, filename)
 
         msg = Message()
         msg.type = Message.MESH
-        msg.device_id = 10
+        msg.device_id = 'fake_client'
         with open(filepath, 'rb') as f:
             msg.mesh.ParseFromString(f.read())
 
