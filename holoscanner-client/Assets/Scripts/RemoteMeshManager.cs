@@ -75,9 +75,11 @@ namespace Holoscanner
             List<MeshFilter> MeshFilters = SpatialMappingManager.Instance.GetMeshFilters();
             for (int index = 0; index < MeshFilters.Count; index++)
             {
-                RemoteMeshSource.Instance.SendData(ProtoMeshSerializer.Serialize(MeshFilters[index].sharedMesh));
+                int id = int.Parse(MeshFilters[index].transform.gameObject.name.Substring("Surface-".Length));
+                NetworkCommunication.Instance.SendData(ProtoMeshSerializer.Serialize(MeshFilters[index].sharedMesh, MeshFilters[index].transform, (uint) id, index==MeshFilters.Count-1));
                 yield return null;
             }
+            NetworkCommunication.Instance.SendData(ProtoMeshSerializer.DataRequest());
 #endif
             yield return null;
         }
