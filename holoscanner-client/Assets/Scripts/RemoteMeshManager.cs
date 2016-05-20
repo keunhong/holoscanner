@@ -25,6 +25,8 @@ namespace Holoscanner
         /// </summary>
         private Dictionary<string, System.Action> keywordCollection;
 
+        private List<Vector3> targets;
+
         // Use this for initialization.
         private void Start()
         {
@@ -67,6 +69,34 @@ namespace Holoscanner
         void Update()
         {
             // FIXME: Send meshes at regular intervals
+
+            // Check for new messages
+            if (NetworkCommunication.Instance.numMessages() > 0)
+            {
+                Proto.Message msg = ProtoMeshSerializer.parseMesssage(NetworkCommunication.Instance.getMessage());
+                switch (msg.Type)
+                {
+                    case Proto.Message.Types.Type.GAME_STATE:
+                        targets.Clear();
+                        for (int i = 0; i < msg.GameState.Targets.Count; i++)
+                        {
+                            targets.Add(new Vector3(msg.GameState.Targets[i].Position.X, msg.GameState.Targets[i].Position.Y, msg.GameState.Targets[i].Position.Z));
+                        }
+                        break;
+                    case Proto.Message.Types.Type.ANCHOR_SET:
+                        break;
+                        // TODO: others
+                }
+                NetworkCommunication.Instance.popMessage();
+            }
+        }
+
+        private void SendTargetFoundMessage(int targetid)
+        {
+            Holoscanner.Proto.Message msg = new Holoscanner.Proto.Message();
+            msg.Type = Holoscanner.Proto.Message.Types.Type.TARGET_FOUND;
+            msg.TargetId = (uint) targetid;
+            NetworkCommunication.Instance.SendData(Google.Protobuf.MessageExtensions.ToByteArray(msg));
         }
 
         private IEnumerator SendMeshes()

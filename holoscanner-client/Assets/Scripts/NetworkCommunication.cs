@@ -64,6 +64,9 @@ namespace HoloToolkit.Unity
         /// </summary>
         private float timeToDeferFailedConnections = 10.0f;
    
+        public int numMessages() { return messageQueue.Count;  }
+        public byte[] getMessage() { return messageQueue.Peek(); }
+        public void popMessage() { messageQueue.Dequeue(); }
         public void Start()
         {
             currentReceivedMessage = null;
