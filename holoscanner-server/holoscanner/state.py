@@ -64,6 +64,7 @@ class Mesh:
             self.vertices[:, 0] += mesh_pb.cam_position.x
             self.vertices[:, 1] += mesh_pb.cam_position.y
             self.vertices[:, 2] += mesh_pb.cam_position.z
+        self.vertices[:, 2] *= -1
 
     def to_proto(self):
         mesh_pb = pb.Mesh()
@@ -125,9 +126,9 @@ class GameState:
         self.send_to_websocket_clients(self.create_mesh_message(mesh.to_proto()))
 
         if mesh_pb.is_last:
+            self.update_planes()
             self.update_targets(40)
             self.send_to_websocket_clients(self.create_game_state_message())
-        self.update_planes()
 
     def clear_meshes(self):
         logger.info('Clearing meshes.')

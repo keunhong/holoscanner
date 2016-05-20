@@ -13,7 +13,7 @@ if __name__ == '__main__':
 
         msg = Message()
         msg.type = Message.MESH
-        msg.device_id = 10
+        msg.device_id = 'fake_client'
         with open(filepath, 'rb') as f:
             msg.mesh.ParseFromString(f.read())
 
