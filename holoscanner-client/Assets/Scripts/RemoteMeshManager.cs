@@ -13,8 +13,9 @@ namespace Holoscanner
 {
     public class RemoteMeshManager : MonoBehaviour
     {
-
-#region Temporary
+        public List<Vector3> targets;
+        public List<uint> targetIDs;
+        #region Temporary
         /// <summary>
         /// Used for voice commands.
         /// </summary>
@@ -25,7 +26,7 @@ namespace Holoscanner
         /// </summary>
         private Dictionary<string, System.Action> keywordCollection;
 
-        private List<Vector3> targets;
+        
 
         // Use this for initialization.
         private void Start()
@@ -78,9 +79,16 @@ namespace Holoscanner
                 {
                     case Proto.Message.Types.Type.GAME_STATE:
                         targets.Clear();
+                        Debug.Log("Getting targets");
                         for (int i = 0; i < msg.GameState.Targets.Count; i++)
                         {
                             targets.Add(new Vector3(msg.GameState.Targets[i].Position.X, msg.GameState.Targets[i].Position.Y, msg.GameState.Targets[i].Position.Z));
+                            targetIDs.Add(msg.GameState.Targets[i].TargetId);
+                        }
+                        if (targets.Count > 0)
+                        {
+                            OrbPlacement op = this.gameObject.GetComponentInChildren<OrbPlacement>();
+                            op.replaceTarget(targets[0], targetIDs[0]);
                         }
                         break;
                     case Proto.Message.Types.Type.ANCHOR_SET:
@@ -97,6 +105,14 @@ namespace Holoscanner
             msg.Type = Holoscanner.Proto.Message.Types.Type.TARGET_FOUND;
             msg.TargetId = (uint) targetid;
             NetworkCommunication.Instance.SendData(Google.Protobuf.MessageExtensions.ToByteArray(msg));
+        }
+
+        public void SendTargetRequest()
+        {
+            Holoscanner.Proto.Message msg = new Holoscanner.Proto.Message();
+            msg.Type = Holoscanner.Proto.Message.Types.Type.GAME_STATE_REQUEST;
+            NetworkCommunication.Instance.SendData(Google.Protobuf.MessageExtensions.ToByteArray(msg));
+          
         }
 
         private IEnumerator SendMeshes()

@@ -13,7 +13,23 @@ public class OrbPlacement : Singleton<OrbPlacement>
     {
         // TODO: Get the candidate position
         Debug.Log("Clicked!");
-        this.gameObject.transform.Translate(Vector3.up);
+        targetFound();
+    }
+
+    void targetFound()
+    {
+        //send "target found" message
+        //get new targets
+        //replace target
+        Holoscanner.RemoteMeshManager rmm = this.GetComponentInParent<Holoscanner.RemoteMeshManager>();
+        rmm.SendTargetRequest();
+       
+    }
+
+    public void replaceTarget(Vector3 t_pos, uint t_id)
+    {
+
+        this.gameObject.transform.position = t_pos;
     }
 
     void Start()

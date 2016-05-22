@@ -25,11 +25,11 @@ namespace HoloToolkit.Unity
         [Tooltip("The connection port on the machine to use.")]
         public int ConnectionPort = 11000;
 
-#if !UNITY_EDITOR 
+
         /// <summary>
         /// Tracks the network connection to the remote machine we are sending meshes to.
         /// </summary>
-        private StreamSocket networkConnection;
+        
 
         /// <summary>
         /// Tracks if we are currently sending a mesh.
@@ -67,6 +67,17 @@ namespace HoloToolkit.Unity
         public int numMessages() { return messageQueue.Count;  }
         public byte[] getMessage() { return messageQueue.Peek(); }
         public void popMessage() { messageQueue.Dequeue(); }
+        public void SendData(byte[] dataBufferToSend)
+        {
+            byte[] lenbytes = System.BitConverter.GetBytes((ulong)dataBufferToSend.Length);
+            byte[] msgbytes = new byte[lenbytes.Length + dataBufferToSend.Length];
+            lenbytes.CopyTo(msgbytes, 0);
+            dataBufferToSend.CopyTo(msgbytes, lenbytes .Length);
+            dataQueue.Enqueue(msgbytes);
+            lenbytes = null;
+        }
+#if !UNITY_EDITOR 
+        private StreamSocket networkConnection;
         public void Start()
         {
             currentReceivedMessage = null;
@@ -167,15 +178,7 @@ namespace HoloToolkit.Unity
         /// Queues up a data buffer to send over the network.
         /// </summary>
         /// <param name="dataBufferToSend">The data buffer to send.</param>
-        public void SendData(byte[] dataBufferToSend)
-        {
-            byte[] lenbytes = System.BitConverter.GetBytes((ulong)dataBufferToSend.Length);
-            byte[] msgbytes = new byte[lenbytes.Length + dataBufferToSend.Length];
-            lenbytes.CopyTo(msgbytes, 0);
-            dataBufferToSend.CopyTo(msgbytes, lenbytes.Length);
-            dataQueue.Enqueue(msgbytes);
-            lenbytes = null;
-        }
+       
 
         /// <summary>
         /// Sends the data over the network.
