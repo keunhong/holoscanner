@@ -50,7 +50,7 @@ class HsServerProtocol(asyncio.Protocol):
         ip, port = transport.get_extra_info('peername')
         logger.info('Hololense connection from {}:{}'.format(ip, port))
         self.transport = transport
-        self.client = game_state.new_hololens_client(ip, protocol)
+        self.client = game_state.new_hololens_client(ip, self)
 
     def handle_bytes(self, data):
         bytes_processed = 0
@@ -112,17 +112,10 @@ class HsClientProtocol(asyncio.Protocol):
         self.loop = loop
 
     def connection_made(self, transport):
+        self.transport = transport
         logger.info('Sending {} messages'.format(len(self.messages)))
         for msg in self.messages:
-            msg_bytes = msg.SerializeToString()
-            header = struct.pack(HEADER_FMT, len(msg_bytes))
-            transport.write(header)
-            transport.write(msg_bytes)
-            logger.info('{} bytes sent'.format(len(msg_bytes)))
-
-        msg = Message()
-        msg.type = Message.FIN
-        transport.write(pack_message(msg))
+            self.send_message(msg)
 
     def data_received(self, data):
         data = data[HEADER_SIZE:]
@@ -130,6 +123,19 @@ class HsClientProtocol(asyncio.Protocol):
         msg.ParseFromString(data)
         logger.info('Data received: length={}, type={}'.format(
             len(data), msg.type))
+
+        if msg.type == Message.GAME_STATE:
+            target_found_msg = Message()
+            target_found_msg.type = Message.TARGET_FOUND
+            target_found_msg.target_id = msg.game_state.targets[0].target_id
+            print(target_found_msg)
+            self.send_message(target_found_msg)
+
+    def send_message(self, message):
+        bytes = pack_message(message)
+        logger.info('Sending message of type {} ({} bytes).'.format(
+            message.type, len(bytes)))
+        self.transport.write(bytes)
 
     def connection_lost(self, exc):
         logger.info('The server closed the connection')

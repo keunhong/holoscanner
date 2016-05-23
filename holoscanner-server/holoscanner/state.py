@@ -135,7 +135,7 @@ class GameState:
 
         if mesh_pb.is_last:
             self.update_planes()
-            self.update_targets(40)
+            self.update_targets(1)
             self.send_to_websocket_clients(self.create_game_state_message())
             self.send_to_hololens_clients(self.create_game_state_message())
 
@@ -174,6 +174,7 @@ class GameState:
         if target_id in self.target_pbs:
             logger.info('Target {} deleted.'.format(target_id))
             del self.target_pbs[target_id]
+            self.send_to_websocket_clients(self.create_game_state_message())
 
     def create_game_state_message(self):
         msg = pb.Message()
@@ -182,6 +183,7 @@ class GameState:
         msg.game_state.floor_y = self.floor
         msg.game_state.ceiling_y = self.ceiling
         msg.game_state.targets.extend(self.target_pbs.values())
+        logger.info('Game state: {} targets'.format(len(self.target_pbs)))
         return msg
 
     def create_mesh_message(self, mesh_pb):
