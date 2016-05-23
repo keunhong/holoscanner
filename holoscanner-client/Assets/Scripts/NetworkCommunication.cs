@@ -122,6 +122,7 @@ namespace HoloToolkit.Unity
             ulong length = System.BitConverter.ToUInt64(bytes,0);
             if (length == 0)
             {
+                ListenForMessageHeader();
                 return;
             }
             currentReceivedMessage = new byte[length];

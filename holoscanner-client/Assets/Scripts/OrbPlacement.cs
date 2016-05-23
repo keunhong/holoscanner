@@ -6,7 +6,7 @@ using HoloToolkit.Sharing;
 public class OrbPlacement : Singleton<OrbPlacement>
 {
 
-
+    public uint targetID;
     public bool GotTransform { get; private set; }
     // Called by GazeGestureManager when the user performs a Select gesture
     void OnSelect()
@@ -22,14 +22,15 @@ public class OrbPlacement : Singleton<OrbPlacement>
         //get new targets
         //replace target
         Holoscanner.RemoteMeshManager rmm = this.GetComponentInParent<Holoscanner.RemoteMeshManager>();
+        rmm.SendTargetFoundMessage(targetID);
         rmm.SendTargetRequest();
        
     }
 
     public void replaceTarget(Vector3 t_pos, uint t_id)
     {
-
         this.gameObject.transform.position = t_pos;
+        targetID = t_id;
     }
 
     void Start()

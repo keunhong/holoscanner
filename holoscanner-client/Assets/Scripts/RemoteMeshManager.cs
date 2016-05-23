@@ -75,6 +75,7 @@ namespace Holoscanner
             if (NetworkCommunication.Instance.numMessages() > 0)
             {
                 Proto.Message msg = ProtoMeshSerializer.parseMesssage(NetworkCommunication.Instance.getMessage());
+                Debug.Log("Got message of type: " + msg.Type);
                 switch (msg.Type)
                 {
                     case Proto.Message.Types.Type.GAME_STATE:
@@ -93,18 +94,20 @@ namespace Holoscanner
                         break;
                     case Proto.Message.Types.Type.ANCHOR_SET:
                         break;
+                    
                         // TODO: others
                 }
                 NetworkCommunication.Instance.popMessage();
             }
         }
 
-        private void SendTargetFoundMessage(int targetid)
+        public void SendTargetFoundMessage(uint targetid)
         {
             Holoscanner.Proto.Message msg = new Holoscanner.Proto.Message();
             msg.Type = Holoscanner.Proto.Message.Types.Type.TARGET_FOUND;
-            msg.TargetId = (uint) targetid;
+            msg.TargetId =  targetid;
             NetworkCommunication.Instance.SendData(Google.Protobuf.MessageExtensions.ToByteArray(msg));
+            Debug.Log("Sending target found");
         }
 
         public void SendTargetRequest()
@@ -112,7 +115,7 @@ namespace Holoscanner
             Holoscanner.Proto.Message msg = new Holoscanner.Proto.Message();
             msg.Type = Holoscanner.Proto.Message.Types.Type.GAME_STATE_REQUEST;
             NetworkCommunication.Instance.SendData(Google.Protobuf.MessageExtensions.ToByteArray(msg));
-          
+            Debug.Log("Sending target request");
         }
 
         private IEnumerator SendMeshes()
