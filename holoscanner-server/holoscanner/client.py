@@ -19,6 +19,12 @@ if __name__ == '__main__':
 
         messages.append(msg)
 
+    messages[-1].mesh.is_last = True
+
+    gsr_message = Message()
+    msg.type = Message.GAME_STATE_REQUEST
+    messages.append(msg)
+
     loop = asyncio.get_event_loop()
     coro = loop.create_connection(lambda: HsClientProtocol(messages, loop),
                                   '127.0.0.1', 8888)

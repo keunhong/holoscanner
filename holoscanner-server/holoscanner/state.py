@@ -64,7 +64,7 @@ class Mesh:
             self.vertices[:, 0] += mesh_pb.cam_position.x
             self.vertices[:, 1] += mesh_pb.cam_position.y
             self.vertices[:, 2] += mesh_pb.cam_position.z
-        self.vertices[:, 2] *= -1
+        # self.vertices[:, 2] *= -1
 
     def to_proto(self):
         mesh_pb = pb.Mesh()
@@ -83,9 +83,13 @@ class Mesh:
 
 
 class Client:
-    def __init__(self, ip):
+    def __init__(self, ip, protocol):
         self.ip = ip
         self.score = 0
+        self.protocol = protocol
+
+    def send_message(self, message):
+        self.protocol.send_message(message)
 
 
 class GameState:
@@ -98,12 +102,12 @@ class GameState:
     floor = -10
     ceiling = 10
     target_counter = 0
-    target_pbs = []
+    target_pbs = {}
 
-    def new_hololens_client(self, ip):
+    def new_hololens_client(self, ip, protocol):
         if ip not in self.clients:
             logger.info('Adding client with IP {}'.format(ip))
-            self.clients[ip] = Client(ip)
+            self.clients[ip] = Client(ip, protocol)
         return self.clients[ip]
 
     def new_websocket_client(self, queue):
@@ -112,6 +116,10 @@ class GameState:
     def send_to_websocket_clients(self, message):
         for queue in self.listeners:
             queue.put_nowait(message)
+
+    def send_to_hololens_clients(self, message):
+        for client in self.clients.values():
+            client.send_message(message)
 
     def new_mesh(self, mesh_pb, client):
         with self.lock:
@@ -129,6 +137,7 @@ class GameState:
             self.update_planes()
             self.update_targets(40)
             self.send_to_websocket_clients(self.create_game_state_message())
+            self.send_to_hololens_clients(self.create_game_state_message())
 
     def clear_meshes(self):
         logger.info('Clearing meshes.')
@@ -141,8 +150,8 @@ class GameState:
         sigma = len(y_coords) / config.MESH_PLANE_FINDING_BINS
         self.floor, self.ceiling = find_planes(
             y_coords, config.MESH_PLANE_FINDING_BINS, sigma / 5)
-        # logger.info('Planes updates: floor={}, ceiling={}'.format(
-        #     self.floor, self.ceiling))
+        logger.info('Planes updates: floor={}, ceiling={}'.format(
+            self.floor, self.ceiling))
 
     def update_targets(self, num_targets):
         self.target_pbs.clear()
@@ -159,7 +168,12 @@ class GameState:
             target_pb.position.y = y
             target_pb.position.z = z
             self.target_counter += 1
-            self.target_pbs.append(target_pb)
+            self.target_pbs[target_pb.target_id] = target_pb
+
+    def delete_target(self, target_id):
+        if target_id in self.target_pbs:
+            logger.info('Target {} deleted.'.format(target_id))
+            del self.target_pbs[target_id]
 
     def create_game_state_message(self):
         msg = pb.Message()
@@ -167,7 +181,7 @@ class GameState:
         msg.device_id = config.SERVER_DEVICE_ID
         msg.game_state.floor_y = self.floor
         msg.game_state.ceiling_y = self.ceiling
-        msg.game_state.targets.extend(self.target_pbs)
+        msg.game_state.targets.extend(self.target_pbs.values())
         return msg
 
     def create_mesh_message(self, mesh_pb):

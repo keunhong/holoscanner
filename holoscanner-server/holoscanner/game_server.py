@@ -1,6 +1,7 @@
 import os
 import asyncio
 import struct
+import threading
 from enum import Enum
 from holoscanner import base_logger
 from holoscanner.proto.holoscanner_pb2 import Message
@@ -43,12 +44,13 @@ class HsServerProtocol(asyncio.Protocol):
         self.data = bytes()
         self.data_size = 0
         self.client = None
+        self.lock = threading.RLock()
 
     def connection_made(self, transport):
         ip, port = transport.get_extra_info('peername')
         logger.info('Hololense connection from {}:{}'.format(ip, port))
         self.transport = transport
-        self.client = game_state.new_hololens_client(ip)
+        self.client = game_state.new_hololens_client(ip, protocol)
 
     def handle_bytes(self, data):
         bytes_processed = 0
@@ -67,18 +69,20 @@ class HsServerProtocol(asyncio.Protocol):
         if len(self.data) == self.data_size:
             msg = Message()
             msg.ParseFromString(self.data)
-            logger.info('Received message of type {}, size {}'.format(msg.type,
-                                                                      self.data_size))
+            logger.info('Received message of type {}, size {}'.format(
+                msg.type, self.data_size))
             if msg.type == Message.MESH:
                 game_state.new_mesh(msg.mesh, self.client)
                 message = game_state.create_ack()
-                self.transport.write(pack_message(message))
+                self.send_message(message)
             elif msg.type == Message.GAME_STATE_REQUEST:
                 message = game_state.create_game_state_message()
-                self.transport.write(pack_message(message))
+                self.send_message(message)
             elif msg.type == Message.FIN:
                 logger.info('Closing the client socket')
                 self.transport.close()
+            elif msg.type == Message.TARGET_FOUND:
+                game_state.delete_target(msg.target_id)
             else:
                 logger.error('Unknown message type {} received'.format(
                     msg.type))
@@ -88,6 +92,13 @@ class HsServerProtocol(asyncio.Protocol):
             self.state = ServerState.WAITING
 
         return bytes_processed
+
+    def send_message(self, message):
+        with self.lock:
+            bytes = pack_message(message)
+            logger.info('Sending message of type {} ({} bytes).'.format(
+                message.type, len(bytes)))
+            self.transport.write(bytes)
 
     def data_received(self, data):
         bytes_processed = 0
