@@ -73,12 +73,13 @@ function handleGameState(pbGameState) {
   targets.length = 0;
 
   for (let target of pbGameState.targets) {
-    console.log(target);
-    let targetMesh = new THREE.PointLight(
-        0xff0000, 1.0 / pbGameState.targets.length, 0);
-    let sphere = new THREE.SphereGeometry(0.1, 32, 32);
-    targetMesh.add(new THREE.Mesh(
-        sphere, new THREE.MeshBasicMaterial({color: 0xff00ff})));
+    let geom = new THREE.SphereGeometry(0.1, 32, 32);
+    let material = new THREE.MeshBasicMaterial({color: 0xff00ff})
+    // let targetMesh = new THREE.PointLight(
+    //     0xff0000, 1.0 / pbGameState.targets.length, 0);
+    // targetMesh.add(new THREE.Mesh(
+    //     sphere, new THREE.MeshBasicMaterial({color: 0xff00ff})));
+    let targetMesh = new THREE.Mesh(geom, material)
     targetMesh.position.set(
         target.position.x, target.position.y, target.position.z);
     scene.add(targetMesh);

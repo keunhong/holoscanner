@@ -50,15 +50,13 @@ def quat_to_mat(x, y, z, w):
         [xz - wy, yz + wx, 1 - (xx + yy)]])
 
 
-def compute_hull_mask(points, vertices, scale=100, alpha=0.3, remove_holes=True):
+def compute_hull_mask(points, vertices, scale=100, alpha=0.4, remove_holes=True):
     transformed = points.copy()
     transformed[:, 0] -= points[:, 0].min()
     transformed[:, 1] -= points[:, 1].min()
     tri = Delaunay(transformed)
-    keep = []
     offsetx = vertices[:, 0].min()
-    offsetz = vertices[:, 2].min()
-    # Points are in PIL convention (x, y).
+    offsety = vertices[:, 2].min()
     width = int(round(vertices[:, 0].max() - vertices[:, 0].min()) * scale)
     height = int(round(vertices[:, 2].max() - vertices[:, 2].min()) * scale)
     im = Image.new('L', (width, height))
@@ -73,8 +71,7 @@ def compute_hull_mask(points, vertices, scale=100, alpha=0.3, remove_holes=True)
     im = np.array(im) == 255
     if remove_holes:
         im = morphology.remove_small_holes(im, min_size=scale**2)
-    # Return to numpy convention (y, x).
-    return im.T, offsetx, offsetz
+    return im.T, offsetx, offsety
 
 
 class Mesh:
@@ -198,21 +195,32 @@ class GameState:
 
     def update_targets(self, num_targets):
         self.target_pbs.clear()
-        coords = np.sort(np.vstack([m.vertices for m in self.meshes]))
+        coords = np.vstack([m.vertices for m in self.meshes])
 
-        is_near_floor = (coords[:, 1] - self.floor) < 0.1
+        is_near_floor = (coords[:, 1] - self.floor) < 0.3
+        is_near_ceiling = (coords[:, 1] - self.ceiling) < 0.3
         global_hull_mask, offsetx, offsetz = compute_hull_mask(
             coords[:, [0, 2]], coords)
         floor_hull_mask, _, _ = compute_hull_mask(
-            coords[is_near_floor][:, [0, 2]], coords, remove_holes=False)
-        sample_mask = global_hull_mask & ~floor_hull_mask
-        cand_x, cand_z = np.where(sample_mask)
+            coords[is_near_floor][:, [0, 2]], coords, remove_holes=True)
+        ceiling_hull_mask, _, _ = compute_hull_mask(
+            coords[is_near_ceiling][:, [0, 2]], coords, remove_holes=True)
+        floor_sample_mask = global_hull_mask & ~floor_hull_mask
+        ceiling_sample_mask = global_hull_mask & ~floor_hull_mask
+        floor_cand_x, floor_cand_z = np.where(floor_sample_mask)
+        ceiling_cand_x, ceiling_cand_z = np.where(ceiling_sample_mask)
 
-        for i in range(100):
-            point_idx = random.randint(0, len(cand_x))
-            x = cand_x[point_idx] / 100 + offsetx
-            z = cand_z[point_idx] / 100 + offsetz
-            y = self.floor + 0.15
+        for i in range(num_targets):
+            if random.random() < 0.5:
+                point_idx = random.randint(0, len(floor_cand_x))
+                x = floor_cand_x[point_idx] / 100 + offsetx
+                z = floor_cand_z[point_idx] / 100 + offsetz
+                y = self.floor + 0.15
+            else:
+                point_idx = random.randint(0, len(ceiling_cand_x))
+                x = ceiling_cand_x[point_idx] / 100 + offsetx
+                z = ceiling_cand_z[point_idx] / 100 + offsetz
+                y = self.ceiling - 0.15
             target_pb = pb.Target()
             target_pb.target_id = self.target_counter
             target_pb.position.x = x
