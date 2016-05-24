@@ -19,6 +19,8 @@ if __name__ == '__main__':
 
         messages.append(msg)
 
+    messages[-1].mesh.is_last = True
+
     loop = asyncio.get_event_loop()
     coro = loop.create_connection(lambda: HsClientProtocol(messages, loop),
                                   '127.0.0.1', 8888)

@@ -5,6 +5,12 @@ import asyncio
 import numpy as np
 from scipy.signal import argrelextrema
 from scipy.ndimage.filters import gaussian_filter1d
+from PIL import Image, ImageDraw
+from skimage import measure
+from skimage import morphology
+from scipy.spatial import Delaunay
+from numpy import linalg
+
 from holoscanner import config
 from holoscanner.proto import holoscanner_pb2 as pb
 from holoscanner import base_logger
@@ -44,10 +50,34 @@ def quat_to_mat(x, y, z, w):
         [xz - wy, yz + wx, 1 - (xx + yy)]])
 
 
+def compute_hull_mask(points, vertices, scale=100, alpha=0.4, remove_holes=True):
+    transformed = points.copy()
+    transformed[:, 0] -= points[:, 0].min()
+    transformed[:, 1] -= points[:, 1].min()
+    tri = Delaunay(transformed)
+    offsetx = vertices[:, 0].min()
+    offsety = vertices[:, 2].min()
+    width = int(round(vertices[:, 0].max() - vertices[:, 0].min()) * scale)
+    height = int(round(vertices[:, 2].max() - vertices[:, 2].min()) * scale)
+    im = Image.new('L', (width, height))
+    draw = ImageDraw.Draw(im)
+    for simplex in tri.simplices:
+        p = [(int(transformed[i, 0]*scale), int(transformed[i, 1]*scale)) for i in simplex]
+        pm = [points[i, :] for i in simplex]
+        if (linalg.norm(pm[0] - pm[1]) < alpha and
+            linalg.norm(pm[1] - pm[2]) < alpha and
+            linalg.norm(pm[0] - pm[2]) < alpha):
+            draw.polygon(p, fill='#fff')
+    im = np.array(im) == 255
+    if remove_holes:
+        im = morphology.remove_small_holes(im, min_size=scale**2)
+    return im.T, offsetx, offsety
+
+
 class Mesh:
     def __init__(self, mesh_pb, client):
         self.nvertices = len(mesh_pb.vertices)
-        self.nfaces = len(mesh_pb.triangles) / 3
+        self.nfaces = int(len(mesh_pb.triangles) / 3)
         self.vertices = np.ndarray((self.nvertices, 3), dtype=float)
         self.client = client
         self.mesh_id = mesh_pb.mesh_id
@@ -64,7 +94,8 @@ class Mesh:
             self.vertices[:, 0] += mesh_pb.cam_position.x
             self.vertices[:, 1] += mesh_pb.cam_position.y
             self.vertices[:, 2] += mesh_pb.cam_position.z
-        self.vertices[:, 2] *= -1
+
+        self.normals = self.compute_normals()
 
     def to_proto(self):
         mesh_pb = pb.Mesh()
@@ -77,15 +108,28 @@ class Mesh:
         mesh_pb.triangles.extend(self.faces.tolist())
         return mesh_pb
 
+    def compute_normals(self):
+        normals = np.zeros((self.nfaces, 3))
+        for i in range(self.nfaces):
+            v1 = self.vertices[self.faces[i * 3 + 0]]
+            v2 = self.vertices[self.faces[i * 3 + 1]]
+            v3 = self.vertices[self.faces[i * 3 + 2]]
+            normals[i] = np.cross(v1 - v2, v3 - v2)
+        return normals
+
     def __repr__(self):
         return 'Mesh(nvertices={}, nfaces={})'.format(
             self.nvertices, self.nfaces)
 
 
 class Client:
-    def __init__(self, ip):
+    def __init__(self, ip, protocol):
         self.ip = ip
         self.score = 0
+        self.protocol = protocol
+
+    def send_message(self, message):
+        self.protocol.send_message(message)
 
 
 class GameState:
@@ -98,12 +142,12 @@ class GameState:
     floor = -10
     ceiling = 10
     target_counter = 0
-    target_pbs = []
+    target_pbs = {}
 
-    def new_hololens_client(self, ip):
+    def new_hololens_client(self, ip, protocol):
         if ip not in self.clients:
             logger.info('Adding client with IP {}'.format(ip))
-            self.clients[ip] = Client(ip)
+            self.clients[ip] = Client(ip, protocol)
         return self.clients[ip]
 
     def new_websocket_client(self, queue):
@@ -112,6 +156,10 @@ class GameState:
     def send_to_websocket_clients(self, message):
         for queue in self.listeners:
             queue.put_nowait(message)
+
+    def send_to_hololens_clients(self, message):
+        for client in self.clients.values():
+            client.send_message(message)
 
     def new_mesh(self, mesh_pb, client):
         with self.lock:
@@ -127,8 +175,9 @@ class GameState:
 
         if mesh_pb.is_last:
             self.update_planes()
-            self.update_targets(40)
+            self.update_targets(1)
             self.send_to_websocket_clients(self.create_game_state_message())
+            self.send_to_hololens_clients(self.create_game_state_message())
 
     def clear_meshes(self):
         logger.info('Clearing meshes.')
@@ -141,25 +190,64 @@ class GameState:
         sigma = len(y_coords) / config.MESH_PLANE_FINDING_BINS
         self.floor, self.ceiling = find_planes(
             y_coords, config.MESH_PLANE_FINDING_BINS, sigma / 5)
-        # logger.info('Planes updates: floor={}, ceiling={}'.format(
-        #     self.floor, self.ceiling))
+        logger.info('Planes updates: floor={}, ceiling={}'.format(
+            self.floor, self.ceiling))
 
     def update_targets(self, num_targets):
         self.target_pbs.clear()
-        coords = np.sort(np.vstack([m.vertices for m in self.meshes]))
+        coords = np.vstack([m.vertices for m in self.meshes])
+
+        is_near_floor = (coords[:, 1] - self.floor) < 0.3
+        is_near_ceiling = (coords[:, 1] - self.ceiling) < 0.3
+        global_hull_mask, offsetx, offsetz = compute_hull_mask(
+            coords[:, [0, 2]], coords)
+        erosion_size = 0.04 * min(global_hull_mask.shape)
+        global_hull_mask = morphology.binary_erosion(global_hull_mask,
+                                  selem=morphology.square(erosion_size))
+        logger.info('Eroding global mask by {}'.format(erosion_size))
+        floor_hull_mask, _, _ = compute_hull_mask(
+            coords[is_near_floor][:, [0, 2]], coords, remove_holes=True)
+        floor_sample_mask = global_hull_mask & ~floor_hull_mask
+        floor_cand_x, floor_cand_z = np.where(floor_sample_mask)
+
+        from scipy.misc import imsave
+        imsave('/home/kpar/www/test0.png', global_hull_mask)
+        imsave('/home/kpar/www/test1.png', floor_hull_mask)
+        imsave('/home/kpar/www/test2.png', floor_sample_mask)
+
+        # ceiling_hull_mask, _, _ = compute_hull_mask(
+        #     coords[is_near_ceiling][:, [0, 2]], coords, remove_holes=True)
+        # ceiling_sample_mask = global_hull_mask & ~floor_hull_mask
+        # ceiling_cand_x, ceiling_cand_z = np.where(ceiling_sample_mask)
+
         for i in range(num_targets):
-            x = random.uniform(coords[:, 0].min() - 1, coords[:, 0].max() + 1)
-            z = random.uniform(coords[:, 2].min() - 1, coords[:, 2].max() + 1)
-            y = (self.floor + 0.1
-                 if random.uniform(0, 1) > 0.5
-                 else self.ceiling - 0.1)
+            # if random.random() < 0.5:
+            point_idx = random.randint(0, len(floor_cand_x))
+            x = floor_cand_x[point_idx] / 100 + offsetx
+            z = floor_cand_z[point_idx] / 100 + offsetz
+            y = self.floor + 0.15
+            # else:
+            #     point_idx = random.randint(0, len(ceiling_cand_x))
+            #     x = ceiling_cand_x[point_idx] / 100 + offsetx
+            #     z = ceiling_cand_z[point_idx] / 100 + offsetz
+            #     y = self.ceiling - 0.15
             target_pb = pb.Target()
             target_pb.target_id = self.target_counter
             target_pb.position.x = x
             target_pb.position.y = y
             target_pb.position.z = z
             self.target_counter += 1
-            self.target_pbs.append(target_pb)
+            self.target_pbs[target_pb.target_id] = target_pb
+
+    def delete_target(self, target_id):
+        logger.info('Deleting {} from {}'.format(
+            target_id, self.target_pbs))
+        if target_id in self.target_pbs:
+            logger.info('Target {} deleted.'.format(target_id))
+            del self.target_pbs[target_id]
+            self.update_targets(1)
+            self.send_to_websocket_clients(self.create_game_state_message())
+            self.send_to_hololens_clients(self.create_game_state_message())
 
     def create_game_state_message(self):
         msg = pb.Message()
@@ -167,7 +255,8 @@ class GameState:
         msg.device_id = config.SERVER_DEVICE_ID
         msg.game_state.floor_y = self.floor
         msg.game_state.ceiling_y = self.ceiling
-        msg.game_state.targets.extend(self.target_pbs)
+        msg.game_state.targets.extend(self.target_pbs.values())
+        logger.info('Game state: {} targets'.format(len(self.target_pbs)))
         return msg
 
     def create_mesh_message(self, mesh_pb):
