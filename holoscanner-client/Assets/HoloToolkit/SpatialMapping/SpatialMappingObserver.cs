@@ -1,7 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT License. See LICENSE in the project root for license information.
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VR.WSA;
 
@@ -187,7 +184,7 @@ namespace HoloToolkit.Unity
 
             switch (changeType)
             {
-                // Adding and updating are nearly identical.  The only difference is if a new gameobject to contain 
+                // Adding and updating are nearly identical.  The only difference is if a new GameObject to contain 
                 // the surface needs to be created.
                 case SurfaceChange.Added:
                 case SurfaceChange.Updated:

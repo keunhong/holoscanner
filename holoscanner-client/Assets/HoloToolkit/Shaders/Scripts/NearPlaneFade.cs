@@ -1,8 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT License. See LICENSE in the project root for license information.
-
-using UnityEngine;
-using System.Collections;
+﻿using UnityEngine;
 
 [ExecuteInEditMode]
 public class NearPlaneFade : MonoBehaviour
@@ -22,25 +18,23 @@ public class NearPlaneFade : MonoBehaviour
         UpdateShaderParams();
     }
 
-    void Update()
-    {
-    }
-
     private void OnValidate()
     {
-        FadeDistanceStart = Mathf.Max(FadeDistanceStart, 0);
-        FadeDistanceEnd = Mathf.Max(FadeDistanceEnd, 0);
-        FadeDistanceStart = Mathf.Max(FadeDistanceStart, FadeDistanceEnd);
-
         UpdateShaderParams();
     }
 
     private void UpdateShaderParams()
     {
-        float rangeInverse = 1.0f / (FadeDistanceStart - FadeDistanceEnd);
-        var fadeDist = new Vector4(-FadeDistanceEnd * rangeInverse, rangeInverse, 0, 0);
+        FadeDistanceStart = Mathf.Max(FadeDistanceStart, 0);
+        FadeDistanceEnd = Mathf.Max(FadeDistanceEnd, 0);
+        FadeDistanceStart = Mathf.Max(FadeDistanceStart, FadeDistanceEnd);
 
-        Shader.SetGlobalVector(fadeDistancePropertyID, fadeDist);
+        if (FadeDistanceStart != FadeDistanceEnd)
+        {
+            float rangeInverse = 1.0f / (FadeDistanceStart - FadeDistanceEnd);
+            var fadeDist = new Vector4(-FadeDistanceEnd * rangeInverse, rangeInverse, 0, 0);
+            Shader.SetGlobalVector(fadeDistancePropertyID, fadeDist);
+        }
 
         if (NearPlaneFadeOn)
         {

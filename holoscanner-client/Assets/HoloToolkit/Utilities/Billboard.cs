@@ -1,7 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT License. See LICENSE in the project root for license information.
-
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace HoloToolkit.Unity
 {
@@ -69,7 +66,7 @@ namespace HoloToolkit.Unity
             }
 
             // Calculate and apply the rotation required to reorient the object and apply the default rotation to the result.
-            gameObject.transform.rotation = Quaternion.LookRotation(-directionToTarget) * DefaultRotation;
+            gameObject.transform.rotation = Quaternion.LookRotation(directionToTarget) * DefaultRotation;
         }
     }
 }

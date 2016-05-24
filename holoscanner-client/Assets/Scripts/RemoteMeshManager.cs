@@ -13,8 +13,9 @@ namespace Holoscanner
 {
     public class RemoteMeshManager : MonoBehaviour
     {
-
-#region Temporary
+        public List<Vector3> targets;
+        public List<uint> targetIDs;
+        #region Temporary
         /// <summary>
         /// Used for voice commands.
         /// </summary>
@@ -25,12 +26,14 @@ namespace Holoscanner
         /// </summary>
         private Dictionary<string, System.Action> keywordCollection;
 
+        
+
         // Use this for initialization.
         private void Start()
         {
             // Create our keyword collection.
             keywordCollection = new Dictionary<string, System.Action>();
-            keywordCollection.Add("send meshes", () => SendMeshes());
+            keywordCollection.Add("send meshes", () => StartCoroutine(SendMeshes()));
 
             // Tell the KeywordRecognizer about our keywords.
             keywordRecognizer = new KeywordRecognizer(keywordCollection.Keys.ToArray());
@@ -67,66 +70,67 @@ namespace Holoscanner
         void Update()
         {
             // FIXME: Send meshes at regular intervals
+
+            // Check for new messages
+            if (NetworkCommunication.Instance.numMessages() > 0)
+            {
+                Proto.Message msg = ProtoMeshSerializer.parseMesssage(NetworkCommunication.Instance.getMessage());
+                Debug.Log("Got message of type: " + msg.Type);
+                switch (msg.Type)
+                {
+                    case Proto.Message.Types.Type.GAME_STATE:
+                        targets.Clear();
+                        Debug.Log("Getting targets");
+                        for (int i = 0; i < msg.GameState.Targets.Count; i++)
+                        {
+                            targets.Add(new Vector3(msg.GameState.Targets[i].Position.X, msg.GameState.Targets[i].Position.Y, msg.GameState.Targets[i].Position.Z));
+                            targetIDs.Add(msg.GameState.Targets[i].TargetId);
+                        }
+                        if (targets.Count > 0)
+                        {
+                            OrbPlacement op = this.gameObject.GetComponentInChildren<OrbPlacement>();
+                            op.replaceTarget(targets[0], targetIDs[0]);
+                        }
+                        break;
+                    case Proto.Message.Types.Type.ANCHOR_SET:
+                        break;
+                    
+                        // TODO: others
+                }
+                NetworkCommunication.Instance.popMessage();
+            }
         }
 
-        private void SendMeshes()
+        public void SendTargetFoundMessage(uint targetid)
+        {
+            Holoscanner.Proto.Message msg = new Holoscanner.Proto.Message();
+            msg.Type = Holoscanner.Proto.Message.Types.Type.TARGET_FOUND;
+            msg.TargetId =  targetid;
+            NetworkCommunication.Instance.SendData(Google.Protobuf.MessageExtensions.ToByteArray(msg));
+            Debug.Log("Sending target found");
+        }
+
+        public void SendTargetRequest()
+        {
+            Holoscanner.Proto.Message msg = new Holoscanner.Proto.Message();
+            msg.Type = Holoscanner.Proto.Message.Types.Type.GAME_STATE_REQUEST;
+            NetworkCommunication.Instance.SendData(Google.Protobuf.MessageExtensions.ToByteArray(msg));
+            Debug.Log("Sending target request");
+        }
+
+        private IEnumerator SendMeshes()
         {
 #if !UNITY_EDITOR
             List<MeshFilter> MeshFilters = SpatialMappingManager.Instance.GetMeshFilters();
-            int num_faces = 0;
-            int num_verts = 0;
-            Debug.Log("Loop iterations: " + MeshFilters.Count);
-
             for (int index = 0; index < MeshFilters.Count; index++)
             {
-                
-                List<Mesh> meshesToSend = new List<Mesh>();
-               MeshFilter filter = MeshFilters[index];
-                Mesh source = filter.sharedMesh;
-                Mesh clone = new Mesh();
-                List<Vector3> verts = new List<Vector3>();
-                verts.AddRange(source.vertices);
-                num_verts += verts.Count;
-                
-                
-                for (int vertIndex = 0; vertIndex < verts.Count; vertIndex++)
-                {
-                    verts[vertIndex] = filter.transform.TransformPoint(verts[vertIndex]);
-                }
-
-
-                num_faces += source.triangles.Length;
-               clone.SetVertices(verts);
-                
-                clone.SetTriangles(source.triangles, 0);
-                meshesToSend.Add(clone);
-
-                byte[] serialized = ProtoMeshSerializer.Serialize(meshesToSend[0]);
- 
-             
-                
-                RemoteMeshSource.Instance.SendData(serialized);
-
-                //RemoteMeshSource.Instance.Update();
-                
-                clone.Clear();
-                clone = null;
-
-                meshesToSend.Clear();
-                meshesToSend = null;
-                serialized = null;
-                verts.Clear();
-                verts = null;
-
-                System.GC.Collect();
-                System.GC.WaitForPendingFinalizers();
-
-
-                // meshesToSend.Clear();
-
-
+                int id = int.Parse(MeshFilters[index].transform.gameObject.name.Substring("Surface-".Length));
+                NetworkCommunication.Instance.SendData(ProtoMeshSerializer.Serialize(MeshFilters[index].sharedMesh, MeshFilters[index].transform, (uint) id, index==MeshFilters.Count-1));
+                yield return null;
             }
+            NetworkCommunication.Instance.SendData(ProtoMeshSerializer.DataRequest());
 #endif
+            yield return null;
         }
     }
 
