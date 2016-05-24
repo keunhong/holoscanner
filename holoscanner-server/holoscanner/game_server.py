@@ -82,6 +82,7 @@ class HsServerProtocol(asyncio.Protocol):
                 logger.info('Closing the client socket')
                 self.transport.close()
             elif msg.type == Message.TARGET_FOUND:
+                logger.info('Target found: {}'.format(msg.target_id))
                 game_state.delete_target(msg.target_id)
             else:
                 logger.error('Unknown message type {} received'.format(
@@ -124,12 +125,12 @@ class HsClientProtocol(asyncio.Protocol):
         logger.info('Data received: length={}, type={}'.format(
             len(data), msg.type))
 
-        if msg.type == Message.GAME_STATE:
-            target_found_msg = Message()
-            target_found_msg.type = Message.TARGET_FOUND
-            target_found_msg.target_id = msg.game_state.targets[0].target_id
-            print(target_found_msg)
-            self.send_message(target_found_msg)
+        # if msg.type == Message.GAME_STATE:
+        #     target_found_msg = Message()
+        #     target_found_msg.type = Message.TARGET_FOUND
+        #     target_found_msg.target_id = msg.game_state.targets[0].target_id
+        #     print(target_found_msg)
+        #     self.send_message(target_found_msg)
 
     def send_message(self, message):
         bytes = pack_message(message)

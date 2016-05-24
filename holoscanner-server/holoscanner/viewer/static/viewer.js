@@ -74,11 +74,11 @@ function handleGameState(pbGameState) {
 
   for (let target of pbGameState.targets) {
     console.log(target);
-    let targetMesh = new THREE.Mesh(
-        new THREE.SphereGeometry(0.1, 32, 32),
-        new THREE.MeshLambertMaterial({
-          color: 0xffff00
-        }));
+    let targetMesh = new THREE.PointLight(
+        0xff0000, 1.0 / pbGameState.targets.length, 0);
+    let sphere = new THREE.SphereGeometry(0.1, 32, 32);
+    targetMesh.add(new THREE.Mesh(
+        sphere, new THREE.MeshBasicMaterial({color: 0xff00ff})));
     targetMesh.position.set(
         target.position.x, target.position.y, target.position.z);
     scene.add(targetMesh);
@@ -92,33 +92,26 @@ function initRenderer() {
   renderer.setSize(container.width(), container.height());
   container.append(renderer.domElement);
 
-  var sphere = new THREE.SphereGeometry(0.5, 16, 8);
-
   let ambientLight = new THREE.AmbientLight(0x333333);
   scene.add(ambientLight);
 
   let light = new THREE.PointLight(0xffffff, 0.5, 0);
-  light.add(new THREE.Mesh(sphere, new THREE.MeshBasicMaterial({color: 0xff0040})));
   light.position.set(0, 10, 0);
   scene.add(light);
 
-  let light2 = new THREE.PointLight(0xffffff, 0.5, 0);
-  light2.add(new THREE.Mesh(sphere, new THREE.MeshBasicMaterial({color: 0xff0040})));
+  let light2 = new THREE.PointLight(0xffffff, 0.1, 0);
   light2.position.set(100, 100, 0);
   scene.add(light2);
 
-  let light3 = new THREE.PointLight(0xffffff, 0.5, 0);
-  light3.add(new THREE.Mesh(sphere, new THREE.MeshBasicMaterial({color: 0xff0040})));
+  let light3 = new THREE.PointLight(0xffffff, 0.1, 0);
   light3.position.set(-100, 100, 0);
   scene.add(light3);
 
-  let light4 = new THREE.PointLight(0xffffff, 0.5, 0);
-  light4.add(new THREE.Mesh(sphere, new THREE.MeshBasicMaterial({color: 0xff0040})));
+  let light4 = new THREE.PointLight(0xffffff, 0.1, 0);
   light4.position.set(-100, -100, 0);
   scene.add(light4);
 
-  let light5 = new THREE.PointLight(0xffffff, 0.5, 0);
-  light5.add(new THREE.Mesh(sphere, new THREE.MeshBasicMaterial({color: 0xff0040})));
+  let light5 = new THREE.PointLight(0xffffff, 0.1, 0);
   light5.position.set(100, -100, 0);
   scene.add(light5);
 
