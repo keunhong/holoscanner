@@ -201,26 +201,36 @@ class GameState:
         is_near_ceiling = (coords[:, 1] - self.ceiling) < 0.3
         global_hull_mask, offsetx, offsetz = compute_hull_mask(
             coords[:, [0, 2]], coords)
+        erosion_size = 0.04 * min(global_hull_mask.shape)
+        global_hull_mask = morphology.binary_erosion(global_hull_mask,
+                                  selem=morphology.square(erosion_size))
+        logger.info('Eroding global mask by {}'.format(erosion_size))
         floor_hull_mask, _, _ = compute_hull_mask(
             coords[is_near_floor][:, [0, 2]], coords, remove_holes=True)
-        ceiling_hull_mask, _, _ = compute_hull_mask(
-            coords[is_near_ceiling][:, [0, 2]], coords, remove_holes=True)
         floor_sample_mask = global_hull_mask & ~floor_hull_mask
-        ceiling_sample_mask = global_hull_mask & ~floor_hull_mask
         floor_cand_x, floor_cand_z = np.where(floor_sample_mask)
-        ceiling_cand_x, ceiling_cand_z = np.where(ceiling_sample_mask)
+
+        from scipy.misc import imsave
+        imsave('/home/kpar/www/test0.png', global_hull_mask)
+        imsave('/home/kpar/www/test1.png', floor_hull_mask)
+        imsave('/home/kpar/www/test2.png', floor_sample_mask)
+
+        # ceiling_hull_mask, _, _ = compute_hull_mask(
+        #     coords[is_near_ceiling][:, [0, 2]], coords, remove_holes=True)
+        # ceiling_sample_mask = global_hull_mask & ~floor_hull_mask
+        # ceiling_cand_x, ceiling_cand_z = np.where(ceiling_sample_mask)
 
         for i in range(num_targets):
-            if random.random() < 0.5:
-                point_idx = random.randint(0, len(floor_cand_x))
-                x = floor_cand_x[point_idx] / 100 + offsetx
-                z = floor_cand_z[point_idx] / 100 + offsetz
-                y = self.floor + 0.15
-            else:
-                point_idx = random.randint(0, len(ceiling_cand_x))
-                x = ceiling_cand_x[point_idx] / 100 + offsetx
-                z = ceiling_cand_z[point_idx] / 100 + offsetz
-                y = self.ceiling - 0.15
+            # if random.random() < 0.5:
+            point_idx = random.randint(0, len(floor_cand_x))
+            x = floor_cand_x[point_idx] / 100 + offsetx
+            z = floor_cand_z[point_idx] / 100 + offsetz
+            y = self.floor + 0.15
+            # else:
+            #     point_idx = random.randint(0, len(ceiling_cand_x))
+            #     x = ceiling_cand_x[point_idx] / 100 + offsetx
+            #     z = ceiling_cand_z[point_idx] / 100 + offsetz
+            #     y = self.ceiling - 0.15
             target_pb = pb.Target()
             target_pb.target_id = self.target_counter
             target_pb.position.x = x
