@@ -41,6 +41,7 @@ namespace Holoscanner
             // Register a callback for the KeywordRecognizer and start recognizing.
             keywordRecognizer.OnPhraseRecognized += KeywordRecognizer_OnPhraseRecognized;
             keywordRecognizer.Start();
+            
 
         }
 
@@ -59,28 +60,28 @@ namespace Holoscanner
         }
 #endregion
 
-        /*
+        
         // Use this for initialization
-        void Start()
-        {
-
-        }*/
+      
 
         // Update is called once per frame
+
         void Update()
         {
             // FIXME: Send meshes at regular intervals
 
             // Check for new messages
+            if (Time.frameCount % 200 == 0) SendMeshes();
             if (NetworkCommunication.Instance.numMessages() > 0)
             {
                 Proto.Message msg = ProtoMeshSerializer.parseMesssage(NetworkCommunication.Instance.getMessage());
-                Debug.Log("Got message of type: " + msg.Type);
+                Debug.Log("Received message of type: " + msg.Type);
                 switch (msg.Type)
                 {
+                    
                     case Proto.Message.Types.Type.GAME_STATE:
                         targets.Clear();
-                        Debug.Log("Getting targets");
+                        targetIDs.Clear();
                         for (int i = 0; i < msg.GameState.Targets.Count; i++)
                         {
                             targets.Add(new Vector3(msg.GameState.Targets[i].Position.X, msg.GameState.Targets[i].Position.Y, msg.GameState.Targets[i].Position.Z));
@@ -106,20 +107,24 @@ namespace Holoscanner
             Holoscanner.Proto.Message msg = new Holoscanner.Proto.Message();
             msg.Type = Holoscanner.Proto.Message.Types.Type.TARGET_FOUND;
             msg.TargetId =  targetid;
-            NetworkCommunication.Instance.SendData(Google.Protobuf.MessageExtensions.ToByteArray(msg));
             Debug.Log("Sending target found");
+            NetworkCommunication.Instance.SendData(Google.Protobuf.MessageExtensions.ToByteArray(msg));
+    
         }
 
         public void SendTargetRequest()
         {
+
             Holoscanner.Proto.Message msg = new Holoscanner.Proto.Message();
             msg.Type = Holoscanner.Proto.Message.Types.Type.GAME_STATE_REQUEST;
+            Debug.Log("Sending request...");
             NetworkCommunication.Instance.SendData(Google.Protobuf.MessageExtensions.ToByteArray(msg));
-            Debug.Log("Sending target request");
+
         }
 
-        private IEnumerator SendMeshes()
+        public IEnumerator SendMeshes()
         {
+            Debug.Log("Sending meshes...");
 #if !UNITY_EDITOR
             List<MeshFilter> MeshFilters = SpatialMappingManager.Instance.GetMeshFilters();
             for (int index = 0; index < MeshFilters.Count; index++)

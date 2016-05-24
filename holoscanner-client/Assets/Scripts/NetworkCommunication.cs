@@ -118,7 +118,11 @@ namespace HoloToolkit.Unity
         public void MessageHeaderReceived(IAsyncOperationWithProgress<IBuffer, uint> asyncInfo, AsyncStatus status)
         {
             byte[] bytes = WindowsRuntimeBufferExtensions.ToArray(asyncInfo.GetResults());
-            Debug.Log("Lengthbytes: " + bytes[0] + " " + bytes[1] + " " + bytes[2] + " " + bytes[3] + " " + bytes[4] + " " + bytes[5] + " " + bytes[6] + " " + bytes[7]);
+            if (bytes.Length < 8)
+            {
+                ListenForMessageHeader();
+                return;
+            }
             ulong length = System.BitConverter.ToUInt64(bytes,0);
             if (length == 0)
             {

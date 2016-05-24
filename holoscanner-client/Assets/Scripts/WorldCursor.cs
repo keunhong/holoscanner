@@ -3,6 +3,7 @@
 public class WorldCursor : MonoBehaviour
 {
     private MeshRenderer meshRenderer;
+    float last_depth = 1.0f;
 
     // Use this for initialization
     void Start()
@@ -31,11 +32,14 @@ public class WorldCursor : MonoBehaviour
             // Rotate the cursor to hug the surface of the hologram.
             this.transform.rotation =
                 Quaternion.FromToRotation(Vector3.up, hitInfo.normal);
+            last_depth = hitInfo.distance;
         }
         else
         {
             // If the raycast did not hit a hologram, hide the cursor mesh.
-            meshRenderer.enabled = false;
+            // meshRenderer.enabled = false;
+            this.transform.position = headPosition + gazeDirection * last_depth;
+            this.transform.rotation = Quaternion.FromToRotation(Vector3.up, -gazeDirection);
         }
     }
 }

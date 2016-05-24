@@ -271,7 +271,7 @@ public class ImportExportAnchorManager : Singleton<ImportExportAnchorManager>
         // First, are there any anchors in this room?
         int anchorCount = currentRoom.GetAnchorCount();
 
-        Debug.Log(anchorCount + " anchors");
+       // Debug.Log(anchorCount + " anchors");
 
         // If there are anchors, we should attach to the first one.
         if (anchorCount > 0)
@@ -383,13 +383,11 @@ public class ImportExportAnchorManager : Singleton<ImportExportAnchorManager>
     /// <returns>True if it attached, false if it could not attach</returns>
     bool AttachToCachedAnchor(string AnchorName)
     {
-        Debug.Log("Looking for " + AnchorName);
         string[] ids = anchorStore.GetAllIds();
         for (int index = 0; index < ids.Length; index++)
         {
             if (ids[index] == AnchorName)
             {
-                Debug.Log("Using what we have");
                 WorldAnchor wa = anchorStore.Load(ids[index], gameObject);
                 if (wa.isLocated)
                 {

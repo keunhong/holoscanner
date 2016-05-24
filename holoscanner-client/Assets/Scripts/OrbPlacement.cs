@@ -3,17 +3,28 @@ using System.Collections.Generic;
 using UnityEngine.Windows.Speech;
 using HoloToolkit.Unity;
 using HoloToolkit.Sharing;
+using Holoscanner;
 public class OrbPlacement : Singleton<OrbPlacement>
 {
 
     public uint targetID;
+    public bool active = false;
     public bool GotTransform { get; private set; }
     // Called by GazeGestureManager when the user performs a Select gesture
     void OnSelect()
     {
         // TODO: Get the candidate position
         Debug.Log("Clicked!");
+        Explode();
         targetFound();
+    }
+
+    void Explode()
+    {
+        //   this.gameObject.PlayAnimation....
+        this.gameObject.GetComponent<Renderer>().enabled = false;
+        this.gameObject.GetComponent<AudioSource>().enabled = false;
+        
     }
 
     void targetFound()
@@ -23,14 +34,33 @@ public class OrbPlacement : Singleton<OrbPlacement>
         //replace target
         Holoscanner.RemoteMeshManager rmm = this.GetComponentInParent<Holoscanner.RemoteMeshManager>();
         rmm.SendTargetFoundMessage(targetID);
-        rmm.SendTargetRequest();
-       
+        rmm.SendTargetRequest(); 
     }
 
     public void replaceTarget(Vector3 t_pos, uint t_id)
     {
         this.gameObject.transform.position = t_pos;
         targetID = t_id;
+        this.gameObject.GetComponent<Renderer>().enabled = true;
+        this.gameObject.GetComponent<AudioSource>().enabled = true;
+    }
+
+    public void activate()
+    {
+        if (active) return;
+        active = true;  
+        // this.gameObject.GetComponent<Renderer>().material.SetColor("_Color",new Color(150,150,150));
+       // this.gameObject.GetComponent<Renderer>().materials[1].SetColor("_EmissionColor", new Color(0, 255, 0));
+        Debug.Log("Activating...");
+    }
+
+    public void deactivate()
+    {
+        if (!active) return;
+        active = false;
+        //this.gameObject.GetComponent<Renderer>().material.SetColor("_Color", new Color(97, 97, 97));
+       // this.gameObject.GetComponent<Renderer>().materials[1].SetColor("_EmissionColor", new Color(0, 0, 0));
+        Debug.Log("Deactivating...");
     }
 
     void Start()
@@ -40,6 +70,11 @@ public class OrbPlacement : Singleton<OrbPlacement>
 
         // And when a new user join we will send the anchor transform we have.
         SharingSessionTracker.Instance.SessionJoined += Instance_SessionJoined;
+        
+       
+        this.gameObject.GetComponent<Renderer>().enabled = false;
+        this.gameObject.GetComponent<AudioSource>().enabled = false;
+
     }
 
     private void Instance_SessionJoined(object sender, SharingSessionTracker.SessionJoinedEventArgs e)
