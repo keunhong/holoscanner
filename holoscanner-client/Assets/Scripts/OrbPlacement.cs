@@ -19,12 +19,24 @@ public class OrbPlacement : Singleton<OrbPlacement>
         targetFound();
     }
 
+    private void setComponentsEnabled(bool enable)
+    {
+        foreach (ParticleSystem sys in gameObject.GetComponentsInChildren<ParticleSystem>())
+        {
+            ParticleSystem.EmissionModule em = sys.emission;
+            em.enabled = enable;
+        }
+        RandomNote audio = gameObject.GetComponent<RandomNote>();
+        audio.playSound = enable;
+    }
+    private System.Collections.IEnumerator setComponentsEnabledDelay(bool enable, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        setComponentsEnabled(enable);
+    }
     void Explode()
     {
-        //   this.gameObject.PlayAnimation....
-        this.gameObject.GetComponent<Renderer>().enabled = false;
-        this.gameObject.GetComponent<AudioSource>().enabled = false;
-        
+        setComponentsEnabled(false);
     }
 
     void targetFound()
@@ -41,8 +53,7 @@ public class OrbPlacement : Singleton<OrbPlacement>
     {
         this.gameObject.transform.localPosition = t_pos;
         targetID = t_id;
-        this.gameObject.GetComponent<Renderer>().enabled = true;
-        this.gameObject.GetComponent<AudioSource>().enabled = true;
+        setComponentsEnabled(true);
     }
 
     public void activate()
@@ -70,12 +81,6 @@ public class OrbPlacement : Singleton<OrbPlacement>
 
         // And when a new user join we will send the anchor transform we have.
         SharingSessionTracker.Instance.SessionJoined += Instance_SessionJoined;
-        
-       
-     //   this.gameObject.GetComponent<Renderer>().enabled = false;
-    //    this.gameObject.GetComponent<AudioSource>().enabled = false;
-
-
 
     }
 
