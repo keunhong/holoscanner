@@ -195,7 +195,6 @@ class GameState:
             self.update_planes()
             self.update_targets(100)
             self.send_to_websocket_clients(self.create_game_state_message())
-            self.send_to_hololens_clients(self.create_game_state_message())
 
     def clear_meshes(self):
         logger.info('Clearing meshes.')
@@ -298,16 +297,20 @@ class GameState:
             if len(self.target_pbs) == 0:
                 self.update_targets(100)
             self.send_to_websocket_clients(self.create_game_state_message())
-            self.send_to_hololens_clients(self.create_game_state_message())
+            self.send_to_hololens_clients(
+                self.create_game_state_message(max_targets=1))
 
-    def create_game_state_message(self):
+    def create_game_state_message(self, max_targets=None):
         with self.gs_lock:
             msg = pb.Message()
             msg.type = pb.Message.GAME_STATE
             msg.device_id = config.SERVER_DEVICE_ID
             msg.game_state.floor_y = self.floor
             msg.game_state.ceiling_y = self.ceiling
-            msg.game_state.targets.extend(self.target_pbs.values())
+            targets = self.target_pbs.values()
+            if max_targets is not None:
+                targets = targets[:min(max_targets, len(targets))]
+            msg.game_state.targets.extend(targets)
             msg.game_state.clients.extend(
                 [c.to_proto() for c in self.clients.values()])
             logger.info('Game state: {} targets'.format(len(self.target_pbs)))

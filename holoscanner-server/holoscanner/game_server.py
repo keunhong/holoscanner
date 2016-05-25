@@ -81,7 +81,7 @@ class HsServerProtocol(asyncio.Protocol):
                 message = game_state.create_ack()
                 self.send_message(message)
             elif msg.type == Message.GAME_STATE_REQUEST:
-                message = game_state.create_game_state_message()
+                message = game_state.create_game_state_message(max_targets=1)
                 self.send_message(message)
             elif msg.type == Message.FIN:
                 logger.info('Closing the client socket')
