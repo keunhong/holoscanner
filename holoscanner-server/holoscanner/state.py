@@ -14,7 +14,7 @@ from holoscanner import base_logger
 logger = base_logger.getChild(__name__)
 
 
-def find_planes(y_coords, nbins, sigma=None):
+def find_floor_and_ceiling(y_coords, nbins, sigma=None):
     if sigma:
         y_coords = gaussian_filter1d(y_coords, sigma)
 
@@ -63,8 +63,6 @@ def compute_hull_mask(faces, vertices, scale=100,
              in face]
         draw.polygon(p, fill='#fff')
 
-    print(width, height)
-
     im = np.array(im) == 255
     if closing:
         im = morphology.binary_closing(im, morphology.square(40))
@@ -93,7 +91,7 @@ class Mesh:
             self.vertices[:, 1] += mesh_pb.cam_position.y
             self.vertices[:, 2] += mesh_pb.cam_position.z
 
-        self.normals = self.compute_normals()
+        self.normals = self._compute_normals()
 
     def to_proto(self):
         mesh_pb = pb.Mesh()
@@ -106,7 +104,7 @@ class Mesh:
         mesh_pb.triangles.extend(self.faces.tolist())
         return mesh_pb
 
-    def compute_normals(self):
+    def _compute_normals(self):
         normals = np.zeros((self.nfaces, 3))
         for i in range(self.nfaces):
             v1 = self.vertices[self.faces[i * 3 + 0]]
@@ -132,6 +130,16 @@ class Client:
     def send_message(self, message):
         self.protocol.send_message(message)
 
+    def new_mesh(self, mesh, is_last):
+        if self.is_next_mesh_new:
+            self.clear_meshes()
+            self.is_next_mesh_new = False
+
+        if is_last:
+            self.is_next_mesh_new = True
+
+        self.meshes.append(mesh)
+
     def clear_meshes(self):
         logger.info('Clearing meshes for client {}'.format(self.client_id))
         del self.meshes[:]
@@ -144,6 +152,7 @@ class Client:
 
 
 class GameState:
+
     clients = {}
 
     clients_lock = threading.RLock()
@@ -184,17 +193,10 @@ class GameState:
         with self.clients_lock:
             client = self.clients[client_id]
             mesh = Mesh(mesh_pb)
-            client.meshes.append(mesh)
+            client.new_mesh(mesh, mesh_pb.is_last)
         self.send_to_websocket_clients(self.create_mesh_message(mesh.to_proto()))
 
-        with self.clients_lock:
-            if client.is_next_mesh_new:
-                client.clear_meshes()
-                client.is_next_mesh_new = False
-
         if mesh_pb.is_last:
-            with self.clients_lock:
-                client.is_next_mesh_new = True
             self.update_planes()
             self.update_targets(100)
             self.send_to_websocket_clients(self.create_game_state_message())
@@ -219,7 +221,7 @@ class GameState:
         y_coords = np.sort(np.vstack(
             [m.vertices for m in client_meshes])[:, 1])
         sigma = len(y_coords) / config.MESH_PLANE_FINDING_BINS
-        self.floor, self.ceiling = find_planes(
+        self.floor, self.ceiling = find_floor_and_ceiling(
             y_coords, config.MESH_PLANE_FINDING_BINS, sigma / 5)
         logger.info('Planes updates: floor={}, ceiling={}'.format(
             self.floor, self.ceiling))

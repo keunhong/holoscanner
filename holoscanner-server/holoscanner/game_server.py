@@ -54,7 +54,6 @@ class HsServerProtocol(asyncio.Protocol):
         self.client = game_state.new_hololens_client(client_id, ip, self)
 
     def connection_lost(self, exc):
-        ip, port = self.transport.get_extra_info('peername')
         game_state.remove_hololens_client(self.client.client_id)
 
     def handle_bytes(self, data):
