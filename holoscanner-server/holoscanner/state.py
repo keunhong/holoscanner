@@ -80,11 +80,10 @@ def compute_hull_mask(faces, vertices, scale=100,
 
 
 class Mesh:
-    def __init__(self, mesh_pb, client):
+    def __init__(self, mesh_pb):
         self.nvertices = len(mesh_pb.vertices)
         self.nfaces = int(len(mesh_pb.triangles) / 3)
         self.vertices = np.ndarray((self.nvertices, 3), dtype=float)
-        self.client = client
         self.mesh_id = mesh_pb.mesh_id
         self.faces = np.array(mesh_pb.triangles, dtype=int)
         for i, vert_pb in enumerate(mesh_pb.vertices):
@@ -133,6 +132,7 @@ class Client:
         self.ip = ip
         self.score = 0
         self.protocol = protocol
+        self.meshes = []
 
     def send_message(self, message):
         self.protocol.send_message(message)
@@ -149,7 +149,6 @@ class GameState:
 
     mesh_lock = threading.RLock()
     gs_lock = threading.RLock()
-    meshes = []
     listeners = []
 
     floor = -10
@@ -179,10 +178,10 @@ class GameState:
         for client in self.clients.values():
             client.send_message(message)
 
-    def new_mesh(self, mesh_pb, client):
+    def new_mesh(self, client_id, mesh_pb):
         with self.mesh_lock:
-            mesh = Mesh(mesh_pb, client)
-            self.meshes.append(mesh)
+            mesh = Mesh(mesh_pb)
+            self.clients[client_id].meshes.append(mesh)
             # save_dir = config.MESHES_SAVE_DIR
             # save_path = os.path.join(save_dir, '{}_{}.bin'.format(
             #     client.ip, len(self.meshes)))
@@ -196,14 +195,25 @@ class GameState:
             self.update_targets(100)
             self.send_to_websocket_clients(self.create_game_state_message())
 
+    def get_all_meshes(self):
+        client_meshes = []
+        with self.mesh_lock:
+            for client in self.clients.values():
+                client_meshes.extend(client.meshes)
+        return client_meshes
+
     def clear_meshes(self):
         logger.info('Clearing meshes.')
         with self.mesh_lock:
-            del self.meshes[:]
+            for client in self.clients.values():
+                del client.meshes[:]
 
     def update_planes(self):
+        client_meshes = []
+        for client in self.clients.values():
+            client_meshes.extend(client.meshes)
         y_coords = np.sort(np.vstack(
-            [m.vertices for m in self.meshes])[:, 1])
+            [m.vertices for m in client_meshes])[:, 1])
         sigma = len(y_coords) / config.MESH_PLANE_FINDING_BINS
         self.floor, self.ceiling = find_planes(
             y_coords, config.MESH_PLANE_FINDING_BINS, sigma / 5)
@@ -214,9 +224,9 @@ class GameState:
         vertices = []
         normals = []
         faces = []
+        base_index = 0
         with self.mesh_lock:
-            base_index = 0
-            for mesh in self.meshes:
+            for mesh in self.get_all_meshes():
                 vertices.extend([vertex for vertex in mesh.vertices])
                 normals.extend([normal for normal in mesh.normals])
                 faces.extend([[mesh.faces[3 * i] + base_index,

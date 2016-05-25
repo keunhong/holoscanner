@@ -22,7 +22,7 @@ class RelayProtocol(WebSocketServerProtocol):
 
         with game_state.gs_lock:
             self.send_message(game_state.create_game_state_message())
-            for mesh in game_state.meshes:
+            for mesh in game_state.get_all_meshes():
                 self.send_message(game_state.create_mesh_message(mesh.to_proto()))
             self.send_message(game_state.create_game_state_message())
 

@@ -71,6 +71,14 @@ function handleGameState(pbGameState) {
     scene.remove(target);
   }
   targets.length = 0;
+  let scoreboard_el = $('#scoreboard');
+  scoreboard_el.empty();
+  scoreboard_el.append('<span>Client Scores</span>');
+  for (let client of pbGameState.clients) {
+    let client_el = $('<div>').addClass('scoreboard-client');
+    client_el.text("[" + client.device_id + "]: " + client.score);
+    scoreboard_el.append(client_el);
+  }
 
   for (let i in pbGameState.targets) {
     let target = pbGameState.targets[i];
