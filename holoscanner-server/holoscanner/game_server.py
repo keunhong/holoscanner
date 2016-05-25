@@ -48,10 +48,11 @@ class HsServerProtocol(asyncio.Protocol):
 
     def connection_made(self, transport):
         ip, port = transport.get_extra_info('peername')
-        logger.info('Hololense connection from {}:{}'.format(ip, port))
         client_id = '{}:{}'.format(ip, port)
         self.transport = transport
         self.client_id = game_state.new_hololens_client(client_id, ip, self)
+        logger.info('Hololense connection from {}:{}, '
+                    'adding as client_id={}'.format(ip, port, self.client_id))
 
     def connection_lost(self, exc):
         game_state.remove_hololens_client(self.client_id)

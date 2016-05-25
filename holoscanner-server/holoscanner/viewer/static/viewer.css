@@ -18,14 +18,28 @@ html, body {
     left: 10px;
     padding: 5px;
     border-radius: 10px;
-    opacity: 0.5;
+    background: #333;
+    color: #fff;
+    vertical-align: middle;
+}
+
+#controls label {
+    margin: 0;
+}
+
+#controls button {
 }
 
 #scoreboard {
     position: absolute;
     top: 10px;
     right: 10px;
-    background: #666;
+    background: #333;
     color: #fff;
-    padding: 5px;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+#scoreboard span {
+    font-weight: bold;
 }

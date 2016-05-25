@@ -6,12 +6,12 @@ let renderer = new THREE.WebGLRenderer();
 
 let scene = new THREE.Scene();
 
-let meshes = [];
+let clients = {};
 let targets = [];
 let floorPlane = new THREE.Mesh(
     new THREE.PlaneGeometry(10, 10),
-    new THREE.MeshLambertMaterial({
-      color: 0x55ff55,
+    new THREE.MeshBasicMaterial({
+      color: 0xff0000,
       side: THREE.DoubleSide,
       transparent: true,
       opacity: 0.2
@@ -19,8 +19,8 @@ let floorPlane = new THREE.Mesh(
 floorPlane.rotation.x = Math.PI / 2;
 let ceilingPlane = new THREE.Mesh(
     new THREE.PlaneGeometry(10, 10),
-    new THREE.MeshLambertMaterial({
-      color: 0x5555ff,
+    new THREE.MeshBasicMaterial({
+      color: 0x00ff00,
       side: THREE.DoubleSide,
       transparent: true,
       opacity: 0.2
@@ -35,14 +35,23 @@ socket.onmessage = function (e) {
     console.log(message);
 
     if (message.type === Holoscanner.Proto.Message.Type.MESH) {
-      handleNewMesh(message.mesh);
+      handleNewMesh(message.device_id, message.mesh);
     } else if (message.type === Holoscanner.Proto.Message.Type.GAME_STATE) {
+      handleGameState(message.game_state);
+    } else if (message.type === Holoscanner.Proto.Message.Type.CLEAR_MESHES) {
+      if (message.device_id in clients) {
+        clients[message.device_id]["meshes"].length = 0;
+      }
       handleGameState(message.game_state);
     }
   }
 };
 
-function handleNewMesh(pbMesh) {
+function handleNewMesh(device_id, pbMesh) {
+  if (!(device_id in clients)) {
+    clients[device_id] = { "meshes": [] };
+  }
+
   let geometry = new THREE.Geometry();
   for (let vertex of pbMesh.vertices) {
     geometry.vertices.push(
@@ -59,11 +68,17 @@ function handleNewMesh(pbMesh) {
   geometry.computeFaceNormals();
   let mesh = new THREE.Mesh(geometry, material);
   mesh.scale.x = mesh.scale.y = mesh.scale.z = 1.0;
+  mesh.device_id = device_id;
+  mesh.name = device_id + "_" + clients[device_id]["meshes"].length;
   scene.add(mesh);
-  meshes.push(mesh);
+  clients[device_id]["meshes"].push(mesh);
 }
 
 function handleGameState(pbGameState) {
+  if (pbGameState == null) {
+    console.log('Game state is null.');
+    return;
+  }
   console.log(pbGameState);
   floorPlane.position.y = pbGameState.floor_y;
   ceilingPlane.position.y = pbGameState.ceiling_y;
@@ -81,6 +96,20 @@ function handleGameState(pbGameState) {
     scoreboard_el.append(client_el);
   }
 
+  for (let client_id in clients) {
+    let exists = false;
+    for (let pbClient of pbGameState.clients) {
+      console.log(pbClient.device_id, client_id);
+      exists |= (pbClient.device_id === client_id);
+    }
+    if (!exists) {
+      for (let mesh of clients[client_id]["meshes"]) {
+        scene.remove(mesh);
+      }
+      delete clients[client_id];
+    }
+  }
+
   for (let i in pbGameState.targets) {
     let target = pbGameState.targets[i];
     let geom = new THREE.SphereGeometry(0.1, 32, 32);
@@ -92,8 +121,6 @@ function handleGameState(pbGameState) {
       targetMesh = new THREE.PointLight(0xff0000, 0.5, 0, 10);
       targetMesh.add(new THREE.Mesh(
           geom, new THREE.MeshPhongMaterial({color: 0xff00ff})));
-      targetMesh.castShadow = true;
-      targetMesh.shadowDarkness = 1;
     } else {
       targetMesh = new THREE.Mesh(geom, material);
       material.transparent = true;
@@ -167,10 +194,12 @@ $(document).ready(function () {
     message.type = Holoscanner.Proto.Message.Type.CLEAR_MESHES;
     test = message;
     socket.send(message.toArrayBuffer());
-    for (let mesh of meshes) {
-      scene.remove(mesh);
+    for (let client_id in clients) {
+      for (let mesh of clients[client_id]["meshes"]) {
+        scene.remove(mesh);
+        clients[client_id]["meshes"].length = 0;
+      }
     }
-    meshes.length = 0;
     console.log('Meshes cleared.');
   });
   
@@ -194,5 +223,14 @@ $(document).ready(function () {
     message.target_id = targets[0].target_id;
     socket.send(message.toArrayBuffer());
     console.log('Acquired target ' + message.target_id);
+  });
+  $('#plane-checkbox').change(function () {
+    floorPlane.visible = this.checked;
+    ceilingPlane.visible = this.checked;
+  });
+  $('#mesh-doubleside-checkbox').change(function () {
+    for (let mesh of meshes) {
+      mesh.material.side = (this.checked) ? THREE.DoubleSide : THREE.FrontSide;
+    }
   });
 });

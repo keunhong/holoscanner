@@ -16,9 +16,6 @@ from holoscanner import base_logger
 logger = base_logger.getChild(__name__)
 
 
-HULL_SCALE = 50
-
-
 def find_floor_and_ceiling(y_coords, nbins, sigma=None):
     if sigma:
         y_coords = gaussian_filter1d(y_coords, sigma)
@@ -51,7 +48,7 @@ def quat_to_mat(x, y, z, w):
         [xz - wy, yz + wx, 1 - (xx + yy)]])
 
 
-def compute_hull_mask(faces, vertices, scale=HULL_SCALE,
+def compute_hull_mask(faces, vertices, scale=config.HULL_SCALE,
                       remove_holes=True, closing=False):
     transformed = vertices.copy()
     transformed[:, 0] -= vertices[:, 0].min()
@@ -138,7 +135,9 @@ class Client:
         self.protocol.send_message(message)
 
     def new_mesh(self, mesh, is_last):
+        cleared = False
         if self.is_next_mesh_new:
+            cleared = True
             self.clear_meshes()
             self.is_next_mesh_new = False
 
@@ -146,6 +145,8 @@ class Client:
             self.is_next_mesh_new = True
 
         self.meshes.append(mesh)
+
+        return cleared
 
     def clear_meshes(self):
         logger.info('Clearing meshes for client {}'.format(self.client_id))
@@ -161,7 +162,7 @@ class Client:
 class GameState:
 
     clients = {
-        '__server__': Client('__server__', '127.0.0.1', None)
+        config.SERVER_DEVICE_ID: Client(config.SERVER_DEVICE_ID, '127.0.0.1', None)
     }
 
     clients_lock = threading.RLock()
@@ -198,24 +199,30 @@ class GameState:
     def send_to_hololens_clients(self, message):
         with self.clients_lock:
             for client in self.clients.values():
-                if not client.client_id == '__server__':
+                if not client.client_id == config.SERVER_DEVICE_ID:
                     client.send_message(message)
 
     def new_mesh(self, client_id, mesh_pb):
         with self.clients_lock:
             client = self.clients[client_id]
             mesh = Mesh(mesh_pb)
-            client.new_mesh(mesh, mesh_pb.is_last)
+            was_cleared = client.new_mesh(mesh, mesh_pb.is_last)
             logger.info('New mesh from client {}, '
                         'nvertices={}, '
                         'nfaces={}, '
                         'is_last={}'.format(
                 client_id, mesh.nvertices, mesh.nfaces, mesh_pb.is_last))
-        self.send_to_websocket_clients(self.create_mesh_message(mesh.to_proto()))
+            if was_cleared:
+                msg = pb.Message()
+                msg.type = pb.Message.CLEAR_MESHES
+                msg.device_id = client_id
+                self.send_to_websocket_clients(msg)
+        self.send_to_websocket_clients(
+            self.create_mesh_message(client_id, mesh.to_proto()))
 
         if mesh_pb.is_last:
             self.update_planes()
-            self.update_targets(100)
+            self.update_targets(config.NUM_TARGETS_GEN)
             self.send_to_websocket_clients(self.create_game_state_message())
 
     def get_all_meshes(self):
@@ -284,8 +291,8 @@ class GameState:
         global_hull_mask, offsetx, offsetz = compute_hull_mask(
             faces, vertices, remove_holes=True, closing=True)
         erosion_size = 0.04 * min(global_hull_mask.shape)
-        global_hull_mask = morphology.binary_erosion(global_hull_mask,
-                                  selem=morphology.square(erosion_size))
+        # global_hull_mask = morphology.binary_erosion(
+        #     global_hull_mask, selem=morphology.square(erosion_size))
         logger.debug('Eroding global mask by {}'.format(erosion_size))
 
         near_floor_inds = np.where((vertices[:, 1] - self.floor) < 0.2)[0]
@@ -326,13 +333,13 @@ class GameState:
                 # Randomly generate on ceiling or floor.
                 if random.random() < 0.5:
                     point_idx = random.randint(0, len(floor_cand_x))
-                    x = floor_cand_x[point_idx] / HULL_SCALE + offsetx
-                    z = floor_cand_z[point_idx] / HULL_SCALE + offsetz
+                    x = floor_cand_x[point_idx] / config.HULL_SCALE + offsetx
+                    z = floor_cand_z[point_idx] / config.HULL_SCALE + offsetz
                     y = self.floor + 0.15
                 else:
                     point_idx = random.randint(0, len(ceiling_cand_x))
-                    x = ceiling_cand_x[point_idx] / HULL_SCALE + offsetx
-                    z = ceiling_cand_z[point_idx] / HULL_SCALE + offsetz
+                    x = ceiling_cand_x[point_idx] / config.HULL_SCALE + offsetx
+                    z = ceiling_cand_z[point_idx] / config.HULL_SCALE + offsetz
                     y = self.ceiling - 0.15
                 target_pb = pb.Target()
                 target_pb.target_id = self.target_counter
@@ -352,13 +359,9 @@ class GameState:
 
             def comparator(item):
                 _, target = item
-                return np.linalg.norm(
-                    np.array([old_target.position.x,
-                              old_target.position.y,
-                              old_target.position.z]) -
-                    np.array([target.position.x,
-                              target.position.y,
-                              target.position.z]))
+                o = old_target.position
+                t = target.position
+                return (o.x  - t.x) ** 2 + (o.y - t.y) ** 2 + (o.z - t.z) ** 2
             self.clients[client_id].score += 1
             logger.info('Client {} found target_id={}, score={}'.format(
                 client_id, target_id, self.clients[client_id].score))
@@ -374,7 +377,7 @@ class GameState:
                 sorted_items = half_1 + half_2
             self.target_pbs = OrderedDict(sorted_items)
             if len(self.target_pbs) == 0:
-                self.update_targets(100)
+                self.update_targets(config.NUM_TARGETS_GEN)
             self.send_to_websocket_clients(self.create_game_state_message())
             self.send_to_hololens_clients(
                 self.create_game_state_message(max_targets=1))
@@ -386,11 +389,9 @@ class GameState:
             msg.device_id = config.SERVER_DEVICE_ID
             msg.game_state.floor_y = self.floor
             msg.game_state.ceiling_y = self.ceiling
-            targets = list(self.target_pbs.items())
+            targets = list(self.target_pbs.values())
             if max_targets is not None:
-                targets = [t[1] for t in targets[:min(max_targets, len(targets))]]
-            else:
-                targets = [t[1] for t in targets]
+                targets = [t for t in targets[:min(max_targets, len(targets))]]
             msg.game_state.targets.extend(targets)
             msg.game_state.clients.extend(
                 [c.to_proto() for c in self.clients.values()])
@@ -398,10 +399,10 @@ class GameState:
                 len(self.target_pbs), self.floor, self.ceiling))
             return msg
 
-    def create_mesh_message(self, mesh_pb):
+    def create_mesh_message(self, client_id, mesh_pb):
         msg = pb.Message()
+        msg.device_id = client_id
         msg.type = pb.Message.MESH
-        msg.device_id = config.SERVER_DEVICE_ID
         msg.mesh.MergeFrom(mesh_pb)
         return msg
 
