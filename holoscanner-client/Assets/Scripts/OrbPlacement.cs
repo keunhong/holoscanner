@@ -39,7 +39,7 @@ public class OrbPlacement : Singleton<OrbPlacement>
 
     public void replaceTarget(Vector3 t_pos, uint t_id)
     {
-        this.gameObject.transform.position = t_pos;
+        this.gameObject.transform.localPosition = t_pos;
         targetID = t_id;
         this.gameObject.GetComponent<Renderer>().enabled = true;
         this.gameObject.GetComponent<AudioSource>().enabled = true;
