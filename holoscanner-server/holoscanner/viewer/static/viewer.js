@@ -14,7 +14,7 @@ let floorPlane = new THREE.Mesh(
       color: 0x55ff55,
       side: THREE.DoubleSide,
       transparent: true,
-      opacity: 0.5
+      opacity: 0.2
     }));
 floorPlane.rotation.x = Math.PI / 2;
 let ceilingPlane = new THREE.Mesh(
@@ -23,7 +23,7 @@ let ceilingPlane = new THREE.Mesh(
       color: 0x5555ff,
       side: THREE.DoubleSide,
       transparent: true,
-      opacity: 0.5
+      opacity: 0.2
     }));
 ceilingPlane.rotation.x = Math.PI / 2;
 
@@ -85,17 +85,19 @@ function handleGameState(pbGameState) {
     let target = pbGameState.targets[i];
     let geom = new THREE.SphereGeometry(0.1, 32, 32);
     let color = (i == 0) ? 0xff0000 : 0x00ff00;
-    let material = new THREE.MeshBasicMaterial({color: color});
+    let material = new THREE.MeshPhongMaterial({color: color});
     
     let targetMesh;
     if (i == 0) {
       targetMesh = new THREE.PointLight(0xff0000, 0.5, 0, 10);
       targetMesh.add(new THREE.Mesh(
-          geom, new THREE.MeshBasicMaterial({color: 0xff00ff})));
+          geom, new THREE.MeshPhongMaterial({color: 0xff00ff})));
       targetMesh.castShadow = true;
       targetMesh.shadowDarkness = 1;
     } else {
       targetMesh = new THREE.Mesh(geom, material);
+      material.transparent = true;
+      material.opacity = 0.5;
     }
     targetMesh.position.set(
         target.position.x, target.position.y, target.position.z);

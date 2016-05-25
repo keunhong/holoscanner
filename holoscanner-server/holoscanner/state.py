@@ -260,7 +260,11 @@ class GameState:
 
     def update_targets(self, num_targets):
         with self.gs_lock:
+            if len(self.target_pbs) > 0:
+                first_target = self.target_pbs[0]
             self.target_pbs.clear()
+            if len(self.target_pbs) > 0:
+                self.target_pbs[first_target.target_id] = first_target
 
         vertices, normals, faces = self.get_concatenated_meshes()
 
