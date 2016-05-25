@@ -45,7 +45,7 @@ public class RandomNote : MonoBehaviour {
     int sourceid = 0;
     int numcomponents = 8;
     bool offbeat = false;
-
+    public float cliplength = 2.4f;
     // Use this for initialization
     void Start () {
         maxidx = 10;
@@ -63,33 +63,37 @@ public class RandomNote : MonoBehaviour {
 	
     IEnumerator outputSound()
     {
-        float cliplength = 2.4f;
+        
         while (true)
         {
-            if (!playSound) yield return null;
-            foreach (AudioSource asource in audio) asource.enabled = true;
-            
-            double t0 = AudioSettings.dspTime + 0.05f;
-            audio[sourceid].time = idx * cliplength;
-            audio[sourceid].PlayScheduled(t0);
-            audio[sourceid].SetScheduledEndTime(t0 + cliplength);
-            int tidx = idx;
-            do
+            if (playSound)
             {
-                int r = (rng.Next() % 4) - 2;
-                if (r >= 0) r++;
-                tidx = idx + r;
-            } while (tidx < 0 || tidx >= maxidx);
-            idx = tidx;
-            sourceid = (sourceid+1)%numcomponents;
-            if (rng.Next() % 2 == 0 || offbeat)
-            {
-                offbeat = !offbeat;
-                yield return new WaitForSeconds(cliplength / (2*speed));
+                foreach (AudioSource asource in audio) asource.enabled = true;
+
+                double t0 = AudioSettings.dspTime + 0.05f;
+                audio[sourceid].time = idx * cliplength;
+                audio[sourceid].PlayScheduled(t0);
+                audio[sourceid].SetScheduledEndTime(t0 + cliplength);
+                int tidx = idx;
+                do
+                {
+                    int r = (rng.Next() % 4) - 2;
+                    if (r >= 0) r++;
+                    tidx = idx + r;
+                } while (tidx < 0 || tidx >= maxidx);
+                idx = tidx;
+                sourceid = (sourceid + 1) % numcomponents;
+                if (rng.Next() % 2 == 0 || offbeat)
+                {
+                    offbeat = !offbeat;
+                    yield return new WaitForSeconds(cliplength / (2 * speed));
+                }
+                else {
+                    yield return new WaitForSeconds(cliplength / speed);
+                }
             }
-            else {
-                yield return new WaitForSeconds(cliplength / speed);
-            }
+            else
+                yield return null;
         }
     }
 	// Update is called once per frame

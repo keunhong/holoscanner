@@ -88,7 +88,7 @@ namespace Holoscanner
                         if (targets.Count > 0)
                         {
                             OrbPlacement op = this.gameObject.GetComponentInChildren<OrbPlacement>();
-                            op.replaceTarget(targets[0], targetIDs[0]);
+                            StartCoroutine(op.replaceTarget(targets[0], targetIDs[0]));
                         }
                         break;
                     case Proto.Message.Types.Type.ANCHOR_SET:
@@ -156,7 +156,7 @@ namespace Holoscanner
             //NetworkCommunication.Instance.SendData(ProtoMeshSerializer.DataRequest());
 #endif
                 }
-                yield return new WaitForSecondsRealtime(10);
+                yield return new WaitForSecondsRealtime(5);
             }
         }
 

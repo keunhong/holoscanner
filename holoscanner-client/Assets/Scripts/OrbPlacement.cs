@@ -4,18 +4,21 @@ using UnityEngine.Windows.Speech;
 using HoloToolkit.Unity;
 using HoloToolkit.Sharing;
 using Holoscanner;
+
+using System.Collections;
 public class OrbPlacement : Singleton<OrbPlacement>
 {
 
     public uint targetID;
     public bool active = false;
+    bool audioOn = true;
     public bool GotTransform { get; private set; }
     // Called by GazeGestureManager when the user performs a Select gesture
     void OnSelect()
     {
         // TODO: Get the candidate position
         Debug.Log("Clicked!");
-        Explode();
+        StartCoroutine(Explode());
         targetFound();
     }
 
@@ -26,52 +29,41 @@ public class OrbPlacement : Singleton<OrbPlacement>
             ParticleSystem.EmissionModule em = sys.emission;
             em.enabled = enable;
         }
-        RandomNote audio = gameObject.GetComponent<RandomNote>();
-        audio.playSound = enable;
+        Debug.Log("Setting playsound to:" + enable);
+        gameObject.GetComponent<RandomNote>().playSound = enable;
+
     }
     private System.Collections.IEnumerator setComponentsEnabledDelay(bool enable, float delay)
     {
         yield return new WaitForSeconds(delay);
         setComponentsEnabled(enable);
     }
-    void Explode()
+    IEnumerator Explode()
     {
         setComponentsEnabled(false);
+        yield return new WaitForSecondsRealtime(2.4f);
+        Debug.Log("AUDIO IS OFF");
+        audioOn = false;
     }
 
     void targetFound()
     {
-        //send "target found" message
-        //get new targets
-        //replace target
         Holoscanner.RemoteMeshManager rmm = this.GetComponentInParent<Holoscanner.RemoteMeshManager>();
         rmm.SendTargetFoundMessage(targetID);
         rmm.SendTargetRequest(); 
     }
 
-    public void replaceTarget(Vector3 t_pos, uint t_id)
+    public IEnumerator replaceTarget(Vector3 t_pos, uint t_id)
     {
+        //disable randomsound
+        //yield for length of sousnd
+        //replace object
+        while (audioOn) yield return null;
+        Debug.Log("AUDIO IS OFF CONFIRMED");
         this.gameObject.transform.localPosition = t_pos;
         targetID = t_id;
         setComponentsEnabled(true);
-    }
-
-    public void activate()
-    {
-        if (active) return;
-        active = true;  
-        // this.gameObject.GetComponent<Renderer>().material.SetColor("_Color",new Color(150,150,150));
-       // this.gameObject.GetComponent<Renderer>().materials[1].SetColor("_EmissionColor", new Color(0, 255, 0));
-        Debug.Log("Activating...");
-    }
-
-    public void deactivate()
-    {
-        if (!active) return;
-        active = false;
-        //this.gameObject.GetComponent<Renderer>().material.SetColor("_Color", new Color(97, 97, 97));
-       // this.gameObject.GetComponent<Renderer>().materials[1].SetColor("_EmissionColor", new Color(0, 0, 0));
-        Debug.Log("Deactivating...");
+        audioOn = true;
     }
 
     void Start()
