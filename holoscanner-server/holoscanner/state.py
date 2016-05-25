@@ -346,9 +346,16 @@ class GameState:
             logger.info('Client {} found target_id={}, score={}'.format(
                 client_id, target_id, self.clients[client_id].score))
             del self.target_pbs[target_id]
-            self.target_pbs = OrderedDict(sorted(self.target_pbs.items(),
-                                                 key=comparator,
-                                                 reverse=True))
+            sorted_items = sorted(self.target_pbs.items(),
+                                  key=comparator,
+                                  reverse=True)
+            if len(sorted_items) >= 7:
+                divide_idx = int(5 * len(sorted_items) / 7)
+                half_1 = sorted_items[:divide_idx]
+                half_2 = sorted_items[divide_idx:]
+                random.shuffle(half_1)
+                sorted_items = half_1 + half_2
+            self.target_pbs = OrderedDict(sorted_items)
             if len(self.target_pbs) == 0:
                 self.update_targets(100)
             self.send_to_websocket_clients(self.create_game_state_message())

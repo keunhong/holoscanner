@@ -3,6 +3,7 @@ let builder = ProtoBuf.loadProtoFile("static/holoscanner.proto");
 let Holoscanner = builder.build("Holoscanner");
 
 let renderer = new THREE.WebGLRenderer();
+
 let scene = new THREE.Scene();
 
 let meshes = [];
@@ -88,10 +89,11 @@ function handleGameState(pbGameState) {
     
     let targetMesh;
     if (i == 0) {
-      targetMesh = new THREE.PointLight(
-          0xff0000, 1.0 / pbGameState.targets.length, 0);
+      targetMesh = new THREE.PointLight(0xff0000, 0.5, 0, 10);
       targetMesh.add(new THREE.Mesh(
           geom, new THREE.MeshBasicMaterial({color: 0xff00ff})));
+      targetMesh.castShadow = true;
+      targetMesh.shadowDarkness = 1;
     } else {
       targetMesh = new THREE.Mesh(geom, material);
     }
@@ -112,28 +114,29 @@ function initRenderer() {
   let ambientLight = new THREE.AmbientLight(0x333333);
   scene.add(ambientLight);
 
-  let light = new THREE.PointLight(0xffffff, 0.5, 0);
+  let light = new THREE.PointLight(0xffffff, 0.3, 0);
   light.position.set(0, 10, 0);
   scene.add(light);
 
-  let light2 = new THREE.PointLight(0xffffff, 0.1, 0);
+  let light2 = new THREE.PointLight(0xffffff, 0.3, 0);
   light2.position.set(100, 100, 0);
   scene.add(light2);
 
-  let light3 = new THREE.PointLight(0xffffff, 0.1, 0);
+  let light3 = new THREE.PointLight(0xffffff, 0.3, 0);
   light3.position.set(-100, 100, 0);
   scene.add(light3);
 
-  let light4 = new THREE.PointLight(0xffffff, 0.1, 0);
+  let light4 = new THREE.PointLight(0xffffff, 0.3, 0);
   light4.position.set(-100, -100, 0);
   scene.add(light4);
 
-  let light5 = new THREE.PointLight(0xffffff, 0.1, 0);
+  let light5 = new THREE.PointLight(0xffffff, 0.3, 0);
   light5.position.set(100, -100, 0);
   scene.add(light5);
-
+  
   let camera = new THREE.PerspectiveCamera(
       75, container.width() / container.height(), 0.1, 1000);
+  
   camera.position.x = 0;
   camera.position.y = 0;
   camera.position.z = 5;
