@@ -16,7 +16,7 @@ app.static_folder = './static'
 
 @app.route('/')
 def index():
-    return render_template('viewer.html')
+    return render_template('dashboard.html')
 
 
 if __name__=='__main__':

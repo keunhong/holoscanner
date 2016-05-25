@@ -45,7 +45,7 @@ class HsServerProtocol(asyncio.Protocol):
         self.data = bytes()
         self.data_size = 0
         self.client_id = None
-        self.lock = threading.RLock()
+        self.send_lock = threading.RLock()
 
     def connection_made(self, transport):
         ip, port = transport.get_extra_info('peername')
@@ -101,7 +101,7 @@ class HsServerProtocol(asyncio.Protocol):
         return bytes_processed
 
     def send_message(self, message):
-        with self.lock:
+        with self.send_lock:
             bytes = pack_message(message)
             logger.debug('Sending message of type {} ({} bytes).'.format(
                 message.type, len(bytes)))

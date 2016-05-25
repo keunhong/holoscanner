@@ -8,6 +8,7 @@ def create_mesh_message(client_id, mesh_pb):
     msg.mesh.MergeFrom(mesh_pb)
     return msg
 
+
 def create_ack():
     msg = pb.Message()
     msg.type = pb.Message.ACK

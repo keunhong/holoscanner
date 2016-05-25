@@ -15,7 +15,7 @@ logger = base_logger.getChild(__name__)
 
 
 class Mesh:
-    def __init__(self, mesh_pb):
+    def __init__(self, mesh_pb, is_last=False):
         self.nvertices = len(mesh_pb.vertices)
         self.nfaces = int(len(mesh_pb.triangles) / 3)
         self.vertices = np.ndarray((self.nvertices, 3), dtype=float)
@@ -35,6 +35,7 @@ class Mesh:
             self.vertices[:, 2] += mesh_pb.cam_position.z
 
         self.normals = self._compute_normals()
+        self.is_last = is_last
 
     def to_proto(self):
         mesh_pb = pb.Mesh()
@@ -45,6 +46,7 @@ class Mesh:
             v.z = self.vertices[i, 2]
             mesh_pb.vertices.extend([v])
         mesh_pb.triangles.extend(self.faces.tolist())
+        mesh_pb.is_last = self.is_last
         return mesh_pb
 
     def _compute_normals(self):
@@ -148,18 +150,18 @@ class GameState:
     def new_mesh(self, client_id, mesh_pb):
         with self.clients_lock:
             client = self.clients[client_id]
-            mesh = Mesh(mesh_pb)
+            mesh = Mesh(mesh_pb, mesh_pb.is_last)
             was_cleared = client.new_mesh(mesh, mesh_pb.is_last)
             logger.info('New mesh from client {}, '
                         'nvertices={}, '
                         'nfaces={}, '
                         'is_last={}'.format(
                 client_id, mesh.nvertices, mesh.nfaces, mesh_pb.is_last))
-            if was_cleared:
-                msg = pb.Message()
-                msg.type = pb.Message.CLEAR_MESHES
-                msg.device_id = client_id
-                self.send_to_websocket_clients(msg)
+            # if was_cleared:
+            #     msg = pb.Message()
+            #     msg.type = pb.Message.CLEAR_MESHES
+            #     msg.device_id = client_id
+            #     self.send_to_websocket_clients(msg)
         self.send_to_websocket_clients(
             proto.create_mesh_message(client_id, mesh.to_proto()))
 

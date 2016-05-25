@@ -57,7 +57,8 @@ function handleNewMesh(deviceId, pbMesh) {
   if (!(deviceId in gClients)) {
     gClients[deviceId] = {
       "meshes": [],
-      "color": CLIENT_COLORS[gNumClients++]
+      "newMeshes": [],
+      "color": CLIENT_COLORS[gNumClients++ % CLIENT_COLORS.length]
     };
   }
 
@@ -82,7 +83,13 @@ function handleNewMesh(deviceId, pbMesh) {
   meshObj.device_id = deviceId;
   meshObj.name = deviceId + "_" + gClients[deviceId]["meshes"].length;
   gScene.add(meshObj);
-  gClients[deviceId]["meshes"].push(meshObj);
+  gClients[deviceId]["newMeshes"].push(meshObj);
+
+  if (pbMesh.is_last) {
+    clearMeshes(deviceId);
+    gClients[deviceId]["meshes"] = gClients[deviceId]["newMeshes"];
+    gClients[deviceId]["newMeshes"] = [];
+  }
 }
 
 function handleGameState(pbGameState) {
@@ -242,20 +249,14 @@ $(document).ready(function () {
   });
   $('#mesh-doubleside-checkbox').change(function () {
     let self = this;
-    forEachMesh(function (mesh) {
-      mesh.material.side = (self.checked) ? THREE.DoubleSide : THREE.FrontSide;
-    })
+    for (let client_id in gClients) {
+      for (let mesh of gClients[client_id]["meshes"]) {
+        mesh.material.side = (self.checked) ? THREE.DoubleSide : THREE.FrontSide;
+      }
+    }
   });
 });
 
-
-function forEachMesh(func) {
-  for (let client_id in gClients) {
-    for (let mesh of gClients[client_id]["meshes"]) {
-      func(mesh);
-    }
-  }
-}
 
 function clearAllMeshes() {
   for (let client_id in gClients) {
@@ -270,5 +271,8 @@ function clearAllMeshes() {
 
 function clearMeshes(deviceId) {
   console.log('Clearing meshes for client ' + deviceId);
+  for (let mesh of gClients[deviceId]["meshes"]) {
+    gScene.remove(mesh);
+  }
   gClients[deviceId]["meshes"].length = 0;
 }

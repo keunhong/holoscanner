@@ -9,7 +9,7 @@ from holoscanner.state import game_state
 logger = base_logger.getChild(__name__)
 
 
-class RelayProtocol(WebSocketServerProtocol):
+class DashboardProtocol(WebSocketServerProtocol):
     def __init__(self):
         super().__init__()
         self.message_queue = asyncio.Queue()
@@ -66,5 +66,5 @@ class RelayProtocol(WebSocketServerProtocol):
 def create_server_factory():
     factory = WebSocketServerFactory("ws://{}:{}".format(
         config.RELAY_LISTEN_ADDR, config.RELAY_LISTEN_PORT))
-    factory.protocol = RelayProtocol
+    factory.protocol = DashboardProtocol
     return factory
