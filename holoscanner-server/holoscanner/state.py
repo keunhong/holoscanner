@@ -1,21 +1,15 @@
-import os
 import threading
 import random
-import asyncio
 import numpy as np
 from scipy.signal import argrelextrema
 from scipy.ndimage.filters import gaussian_filter1d
 from PIL import Image, ImageDraw
-from skimage import measure
 from skimage import morphology
-from scipy.spatial import Delaunay
-from numpy import linalg
 from scipy.misc import imsave
 
 from holoscanner import config
 from holoscanner.proto import holoscanner_pb2 as pb
 from holoscanner import base_logger
-from holoscanner.sampling import sample_poisson_mask
 
 logger = base_logger.getChild(__name__)
 
@@ -133,9 +127,14 @@ class Client:
         self.score = 0
         self.protocol = protocol
         self.meshes = []
+        self.is_next_mesh_new = True
 
     def send_message(self, message):
         self.protocol.send_message(message)
+
+    def clear_meshes(self):
+        logger.info('Clearing meshes for client {}'.format(self.client_id))
+        del self.meshes[:]
 
     def to_proto(self):
         client_pb = pb.Client()
@@ -147,7 +146,7 @@ class Client:
 class GameState:
     clients = {}
 
-    mesh_lock = threading.RLock()
+    clients_lock = threading.RLock()
     gs_lock = threading.RLock()
     listeners = []
 
@@ -158,8 +157,9 @@ class GameState:
 
     def new_hololens_client(self, client_id, ip, protocol):
         logger.info('Hololens client {} joined'.format(ip))
-        if client_id not in self.clients:
-            self.clients[client_id] = Client(client_id, ip, protocol)
+        with self.clients_lock:
+            if client_id not in self.clients:
+                self.clients[client_id] = Client(client_id, ip, protocol)
         return self.clients[client_id]
 
     def new_websocket_client(self, queue):
@@ -167,44 +167,48 @@ class GameState:
 
     def remove_hololens_client(self, client_id):
         logger.info('Hololens client {} left.'.format(client_id))
-        if client_id in self.clients:
-            del self.clients[client_id]
+        with self.clients_lock:
+            if client_id in self.clients:
+                del self.clients[client_id]
 
     def send_to_websocket_clients(self, message):
         for queue in self.listeners:
             queue.put_nowait(message)
 
     def send_to_hololens_clients(self, message):
-        for client in self.clients.values():
-            client.send_message(message)
+        with self.clients_lock:
+            for client in self.clients.values():
+                client.send_message(message)
 
     def new_mesh(self, client_id, mesh_pb):
-        with self.mesh_lock:
+        with self.clients_lock:
+            client = self.clients[client_id]
             mesh = Mesh(mesh_pb)
-            self.clients[client_id].meshes.append(mesh)
-            # save_dir = config.MESHES_SAVE_DIR
-            # save_path = os.path.join(save_dir, '{}_{}.bin'.format(
-            #     client.ip, len(self.meshes)))
-            # with open(save_path, 'wb') as f:
-            #     f.write(mesh_pb.SerializeToString())
-
+            client.meshes.append(mesh)
         self.send_to_websocket_clients(self.create_mesh_message(mesh.to_proto()))
 
+        with self.clients_lock:
+            if client.is_next_mesh_new:
+                client.clear_meshes()
+                client.is_next_mesh_new = False
+
         if mesh_pb.is_last:
+            with self.clients_lock:
+                client.is_next_mesh_new = True
             self.update_planes()
             self.update_targets(100)
             self.send_to_websocket_clients(self.create_game_state_message())
 
     def get_all_meshes(self):
         client_meshes = []
-        with self.mesh_lock:
+        with self.clients_lock:
             for client in self.clients.values():
                 client_meshes.extend(client.meshes)
         return client_meshes
 
     def clear_meshes(self):
         logger.info('Clearing meshes.')
-        with self.mesh_lock:
+        with self.clients_lock:
             for client in self.clients.values():
                 del client.meshes[:]
 
@@ -225,7 +229,7 @@ class GameState:
         normals = []
         faces = []
         base_index = 0
-        with self.mesh_lock:
+        with self.clients_lock:
             for mesh in self.get_all_meshes():
                 vertices.extend([vertex for vertex in mesh.vertices])
                 normals.extend([normal for normal in mesh.normals])
@@ -253,39 +257,51 @@ class GameState:
         logger.info('Eroding global mask by {}'.format(erosion_size))
 
         near_floor_inds = np.where((vertices[:, 1] - self.floor) < 0.2)[0]
+        near_ceiling_inds = np.where((vertices[:, 1] - self.ceiling) < 0.2)[0]
+
         floor_faces = []
+        ceiling_faces = []
         for face in faces:
             if (face[0] in near_floor_inds or
-                face[1] in near_floor_inds or
-                face[2] in near_floor_inds):
+                    face[1] in near_floor_inds or
+                    face[2] in near_floor_inds):
                 floor_faces.append(face)
+            if (face[0] in near_ceiling_inds or
+                        face[1] in near_ceiling_inds or
+                        face[2] in near_ceiling_inds):
+                ceiling_faces.append(face)
+
         floor_faces = np.array(floor_faces, dtype=np.uint32)
         floor_hull_mask, _, _ = compute_hull_mask(
             floor_faces, vertices, remove_holes=False)
         floor_sample_mask = global_hull_mask & ~floor_hull_mask
         floor_cand_x, floor_cand_z = np.where(floor_sample_mask)
 
-        imsave('/home/kpar/www/test0.png', global_hull_mask)
-        imsave('/home/kpar/www/test1.png', floor_hull_mask)
-        imsave('/home/kpar/www/test2.png', floor_sample_mask)
+        ceiling_faces = np.array(ceiling_faces, dtype=np.uint32)
+        ceiling_hull_mask, _, _ = compute_hull_mask(
+            ceiling_faces, vertices, remove_holes=False)
+        ceiling_sample_mask = global_hull_mask & ~ceiling_hull_mask
+        ceiling_cand_x, ceiling_cand_z = np.where(ceiling_sample_mask)
 
-        # ceiling_hull_mask, _, _ = compute_hull_mask(
-        #     coords[is_near_ceiling][:, [0, 2]], coords, remove_holes=True)
-        # ceiling_sample_mask = global_hull_mask & ~floor_hull_mask
-        # ceiling_cand_x, ceiling_cand_z = np.where(ceiling_sample_mask)
+        imsave('/home/kpar/www/global_map.png', global_hull_mask)
+        imsave('/home/kpar/www/floor_map.png', floor_hull_mask)
+        imsave('/home/kpar/www/floor_cand.png', floor_sample_mask)
+        imsave('/home/kpar/www/ceiling_map.png', ceiling_hull_mask)
+        imsave('/home/kpar/www/ceiling_cand.png', ceiling_sample_mask)
 
         with self.gs_lock:
             for i in range(num_targets):
-                # if random.random() < 0.5:
-                point_idx = random.randint(0, len(floor_cand_x))
-                x = floor_cand_x[point_idx] / 100 + offsetx
-                z = floor_cand_z[point_idx] / 100 + offsetz
-                y = self.floor + 0.15
-                # else:
-                #     point_idx = random.randint(0, len(ceiling_cand_x))
-                #     x = ceiling_cand_x[point_idx] / 100 + offsetx
-                #     z = ceiling_cand_z[point_idx] / 100 + offsetz
-                #     y = self.ceiling - 0.15
+                # Randomly generate on ceiling or floor.
+                if random.random() < 0.5:
+                    point_idx = random.randint(0, len(floor_cand_x))
+                    x = floor_cand_x[point_idx] / 100 + offsetx
+                    z = floor_cand_z[point_idx] / 100 + offsetz
+                    y = self.floor + 0.15
+                else:
+                    point_idx = random.randint(0, len(ceiling_cand_x))
+                    x = ceiling_cand_x[point_idx] / 100 + offsetx
+                    z = ceiling_cand_z[point_idx] / 100 + offsetz
+                    y = self.ceiling - 0.15
                 target_pb = pb.Target()
                 target_pb.target_id = self.target_counter
                 target_pb.position.x = x
