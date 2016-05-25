@@ -73,7 +73,7 @@ class HsServerProtocol(asyncio.Protocol):
         if len(self.data) == self.data_size:
             msg = Message()
             msg.ParseFromString(self.data)
-            logger.info('Received message of type {}, size {}'.format(
+            logger.debug('Received message of type {}, size {}'.format(
                 msg.type, self.data_size))
             if msg.type == Message.MESH:
                 game_state.new_mesh(self.client_id, msg.mesh)
@@ -101,7 +101,7 @@ class HsServerProtocol(asyncio.Protocol):
     def send_message(self, message):
         with self.lock:
             bytes = pack_message(message)
-            logger.info('Sending message of type {} ({} bytes).'.format(
+            logger.debug('Sending message of type {} ({} bytes).'.format(
                 message.type, len(bytes)))
             self.transport.write(bytes)
 

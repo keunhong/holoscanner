@@ -1,4 +1,5 @@
 import threading
+import math
 import random
 import numpy as np
 from collections import OrderedDict
@@ -13,6 +14,9 @@ from holoscanner.proto import holoscanner_pb2 as pb
 from holoscanner import base_logger
 
 logger = base_logger.getChild(__name__)
+
+
+HULL_SCALE = 50
 
 
 def find_floor_and_ceiling(y_coords, nbins, sigma=None):
@@ -47,15 +51,17 @@ def quat_to_mat(x, y, z, w):
         [xz - wy, yz + wx, 1 - (xx + yy)]])
 
 
-def compute_hull_mask(faces, vertices, scale=100,
+def compute_hull_mask(faces, vertices, scale=HULL_SCALE,
                       remove_holes=True, closing=False):
     transformed = vertices.copy()
     transformed[:, 0] -= vertices[:, 0].min()
     transformed[:, 2] -= vertices[:, 2].min()
     offsetx = vertices[:, 0].min()
     offsety = vertices[:, 2].min()
-    width = int(round(vertices[:, 0].max() - vertices[:, 0].min()) * scale) + 1
-    height = int(round(vertices[:, 2].max() - vertices[:, 2].min()) * scale) + 1
+    width = int(math.ceil(vertices[:, 0].max() -
+                          vertices[:, 0].min()) * scale) + 1
+    height = int(math.ceil(vertices[:, 2].max() -
+                           vertices[:, 2].min()) * scale) + 1
 
     im = Image.new('L', (width, height))
     draw = ImageDraw.Draw(im)
@@ -67,7 +73,7 @@ def compute_hull_mask(faces, vertices, scale=100,
     im = np.array(im) == 255
     if closing:
         im = morphology.binary_closing(im, morphology.square(40))
-    if remove_holes:
+    if remove_holes and len(np.unique(im) >= 2):
         im = morphology.remove_small_holes(im, min_size=scale ** 2)
     return im.T, offsetx, offsety
 
@@ -200,6 +206,11 @@ class GameState:
             client = self.clients[client_id]
             mesh = Mesh(mesh_pb)
             client.new_mesh(mesh, mesh_pb.is_last)
+            logger.info('New mesh from client {}, '
+                        'nvertices={}, '
+                        'nfaces={}, '
+                        'is_last={}'.format(
+                client_id, mesh.nvertices, mesh.nfaces, mesh_pb.is_last))
         self.send_to_websocket_clients(self.create_mesh_message(mesh.to_proto()))
 
         if mesh_pb.is_last:
@@ -235,9 +246,7 @@ class GameState:
             [m.vertices for m in client_meshes])[:, 1])
         sigma = len(y_coords) / config.MESH_PLANE_FINDING_BINS
         self.floor, self.ceiling = find_floor_and_ceiling(
-            y_coords, config.MESH_PLANE_FINDING_BINS, sigma / 3)
-        logger.info('Planes updates: floor={}, ceiling={}'.format(
-            self.floor, self.ceiling))
+            y_coords, config.MESH_PLANE_FINDING_BINS, sigma / 4)
 
     def get_concatenated_meshes(self):
         vertices = []
@@ -258,22 +267,26 @@ class GameState:
         faces = np.array(faces, dtype=np.uint32)
         return vertices, normals, faces
 
-    def update_targets(self, num_targets):
+    def update_targets(self, num_targets, keep_first=True):
         with self.gs_lock:
-            if len(self.target_pbs) > 0:
-                first_target = self.target_pbs[0]
+            first_target = None
+            if keep_first and len(self.target_pbs) > 0:
+                first_target = self.target_pbs.popitem(last=False)[1]
             self.target_pbs.clear()
-            if len(self.target_pbs) > 0:
+            if first_target is not None:
                 self.target_pbs[first_target.target_id] = first_target
 
         vertices, normals, faces = self.get_concatenated_meshes()
+        if vertices.shape[0] < 10:
+            logger.info('Not computing targets: not enough mesh data.')
+            return
 
         global_hull_mask, offsetx, offsetz = compute_hull_mask(
             faces, vertices, remove_holes=True, closing=True)
         erosion_size = 0.04 * min(global_hull_mask.shape)
         global_hull_mask = morphology.binary_erosion(global_hull_mask,
                                   selem=morphology.square(erosion_size))
-        logger.info('Eroding global mask by {}'.format(erosion_size))
+        logger.debug('Eroding global mask by {}'.format(erosion_size))
 
         near_floor_inds = np.where((vertices[:, 1] - self.floor) < 0.2)[0]
         near_ceiling_inds = np.where((vertices[:, 1] - self.ceiling) < 0.2)[0]
@@ -313,13 +326,13 @@ class GameState:
                 # Randomly generate on ceiling or floor.
                 if random.random() < 0.5:
                     point_idx = random.randint(0, len(floor_cand_x))
-                    x = floor_cand_x[point_idx] / 100 + offsetx
-                    z = floor_cand_z[point_idx] / 100 + offsetz
+                    x = floor_cand_x[point_idx] / HULL_SCALE + offsetx
+                    z = floor_cand_z[point_idx] / HULL_SCALE + offsetz
                     y = self.floor + 0.15
                 else:
                     point_idx = random.randint(0, len(ceiling_cand_x))
-                    x = ceiling_cand_x[point_idx] / 100 + offsetx
-                    z = ceiling_cand_z[point_idx] / 100 + offsetz
+                    x = ceiling_cand_x[point_idx] / HULL_SCALE + offsetx
+                    z = ceiling_cand_z[point_idx] / HULL_SCALE + offsetz
                     y = self.ceiling - 0.15
                 target_pb = pb.Target()
                 target_pb.target_id = self.target_counter
@@ -381,7 +394,8 @@ class GameState:
             msg.game_state.targets.extend(targets)
             msg.game_state.clients.extend(
                 [c.to_proto() for c in self.clients.values()])
-            logger.info('Game state: {} targets'.format(len(self.target_pbs)))
+            logger.info('Game state: {} targets, floor={}, ceiling={}'.format(
+                len(self.target_pbs), self.floor, self.ceiling))
             return msg
 
     def create_mesh_message(self, mesh_pb):

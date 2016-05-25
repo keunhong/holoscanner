@@ -15,10 +15,10 @@ class RelayProtocol(WebSocketServerProtocol):
         game_state.new_websocket_client(self.message_queue)
 
     def onConnect(self, request):
-        logger.info("New WebSocket connection: {0}".format(request.peer))
+        logger.debug("New WebSocket connection: {0}".format(request.peer))
 
     def onOpen(self):
-        logger.info('WebSocket connection established.')
+        logger.debug('WebSocket connection established.')
 
         with game_state.gs_lock:
             self.send_message(game_state.create_game_state_message())
@@ -33,7 +33,7 @@ class RelayProtocol(WebSocketServerProtocol):
     @asyncio.coroutine
     def onMessage(self, payload, isBinary):
         if not isBinary:
-            logger.info('Not Binary {}'.format(payload.decode('utf8')))
+            logger.error('Not Binary {}'.format(payload.decode('utf8')))
         message = Message()
         message.ParseFromString(payload)
         if message.type == Message.CLEAR_MESHES:
@@ -41,7 +41,7 @@ class RelayProtocol(WebSocketServerProtocol):
         elif message.type == Message.CLEAR_GAME_STATE:
             game_state.clear_game_state()
         elif message.type == Message.UPDATE_TARGETS:
-            game_state.update_targets(100)
+            game_state.update_targets(100, keep_first=False)
             game_state.send_to_websocket_clients(
                 game_state.create_game_state_message())
         elif message.type == Message.TARGET_FOUND:
@@ -50,7 +50,7 @@ class RelayProtocol(WebSocketServerProtocol):
                 game_state.create_game_state_message())
 
     def onClose(self, wasClean, code, reason):
-        logger.info("WebSocket connection closed: {0}".format(reason))
+        logger.debug("WebSocket connection closed: {0}".format(reason))
         game_state.listeners.remove(self.message_queue)
 
     def send_message(self, msg):
