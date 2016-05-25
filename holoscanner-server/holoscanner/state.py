@@ -50,7 +50,6 @@ def quat_to_mat(x, y, z, w):
 
 def compute_hull_mask(faces, vertices, scale=config.HULL_SCALE,
                       remove_holes=True, closing=False):
-    logger.info('111')
     transformed = vertices.copy()
     transformed[:, 0] -= vertices[:, 0].min()
     transformed[:, 2] -= vertices[:, 2].min()
@@ -61,24 +60,20 @@ def compute_hull_mask(faces, vertices, scale=config.HULL_SCALE,
                           vertices[:, 0].min()) * scale) + 1
     height = int(math.ceil(vertices[:, 2].max() -
                            vertices[:, 2].min()) * scale) + 1
-    logger.info('222')
 
     im = Image.new('L', (width, height))
     draw = ImageDraw.Draw(im)
     for face in faces:
         p = [(int(transformed[i, 0]), int(transformed[i, 2])) for i in face]
         draw.polygon(p, fill='#fff')
-    logger.info('333')
 
     im = np.array(im) == 255
-    logger.info('AAA')
     if closing:
         im = morphology.binary_closing(im, morphology.square(40))
     imsave('/home/kpar/www/test.png', im)
     if remove_holes and len(np.unique(im) >= 2):
         im = morphology.remove_small_holes(im, min_size=scale ** 2)
         imsave('/home/kpar/www/test2.png', im)
-    logger.info('BBB')
     return im.T, offsetx, offsety
 
 
@@ -294,24 +289,21 @@ class GameState:
 
         vertices, normals, faces = self.get_concatenated_meshes()
         if vertices.shape[0] < 10:
-            logger.info('Not computing gTargets: not enough mesh data.')
+            logger.info('Not computing targets: not enough mesh data.')
             return
 
-        logger.info('8888')
         global_hull_mask, offsetx, offsetz = compute_hull_mask(
             faces, vertices, remove_holes=True, closing=False)
         erosion_size = 0.04 * min(global_hull_mask.shape)
         global_hull_mask = morphology.binary_erosion(
             global_hull_mask, selem=morphology.square(erosion_size))
         logger.debug('Eroding global mask by {}'.format(erosion_size))
-        logger.info('9999')
 
         near_floor_inds = set(np.where((vertices[:, 1] - self.floor) < 0.2)[0])
         near_ceiling_inds = set(np.where((vertices[:, 1] - self.ceiling) < 0.2)[0])
 
         floor_faces = []
         ceiling_faces = []
-        logger.info('555')
         for face in faces:
             if (face[0] in near_floor_inds or
                     face[1] in near_floor_inds or
@@ -321,7 +313,6 @@ class GameState:
                         face[1] in near_ceiling_inds or
                         face[2] in near_ceiling_inds):
                 ceiling_faces.append(face)
-        logger.info('666')
 
         floor_faces = np.array(floor_faces, dtype=np.uint32)
         floor_hull_mask, _, _ = compute_hull_mask(
@@ -365,10 +356,10 @@ class GameState:
                 self.target_counter += 1
                 self.target_pbs[target_pb.target_id] = target_pb
 
-        logger.info('Generated {} gTargets.'.format(len(self.target_pbs)))
+        logger.info('Generated {} targets.'.format(len(self.target_pbs)))
 
     def target_found(self, client_id, target_id):
-        logger.info('Deleting target_id={} ({} gTargets exist)'.format(
+        logger.info('Deleting target_id={} ({} targets exist)'.format(
             target_id, len(self.target_pbs)))
         if target_id in self.target_pbs:
             old_target = self.target_pbs[target_id]
@@ -411,7 +402,7 @@ class GameState:
             msg.game_state.targets.extend(targets)
             msg.game_state.clients.extend(
                 [c.to_proto() for c in self.clients.values()])
-            logger.info('Game state: {} gTargets, floor={}, ceiling={}'.format(
+            logger.info('Game state: {} targets, floor={}, ceiling={}'.format(
                 len(self.target_pbs), self.floor, self.ceiling))
             return msg
 
