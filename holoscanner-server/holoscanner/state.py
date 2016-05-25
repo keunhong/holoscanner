@@ -52,27 +52,30 @@ def quat_to_mat(x, y, z, w):
         [xz - wy, yz + wx, 1 - (xx + yy)]])
 
 
-def compute_hull_mask(points, vertices, scale=100, alpha=0.3, remove_holes=True):
-    transformed = points.copy()
-    transformed[:, 0] -= points[:, 0].min()
-    transformed[:, 1] -= points[:, 1].min()
-    tri = Delaunay(transformed)
+def compute_hull_mask(faces, vertices, scale=100,
+                      remove_holes=True, closing=False):
+    transformed = vertices.copy()
+    transformed[:, 0] -= vertices[:, 0].min()
+    transformed[:, 2] -= vertices[:, 2].min()
     offsetx = vertices[:, 0].min()
     offsety = vertices[:, 2].min()
     width = int(round(vertices[:, 0].max() - vertices[:, 0].min()) * scale)
     height = int(round(vertices[:, 2].max() - vertices[:, 2].min()) * scale)
+
     im = Image.new('L', (width, height))
     draw = ImageDraw.Draw(im)
-    for simplex in tri.simplices:
-        p = [(int(transformed[i, 0]*scale), int(transformed[i, 1]*scale)) for i in simplex]
-        pm = [points[i, :] for i in simplex]
-        if (linalg.norm(pm[0] - pm[1]) < alpha and
-            linalg.norm(pm[1] - pm[2]) < alpha and
-            linalg.norm(pm[0] - pm[2]) < alpha):
-            draw.polygon(p, fill='#fff')
+    for face in faces:
+        p = [(int(transformed[i, 0] * scale), int(transformed[i, 2] * scale)) for i
+             in face]
+        draw.polygon(p, fill='#fff')
+
+    print(width, height)
+
     im = np.array(im) == 255
+    if closing:
+        im = morphology.binary_closing(im, morphology.square(40))
     if remove_holes:
-        im = morphology.remove_small_holes(im, min_size=scale**2)
+        im = morphology.remove_small_holes(im, min_size=scale ** 2)
     return im.T, offsetx, offsety
 
 
@@ -208,21 +211,48 @@ class GameState:
         logger.info('Planes updates: floor={}, ceiling={}'.format(
             self.floor, self.ceiling))
 
+    def get_concatenated_meshes(self):
+        vertices = []
+        normals = []
+        faces = []
+        with self.mesh_lock:
+            base_index = 0
+            for mesh in self.meshes:
+                vertices.extend([vertex for vertex in mesh.vertices])
+                normals.extend([normal for normal in mesh.normals])
+                faces.extend([[mesh.faces[3 * i] + base_index,
+                               mesh.faces[3 * i + 1] + base_index,
+                               mesh.faces[3 * i + 2] + base_index]
+                              for i in range(mesh.nfaces)])
+                base_index = len(vertices)
+        vertices = np.array(vertices)
+        normals = np.array(normals)
+        faces = np.array(faces, dtype=np.uint32)
+        return vertices, normals, faces
+
     def update_targets(self, num_targets):
         with self.gs_lock:
             self.target_pbs.clear()
-        coords = np.vstack([m.vertices for m in self.meshes])
 
-        is_near_floor = (coords[:, 1] - self.floor) < 0.2
-        is_near_ceiling = (coords[:, 1] - self.ceiling) < 0.3
+        vertices, normals, faces = self.get_concatenated_meshes()
+
         global_hull_mask, offsetx, offsetz = compute_hull_mask(
-            coords[:, [0, 2]], coords)
+            faces, vertices, remove_holes=True, closing=True)
         erosion_size = 0.04 * min(global_hull_mask.shape)
         global_hull_mask = morphology.binary_erosion(global_hull_mask,
                                   selem=morphology.square(erosion_size))
         logger.info('Eroding global mask by {}'.format(erosion_size))
+
+        near_floor_inds = np.where((vertices[:, 1] - self.floor) < 0.2)[0]
+        floor_faces = []
+        for face in faces:
+            if (face[0] in near_floor_inds or
+                face[1] in near_floor_inds or
+                face[2] in near_floor_inds):
+                floor_faces.append(face)
+        floor_faces = np.array(floor_faces, dtype=np.uint32)
         floor_hull_mask, _, _ = compute_hull_mask(
-            coords[is_near_floor][:, [0, 2]], coords, remove_holes=True)
+            floor_faces, vertices, remove_holes=False)
         floor_sample_mask = global_hull_mask & ~floor_hull_mask
         floor_cand_x, floor_cand_z = np.where(floor_sample_mask)
 
