@@ -4,6 +4,7 @@ import struct
 import threading
 from enum import Enum
 from holoscanner import base_logger
+from holoscanner import proto
 from holoscanner.proto.holoscanner_pb2 import Message
 from holoscanner.state import game_state
 
@@ -78,13 +79,13 @@ class HsServerProtocol(asyncio.Protocol):
                 msg.type, self.data_size))
             if msg.type == Message.MESH:
                 game_state.new_mesh(self.client_id, msg.mesh)
-                message = game_state.create_ack()
+                message = proto.create_ack()
                 self.send_message(message)
             elif msg.type == Message.GAME_STATE_REQUEST:
                 message = game_state.create_game_state_message(max_targets=1)
                 self.send_message(message)
             elif msg.type == Message.FIN:
-                logger.info('Closing the client socket')
+                logger.info('Closing the client gSocket')
                 self.transport.close()
             elif msg.type == Message.TARGET_FOUND:
                 logger.info('Target found: {}'.format(msg.target_id))
@@ -133,7 +134,7 @@ class HsClientProtocol(asyncio.Protocol):
         # if msg.type == Message.GAME_STATE:
         #     target_found_msg = Message()
         #     target_found_msg.type = Message.TARGET_FOUND
-        #     target_found_msg.target_id = msg.game_state.targets[0].target_id
+        #     target_found_msg.target_id = msg.game_state.gTargets[0].target_id
         #     print(target_found_msg)
         #     self.send_message(target_found_msg)
 

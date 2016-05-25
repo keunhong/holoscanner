@@ -2,6 +2,7 @@ import asyncio
 from autobahn.asyncio.websocket import (WebSocketServerProtocol,
                                         WebSocketServerFactory)
 from holoscanner import config, base_logger
+from holoscanner import proto
 from holoscanner.proto.holoscanner_pb2 import Message
 from holoscanner.state import game_state
 
@@ -25,7 +26,7 @@ class RelayProtocol(WebSocketServerProtocol):
             with game_state.clients_lock:
                 for client in game_state.clients.values():
                     for mesh in client.meshes:
-                        self.send_message(game_state.create_mesh_message(
+                        self.send_message(proto.create_mesh_message(
                             client.client_id, mesh.to_proto()))
             self.send_message(game_state.create_game_state_message())
 
