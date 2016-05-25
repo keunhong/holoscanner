@@ -1,26 +1,21 @@
-import os
 import threading
 import random
-import asyncio
 import numpy as np
+from collections import OrderedDict
 from scipy.signal import argrelextrema
 from scipy.ndimage.filters import gaussian_filter1d
 from PIL import Image, ImageDraw
-from skimage import measure
 from skimage import morphology
-from scipy.spatial import Delaunay
-from numpy import linalg
 from scipy.misc import imsave
 
 from holoscanner import config
 from holoscanner.proto import holoscanner_pb2 as pb
 from holoscanner import base_logger
-from holoscanner.sampling import sample_poisson_mask
 
 logger = base_logger.getChild(__name__)
 
 
-def find_planes(y_coords, nbins, sigma=None):
+def find_floor_and_ceiling(y_coords, nbins, sigma=None):
     if sigma:
         y_coords = gaussian_filter1d(y_coords, sigma)
 
@@ -52,36 +47,36 @@ def quat_to_mat(x, y, z, w):
         [xz - wy, yz + wx, 1 - (xx + yy)]])
 
 
-def compute_hull_mask(points, vertices, scale=100, alpha=0.3, remove_holes=True):
-    transformed = points.copy()
-    transformed[:, 0] -= points[:, 0].min()
-    transformed[:, 1] -= points[:, 1].min()
-    tri = Delaunay(transformed)
+def compute_hull_mask(faces, vertices, scale=100,
+                      remove_holes=True, closing=False):
+    transformed = vertices.copy()
+    transformed[:, 0] -= vertices[:, 0].min()
+    transformed[:, 2] -= vertices[:, 2].min()
     offsetx = vertices[:, 0].min()
     offsety = vertices[:, 2].min()
-    width = int(round(vertices[:, 0].max() - vertices[:, 0].min()) * scale)
-    height = int(round(vertices[:, 2].max() - vertices[:, 2].min()) * scale)
+    width = int(round(vertices[:, 0].max() - vertices[:, 0].min()) * scale) + 1
+    height = int(round(vertices[:, 2].max() - vertices[:, 2].min()) * scale) + 1
+
     im = Image.new('L', (width, height))
     draw = ImageDraw.Draw(im)
-    for simplex in tri.simplices:
-        p = [(int(transformed[i, 0]*scale), int(transformed[i, 1]*scale)) for i in simplex]
-        pm = [points[i, :] for i in simplex]
-        if (linalg.norm(pm[0] - pm[1]) < alpha and
-            linalg.norm(pm[1] - pm[2]) < alpha and
-            linalg.norm(pm[0] - pm[2]) < alpha):
-            draw.polygon(p, fill='#fff')
+    for face in faces:
+        p = [(int(transformed[i, 0] * scale), int(transformed[i, 2] * scale)) for i
+             in face]
+        draw.polygon(p, fill='#fff')
+
     im = np.array(im) == 255
+    if closing:
+        im = morphology.binary_closing(im, morphology.square(40))
     if remove_holes:
-        im = morphology.remove_small_holes(im, min_size=scale**2)
+        im = morphology.remove_small_holes(im, min_size=scale ** 2)
     return im.T, offsetx, offsety
 
 
 class Mesh:
-    def __init__(self, mesh_pb, client):
+    def __init__(self, mesh_pb):
         self.nvertices = len(mesh_pb.vertices)
         self.nfaces = int(len(mesh_pb.triangles) / 3)
         self.vertices = np.ndarray((self.nvertices, 3), dtype=float)
-        self.client = client
         self.mesh_id = mesh_pb.mesh_id
         self.faces = np.array(mesh_pb.triangles, dtype=int)
         for i, vert_pb in enumerate(mesh_pb.vertices):
@@ -97,7 +92,7 @@ class Mesh:
             self.vertices[:, 1] += mesh_pb.cam_position.y
             self.vertices[:, 2] += mesh_pb.cam_position.z
 
-        self.normals = self.compute_normals()
+        self.normals = self._compute_normals()
 
     def to_proto(self):
         mesh_pb = pb.Mesh()
@@ -110,7 +105,7 @@ class Mesh:
         mesh_pb.triangles.extend(self.faces.tolist())
         return mesh_pb
 
-    def compute_normals(self):
+    def _compute_normals(self):
         normals = np.zeros((self.nfaces, 3))
         for i in range(self.nfaces):
             v1 = self.vertices[self.faces[i * 3 + 0]]
@@ -130,9 +125,25 @@ class Client:
         self.ip = ip
         self.score = 0
         self.protocol = protocol
+        self.meshes = []
+        self.is_next_mesh_new = True
 
     def send_message(self, message):
         self.protocol.send_message(message)
+
+    def new_mesh(self, mesh, is_last):
+        if self.is_next_mesh_new:
+            self.clear_meshes()
+            self.is_next_mesh_new = False
+
+        if is_last:
+            self.is_next_mesh_new = True
+
+        self.meshes.append(mesh)
+
+    def clear_meshes(self):
+        logger.info('Clearing meshes for client {}'.format(self.client_id))
+        del self.meshes[:]
 
     def to_proto(self):
         client_pb = pb.Client()
@@ -142,111 +153,174 @@ class Client:
 
 
 class GameState:
-    clients = {}
 
-    mesh_lock = threading.RLock()
+    clients = {
+        '__server__': Client('__server__', '127.0.0.1', None)
+    }
+
+    clients_lock = threading.RLock()
     gs_lock = threading.RLock()
-    meshes = []
     listeners = []
 
-    floor = -10
-    ceiling = 10
+    floor = -5
+    ceiling = 5
     target_counter = 0
-    target_pbs = {}
+    target_pbs = OrderedDict()
 
     def new_hololens_client(self, client_id, ip, protocol):
         logger.info('Hololens client {} joined'.format(ip))
-        if client_id not in self.clients:
-            self.clients[client_id] = Client(client_id, ip, protocol)
-        return self.clients[client_id]
+        with self.clients_lock:
+            if client_id not in self.clients:
+                self.clients[client_id] = Client(client_id, ip, protocol)
+        self.send_to_websocket_clients(self.create_game_state_message())
+        return client_id
 
     def new_websocket_client(self, queue):
         self.listeners.append(queue)
 
     def remove_hololens_client(self, client_id):
         logger.info('Hololens client {} left.'.format(client_id))
-        if client_id in self.clients:
-            del self.clients[client_id]
+        with self.clients_lock:
+            if client_id in self.clients:
+                del self.clients[client_id]
+        self.send_to_websocket_clients(self.create_game_state_message())
 
     def send_to_websocket_clients(self, message):
         for queue in self.listeners:
             queue.put_nowait(message)
 
     def send_to_hololens_clients(self, message):
-        for client in self.clients.values():
-            client.send_message(message)
+        with self.clients_lock:
+            for client in self.clients.values():
+                if not client.client_id == '__server__':
+                    client.send_message(message)
 
-    def new_mesh(self, mesh_pb, client):
-        with self.mesh_lock:
-            mesh = Mesh(mesh_pb, client)
-            self.meshes.append(mesh)
-            # save_dir = config.MESHES_SAVE_DIR
-            # save_path = os.path.join(save_dir, '{}_{}.bin'.format(
-            #     client.ip, len(self.meshes)))
-            # with open(save_path, 'wb') as f:
-            #     f.write(mesh_pb.SerializeToString())
-
+    def new_mesh(self, client_id, mesh_pb):
+        with self.clients_lock:
+            client = self.clients[client_id]
+            mesh = Mesh(mesh_pb)
+            client.new_mesh(mesh, mesh_pb.is_last)
         self.send_to_websocket_clients(self.create_mesh_message(mesh.to_proto()))
 
         if mesh_pb.is_last:
             self.update_planes()
             self.update_targets(100)
             self.send_to_websocket_clients(self.create_game_state_message())
-            self.send_to_hololens_clients(self.create_game_state_message())
+
+    def get_all_meshes(self):
+        client_meshes = []
+        with self.clients_lock:
+            for client in self.clients.values():
+                client_meshes.extend(client.meshes)
+        return client_meshes
 
     def clear_meshes(self):
         logger.info('Clearing meshes.')
-        with self.mesh_lock:
-            del self.meshes[:]
+        with self.clients_lock:
+            for client in self.clients.values():
+                client.clear_meshes()
+
+    def clear_game_state(self):
+        with self.gs_lock:
+            self.target_pbs.clear()
+            self.floor = -5
+            self.ceiling = 5
+        self.send_to_websocket_clients(self.create_game_state_message())
 
     def update_planes(self):
+        client_meshes = []
+        for client in self.clients.values():
+            client_meshes.extend(client.meshes)
         y_coords = np.sort(np.vstack(
-            [m.vertices for m in self.meshes])[:, 1])
+            [m.vertices for m in client_meshes])[:, 1])
         sigma = len(y_coords) / config.MESH_PLANE_FINDING_BINS
-        self.floor, self.ceiling = find_planes(
-            y_coords, config.MESH_PLANE_FINDING_BINS, sigma / 5)
+        self.floor, self.ceiling = find_floor_and_ceiling(
+            y_coords, config.MESH_PLANE_FINDING_BINS, sigma / 3)
         logger.info('Planes updates: floor={}, ceiling={}'.format(
             self.floor, self.ceiling))
 
+    def get_concatenated_meshes(self):
+        vertices = []
+        normals = []
+        faces = []
+        base_index = 0
+        with self.clients_lock:
+            for mesh in self.get_all_meshes():
+                vertices.extend([vertex for vertex in mesh.vertices])
+                normals.extend([normal for normal in mesh.normals])
+                faces.extend([[mesh.faces[3 * i] + base_index,
+                               mesh.faces[3 * i + 1] + base_index,
+                               mesh.faces[3 * i + 2] + base_index]
+                              for i in range(mesh.nfaces)])
+                base_index = len(vertices)
+        vertices = np.array(vertices)
+        normals = np.array(normals)
+        faces = np.array(faces, dtype=np.uint32)
+        return vertices, normals, faces
+
     def update_targets(self, num_targets):
         with self.gs_lock:
+            if len(self.target_pbs) > 0:
+                first_target = self.target_pbs[0]
             self.target_pbs.clear()
-        coords = np.vstack([m.vertices for m in self.meshes])
+            if len(self.target_pbs) > 0:
+                self.target_pbs[first_target.target_id] = first_target
 
-        is_near_floor = (coords[:, 1] - self.floor) < 0.2
-        is_near_ceiling = (coords[:, 1] - self.ceiling) < 0.3
+        vertices, normals, faces = self.get_concatenated_meshes()
+
         global_hull_mask, offsetx, offsetz = compute_hull_mask(
-            coords[:, [0, 2]], coords)
+            faces, vertices, remove_holes=True, closing=True)
         erosion_size = 0.04 * min(global_hull_mask.shape)
         global_hull_mask = morphology.binary_erosion(global_hull_mask,
                                   selem=morphology.square(erosion_size))
         logger.info('Eroding global mask by {}'.format(erosion_size))
+
+        near_floor_inds = np.where((vertices[:, 1] - self.floor) < 0.2)[0]
+        near_ceiling_inds = np.where((vertices[:, 1] - self.ceiling) < 0.2)[0]
+
+        floor_faces = []
+        ceiling_faces = []
+        for face in faces:
+            if (face[0] in near_floor_inds or
+                    face[1] in near_floor_inds or
+                    face[2] in near_floor_inds):
+                floor_faces.append(face)
+            if (face[0] in near_ceiling_inds or
+                        face[1] in near_ceiling_inds or
+                        face[2] in near_ceiling_inds):
+                ceiling_faces.append(face)
+
+        floor_faces = np.array(floor_faces, dtype=np.uint32)
         floor_hull_mask, _, _ = compute_hull_mask(
-            coords[is_near_floor][:, [0, 2]], coords, remove_holes=True)
+            floor_faces, vertices, remove_holes=False)
         floor_sample_mask = global_hull_mask & ~floor_hull_mask
         floor_cand_x, floor_cand_z = np.where(floor_sample_mask)
 
-        imsave('/home/kpar/www/test0.png', global_hull_mask)
-        imsave('/home/kpar/www/test1.png', floor_hull_mask)
-        imsave('/home/kpar/www/test2.png', floor_sample_mask)
+        ceiling_faces = np.array(ceiling_faces, dtype=np.uint32)
+        ceiling_hull_mask, _, _ = compute_hull_mask(
+            ceiling_faces, vertices, remove_holes=False)
+        ceiling_sample_mask = global_hull_mask & ~ceiling_hull_mask
+        ceiling_cand_x, ceiling_cand_z = np.where(ceiling_sample_mask)
 
-        # ceiling_hull_mask, _, _ = compute_hull_mask(
-        #     coords[is_near_ceiling][:, [0, 2]], coords, remove_holes=True)
-        # ceiling_sample_mask = global_hull_mask & ~floor_hull_mask
-        # ceiling_cand_x, ceiling_cand_z = np.where(ceiling_sample_mask)
+        imsave('/home/kpar/www/global_map.png', global_hull_mask)
+        imsave('/home/kpar/www/floor_map.png', floor_hull_mask)
+        imsave('/home/kpar/www/floor_cand.png', floor_sample_mask)
+        imsave('/home/kpar/www/ceiling_map.png', ceiling_hull_mask)
+        imsave('/home/kpar/www/ceiling_cand.png', ceiling_sample_mask)
 
         with self.gs_lock:
             for i in range(num_targets):
-                # if random.random() < 0.5:
-                point_idx = random.randint(0, len(floor_cand_x))
-                x = floor_cand_x[point_idx] / 100 + offsetx
-                z = floor_cand_z[point_idx] / 100 + offsetz
-                y = self.floor + 0.15
-                # else:
-                #     point_idx = random.randint(0, len(ceiling_cand_x))
-                #     x = ceiling_cand_x[point_idx] / 100 + offsetx
-                #     z = ceiling_cand_z[point_idx] / 100 + offsetz
-                #     y = self.ceiling - 0.15
+                # Randomly generate on ceiling or floor.
+                if random.random() < 0.5:
+                    point_idx = random.randint(0, len(floor_cand_x))
+                    x = floor_cand_x[point_idx] / 100 + offsetx
+                    z = floor_cand_z[point_idx] / 100 + offsetz
+                    y = self.floor + 0.15
+                else:
+                    point_idx = random.randint(0, len(ceiling_cand_x))
+                    x = ceiling_cand_x[point_idx] / 100 + offsetx
+                    z = ceiling_cand_z[point_idx] / 100 + offsetz
+                    y = self.ceiling - 0.15
                 target_pb = pb.Target()
                 target_pb.target_id = self.target_counter
                 target_pb.position.x = x
@@ -261,23 +335,50 @@ class GameState:
         logger.info('Deleting target_id={} ({} targets exist)'.format(
             target_id, len(self.target_pbs)))
         if target_id in self.target_pbs:
+            old_target = self.target_pbs[target_id]
+
+            def comparator(item):
+                _, target = item
+                return np.linalg.norm(
+                    np.array([old_target.position.x,
+                              old_target.position.y,
+                              old_target.position.z]) -
+                    np.array([target.position.x,
+                              target.position.y,
+                              target.position.z]))
             self.clients[client_id].score += 1
             logger.info('Client {} found target_id={}, score={}'.format(
                 client_id, target_id, self.clients[client_id].score))
             del self.target_pbs[target_id]
+            sorted_items = sorted(self.target_pbs.items(),
+                                  key=comparator,
+                                  reverse=True)
+            if len(sorted_items) >= 7:
+                divide_idx = int(5 * len(sorted_items) / 7)
+                half_1 = sorted_items[:divide_idx]
+                half_2 = sorted_items[divide_idx:]
+                random.shuffle(half_1)
+                sorted_items = half_1 + half_2
+            self.target_pbs = OrderedDict(sorted_items)
             if len(self.target_pbs) == 0:
                 self.update_targets(100)
             self.send_to_websocket_clients(self.create_game_state_message())
-            self.send_to_hololens_clients(self.create_game_state_message())
+            self.send_to_hololens_clients(
+                self.create_game_state_message(max_targets=1))
 
-    def create_game_state_message(self):
+    def create_game_state_message(self, max_targets=None):
         with self.gs_lock:
             msg = pb.Message()
             msg.type = pb.Message.GAME_STATE
             msg.device_id = config.SERVER_DEVICE_ID
             msg.game_state.floor_y = self.floor
             msg.game_state.ceiling_y = self.ceiling
-            msg.game_state.targets.extend(self.target_pbs.values())
+            targets = list(self.target_pbs.items())
+            if max_targets is not None:
+                targets = [t[1] for t in targets[:min(max_targets, len(targets))]]
+            else:
+                targets = [t[1] for t in targets]
+            msg.game_state.targets.extend(targets)
             msg.game_state.clients.extend(
                 [c.to_proto() for c in self.clients.values()])
             logger.info('Game state: {} targets'.format(len(self.target_pbs)))

@@ -22,7 +22,7 @@ class RelayProtocol(WebSocketServerProtocol):
 
         with game_state.gs_lock:
             self.send_message(game_state.create_game_state_message())
-            for mesh in game_state.meshes:
+            for mesh in game_state.get_all_meshes():
                 self.send_message(game_state.create_mesh_message(mesh.to_proto()))
             self.send_message(game_state.create_game_state_message())
 
@@ -38,6 +38,16 @@ class RelayProtocol(WebSocketServerProtocol):
         message.ParseFromString(payload)
         if message.type == Message.CLEAR_MESHES:
             game_state.clear_meshes()
+        elif message.type == Message.CLEAR_GAME_STATE:
+            game_state.clear_game_state()
+        elif message.type == Message.UPDATE_TARGETS:
+            game_state.update_targets(100)
+            game_state.send_to_websocket_clients(
+                game_state.create_game_state_message())
+        elif message.type == Message.TARGET_FOUND:
+            game_state.target_found('__server__', message.target_id)
+            game_state.send_to_websocket_clients(
+                game_state.create_game_state_message())
 
     def onClose(self, wasClean, code, reason):
         logger.info("WebSocket connection closed: {0}".format(reason))

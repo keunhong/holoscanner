@@ -2,6 +2,8 @@ html, body {
     height: 100%;
     margin: 0;
     overflow: hidden;
+    font-family: 'Avenir Next', 'Helvetica';
+    font-size: 0.9em;
 }
 
 #canvas {
@@ -17,4 +19,13 @@ html, body {
     padding: 5px;
     border-radius: 10px;
     opacity: 0.5;
+}
+
+#scoreboard {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #666;
+    color: #fff;
+    padding: 5px;
 }
