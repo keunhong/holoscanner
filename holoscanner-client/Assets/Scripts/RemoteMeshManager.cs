@@ -119,6 +119,20 @@ namespace Holoscanner
             NetworkCommunication.Instance.SendData(Google.Protobuf.MessageExtensions.ToByteArray(msg));
 
         }
+        // From http://answers.unity3d.com/questions/11363/converting-matrix4x4-to-quaternion-vector3.html
+        public static Quaternion QuaternionFromMatrix(Matrix4x4 m)
+        {
+            // Adapted from: http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/index.htm
+            Quaternion q = new Quaternion();
+            q.w = Mathf.Sqrt(Mathf.Max(0, 1 + m[0, 0] + m[1, 1] + m[2, 2])) / 2;
+            q.x = Mathf.Sqrt(Mathf.Max(0, 1 + m[0, 0] - m[1, 1] - m[2, 2])) / 2;
+            q.y = Mathf.Sqrt(Mathf.Max(0, 1 - m[0, 0] + m[1, 1] - m[2, 2])) / 2;
+            q.z = Mathf.Sqrt(Mathf.Max(0, 1 - m[0, 0] - m[1, 1] + m[2, 2])) / 2;
+            q.x *= Mathf.Sign(q.x * (m[2, 1] - m[1, 2]));
+            q.y *= Mathf.Sign(q.y * (m[0, 2] - m[2, 0]));
+            q.z *= Mathf.Sign(q.z * (m[1, 0] - m[0, 1]));
+            return q;
+        }
 
         public IEnumerator SendMeshes()
         {
@@ -132,12 +146,11 @@ namespace Holoscanner
             for (int index = 0; index < MeshFilters.Count; index++)
             {
                 int id = int.Parse(MeshFilters[index].transform.gameObject.name.Substring("Surface-".Length));
-                Transform t = MeshFilters[index].transform;
+                Matrix4x4 t = MeshFilters[index].transform.localToWorldMatrix;
                 if (worldtransform != null) {
-                    t.Rotate(worldtransform.rotation.eulerAngles);
-                    t.Translate(worldtransform.localPosition);
+                    t = worldtransform.worldToLocalMatrix*t;
                 }
-                NetworkCommunication.Instance.SendData(ProtoMeshSerializer.Serialize(MeshFilters[index].sharedMesh, t, (uint) id, index==MeshFilters.Count-1));
+                NetworkCommunication.Instance.SendData(ProtoMeshSerializer.Serialize(MeshFilters[index].sharedMesh, QuaternionFromMatrix(t), t.GetColumn(3), (uint) id, index==MeshFilters.Count-1));
                 yield return null;
             }
             //NetworkCommunication.Instance.SendData(ProtoMeshSerializer.DataRequest());

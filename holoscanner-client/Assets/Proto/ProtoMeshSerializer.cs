@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 public static class ProtoMeshSerializer {
-    public static byte[] Serialize(Mesh mesh, Transform transform, uint id, bool islast)
+    public static byte[] Serialize(Mesh mesh, Quaternion q, Vector3 v, uint id, bool islast)
     {
         IEnumerable<Holoscanner.Proto.Vec3D> vertices = mesh.vertices.Select(x => {
             Holoscanner.Proto.Vec3D ret = new Holoscanner.Proto.Vec3D();
@@ -19,14 +19,14 @@ public static class ProtoMeshSerializer {
         msg.Mesh.Vertices.Add(vertices);
         msg.Mesh.Triangles.Add(mesh.triangles);
         msg.Mesh.CamPosition = new Holoscanner.Proto.Vec3D();
-        msg.Mesh.CamPosition.X = transform.position.x;
-        msg.Mesh.CamPosition.Y = transform.position.y;
-        msg.Mesh.CamPosition.Z = transform.position.z;
+        msg.Mesh.CamPosition.X = v.x;
+        msg.Mesh.CamPosition.Y = v.y;
+        msg.Mesh.CamPosition.Z = v.z;
         msg.Mesh.CamRotation = new Holoscanner.Proto.Vec4D();
-        msg.Mesh.CamRotation.X = transform.rotation.x;
-        msg.Mesh.CamRotation.Y = transform.rotation.y;
-        msg.Mesh.CamRotation.Z = transform.rotation.z;
-        msg.Mesh.CamRotation.W = transform.rotation.w;
+        msg.Mesh.CamRotation.X = q.x;
+        msg.Mesh.CamRotation.Y = q.y;
+        msg.Mesh.CamRotation.Z = q.z;
+        msg.Mesh.CamRotation.W = q.w;
 
         // FIXME - Fill in fields properly -------------------------------------------------------
 #if !UNITY_EDITOR

@@ -388,7 +388,11 @@ public class ImportExportAnchorManager : Singleton<ImportExportAnchorManager>
         {
             if (ids[index] == AnchorName)
             {
+                Debug.Log("attaching to cached anchor");
                 WorldAnchor wa = anchorStore.Load(ids[index], gameObject);
+                GameObject.Find("HologramCollection").GetComponent<Holoscanner.RemoteMeshManager>().anchorSet = true;
+                GameObject.Find("HologramCollection").GetComponent<Holoscanner.RemoteMeshManager>().worldtransform = gameObject.transform;
+                //GameObject.Find("HologramCollection").GetComponent<Holoscanner.RemoteMeshManager>().SendTargetRequest();
                 if (wa.isLocated)
                 {
                     CurrentState = ImportExportState.Ready;
@@ -439,16 +443,15 @@ public class ImportExportAnchorManager : Singleton<ImportExportAnchorManager>
 
             string first = wat.GetAllIds()[0];
             Debug.Log("Anchor name: " + first);
-
             WorldAnchor anchor = wat.LockObject(first, gameObject);
            
             anchorStore.Save(first, anchor);
             CurrentState = ImportExportState.Ready;
             GameObject.Find("HologramCollection").GetComponent<Holoscanner.RemoteMeshManager>().anchorSet = true;
             //WorldAnchor a = GetComponent<WorldAnchor>();
-            Debug.Log(anchor.transform);
-            Debug.Log(GetComponent<WorldAnchor>().transform);
-            GameObject.Find("HologramCollection").GetComponent<Holoscanner.RemoteMeshManager>().worldtransform = GetComponent<WorldAnchor>().transform;
+            Debug.Log(gameObject.transform.position);
+            Debug.Log(gameObject.transform.rotation);
+            GameObject.Find("HologramCollection").GetComponent<Holoscanner.RemoteMeshManager>().worldtransform = gameObject.transform;
             //GameObject.Find("HologramCollection").GetComponent<Holoscanner.RemoteMeshManager>().SendTargetRequest();
 
         }
@@ -513,9 +516,7 @@ public class ImportExportAnchorManager : Singleton<ImportExportAnchorManager>
                 exportingAnchorBytes.ToArray(),
                 exportingAnchorBytes.Count);
             GameObject.Find("HologramCollection").GetComponent<Holoscanner.RemoteMeshManager>().anchorSet = true;
-            //Debug.Log(anchor.transform);
-            Debug.Log(GetComponent<WorldAnchor>().transform);
-            GameObject.Find("HologramCollection").GetComponent<Holoscanner.RemoteMeshManager>().worldtransform = GetComponent<WorldAnchor>().transform;
+            GameObject.Find("HologramCollection").GetComponent<Holoscanner.RemoteMeshManager>().worldtransform = gameObject.transform;
             //GameObject.Find("HologramCollection").GetComponent<Holoscanner.RemoteMeshManager>().SendTargetRequest();
         }
         else
