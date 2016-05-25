@@ -169,7 +169,8 @@ class GameState:
         with self.clients_lock:
             if client_id not in self.clients:
                 self.clients[client_id] = Client(client_id, ip, protocol)
-        return self.clients[client_id]
+        self.send_to_websocket_clients(self.create_game_state_message())
+        return client_id
 
     def new_websocket_client(self, queue):
         self.listeners.append(queue)
@@ -179,6 +180,7 @@ class GameState:
         with self.clients_lock:
             if client_id in self.clients:
                 del self.clients[client_id]
+        self.send_to_websocket_clients(self.create_game_state_message())
 
     def send_to_websocket_clients(self, message):
         for queue in self.listeners:
