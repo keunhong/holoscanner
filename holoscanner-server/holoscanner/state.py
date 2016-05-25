@@ -290,7 +290,7 @@ class GameState:
 
         global_hull_mask, offsetx, offsetz = compute_hull_mask(
             faces, vertices, remove_holes=True, closing=True)
-        erosion_size = 0.04 * min(global_hull_mask.shape)
+        erosion_size = 0.06 * min(global_hull_mask.shape)
         # global_hull_mask = morphology.binary_erosion(
         #     global_hull_mask, selem=morphology.square(erosion_size))
         logger.debug('Eroding global mask by {}'.format(erosion_size))

@@ -6,6 +6,12 @@ let renderer = new THREE.WebGLRenderer();
 
 let scene = new THREE.Scene();
 
+
+let clientColors = [
+    '#bbdefb', '#e1bee7', '#f48fb1', '#e6ee9c'
+];
+
+let numClients = 0;
 let clients = {};
 let targets = [];
 let floorPlane = new THREE.Mesh(
@@ -49,7 +55,10 @@ socket.onmessage = function (e) {
 
 function handleNewMesh(device_id, pbMesh) {
   if (!(device_id in clients)) {
-    clients[device_id] = { "meshes": [] };
+    clients[device_id] = {
+      "meshes": [],
+      "color": clientColors[numClients++]
+    };
   }
 
   let geometry = new THREE.Geometry();
@@ -62,7 +71,7 @@ function handleNewMesh(device_id, pbMesh) {
         new THREE.Face3(pbMesh.triangles[i*3], pbMesh.triangles[i*3+1], pbMesh.triangles[i*3+2]));
   }
   let material = new THREE.MeshLambertMaterial({
-    color: 0xffffff,
+    color: clients[device_id]["color"],
     side: THREE.DoubleSide
   });
   geometry.computeFaceNormals();
@@ -91,7 +100,12 @@ function handleGameState(pbGameState) {
   scoreboard_el.empty();
   scoreboard_el.append('<span>Client Scores</span>');
   for (let client of pbGameState.clients) {
+    console.log(client);
+    let clientColor = (client.device_id in clients)
+        ? clients[client.device_id]["color"]
+        : 0xffffff;
     let client_el = $('<div>').addClass('scoreboard-client');
+    client_el.css('color', clientColor);
     client_el.text("[" + client.device_id + "]: " + client.score);
     scoreboard_el.append(client_el);
   }
@@ -117,15 +131,15 @@ function handleGameState(pbGameState) {
     let material = new THREE.MeshPhongMaterial({color: color});
     
     let targetMesh;
-    if (i == 0) {
-      targetMesh = new THREE.PointLight(0xff0000, 0.5, 0, 10);
-      targetMesh.add(new THREE.Mesh(
-          geom, new THREE.MeshPhongMaterial({color: 0xff00ff})));
-    } else {
+    // if (i == 0) {
+    //   targetMesh = new THREE.PointLight(0xff0000, 0.5, 0, 10);
+    //   targetMesh.add(new THREE.Mesh(
+    //       geom, new THREE.MeshPhongMaterial({color: 0xff00ff})));
+    // } else {
       targetMesh = new THREE.Mesh(geom, material);
       material.transparent = true;
       material.opacity = 0.5;
-    }
+    // }
     targetMesh.position.set(
         target.position.x, target.position.y, target.position.z);
     targetMesh.target_id = target.target_id;
@@ -143,23 +157,23 @@ function initRenderer() {
   let ambientLight = new THREE.AmbientLight(0x333333);
   scene.add(ambientLight);
 
-  let light = new THREE.PointLight(0xffffff, 0.3, 0);
+  let light = new THREE.PointLight(0xffffff, 0.4, 0);
   light.position.set(0, 10, 0);
   scene.add(light);
 
-  let light2 = new THREE.PointLight(0xffffff, 0.3, 0);
+  let light2 = new THREE.PointLight(0xffffff, 0.4, 0);
   light2.position.set(100, 100, 0);
   scene.add(light2);
 
-  let light3 = new THREE.PointLight(0xffffff, 0.3, 0);
+  let light3 = new THREE.PointLight(0xffffff, 0.4, 0);
   light3.position.set(-100, 100, 0);
   scene.add(light3);
 
-  let light4 = new THREE.PointLight(0xffffff, 0.3, 0);
+  let light4 = new THREE.PointLight(0xffffff, 0.4, 0);
   light4.position.set(-100, -100, 0);
   scene.add(light4);
 
-  let light5 = new THREE.PointLight(0xffffff, 0.3, 0);
+  let light5 = new THREE.PointLight(0xffffff, 0.4, 0);
   light5.position.set(100, -100, 0);
   scene.add(light5);
   
