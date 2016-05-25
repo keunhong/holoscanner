@@ -45,9 +45,7 @@ socket.onmessage = function (e) {
     } else if (message.type === Holoscanner.Proto.Message.Type.GAME_STATE) {
       handleGameState(message.game_state);
     } else if (message.type === Holoscanner.Proto.Message.Type.CLEAR_MESHES) {
-      if (message.device_id in clients) {
-        clients[message.device_id]["meshes"].length = 0;
-      }
+      clearAllMeshes();
       handleGameState(message.game_state);
     }
   }
@@ -208,12 +206,7 @@ $(document).ready(function () {
     message.type = Holoscanner.Proto.Message.Type.CLEAR_MESHES;
     test = message;
     socket.send(message.toArrayBuffer());
-    for (let client_id in clients) {
-      for (let mesh of clients[client_id]["meshes"]) {
-        scene.remove(mesh);
-        clients[client_id]["meshes"].length = 0;
-      }
-    }
+    clearAllMeshes();
     console.log('Meshes cleared.');
   });
   
@@ -243,8 +236,27 @@ $(document).ready(function () {
     ceilingPlane.visible = this.checked;
   });
   $('#mesh-doubleside-checkbox').change(function () {
-    for (let mesh of meshes) {
-      mesh.material.side = (this.checked) ? THREE.DoubleSide : THREE.FrontSide;
-    }
+    let self = this;
+    forEachMesh(function (mesh) {
+      mesh.material.side = (self.checked) ? THREE.DoubleSide : THREE.FrontSide;
+    })
   });
 });
+
+
+function forEachMesh(func) {
+  for (let client_id in clients) {
+    for (let mesh of clients[client_id]["meshes"]) {
+      func(mesh);
+    }
+  }
+}
+
+function clearAllMeshes() {
+  forEachMesh(function (mesh) {
+    scene.remove(mesh);
+  });
+  for (let client_id in clients) {
+    clients[client_id]["meshes"].length = 0;
+  }
+}
