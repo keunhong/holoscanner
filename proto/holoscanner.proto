@@ -55,6 +55,8 @@ message Message {
         ANCHOR_SET = 30;
         ANCHOR_GET = 31;
         CLEAR_MESHES = 100;
+        CLEAR_GAME_STATE = 101;
+        UPDATE_TARGETS = 102;
     }
 
     Type type = 1;

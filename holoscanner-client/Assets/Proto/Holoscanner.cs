@@ -36,15 +36,16 @@ namespace Holoscanner.Proto {
             "SG9sb3NjYW5uZXIuUHJvdG8uVmVjM0QihwEKCUdhbWVTdGF0ZRIPCgdmbG9v",
             "cl95GAEgASgCEhEKCWNlaWxpbmdfeRgCIAEoAhIqCgd0YXJnZXRzGAogAygL",
             "MhkuSG9sb3NjYW5uZXIuUHJvdG8uVGFyZ2V0EioKB2NsaWVudHMYFCADKAsy",
-            "GS5Ib2xvc2Nhbm5lci5Qcm90by5DbGllbnQiygIKB01lc3NhZ2USLQoEdHlw",
+            "GS5Ib2xvc2Nhbm5lci5Qcm90by5DbGllbnQi9AIKB01lc3NhZ2USLQoEdHlw",
             "ZRgBIAEoDjIfLkhvbG9zY2FubmVyLlByb3RvLk1lc3NhZ2UuVHlwZRIRCglk",
             "ZXZpY2VfaWQYAiABKAkSJQoEbWVzaBhkIAEoCzIXLkhvbG9zY2FubmVyLlBy",
             "b3RvLk1lc2gSMQoKZ2FtZV9zdGF0ZRj0AyABKAsyHC5Ib2xvc2Nhbm5lci5Q",
-            "cm90by5HYW1lU3RhdGUSEgoJdGFyZ2V0X2lkGNgEIAEoDSKOAQoEVHlwZRIH",
+            "cm90by5HYW1lU3RhdGUSEgoJdGFyZ2V0X2lkGNgEIAEoDSK4AQoEVHlwZRIH",
             "CgNBQ0sQABIHCgNGSU4QARIICgRNRVNIEAoSDgoKR0FNRV9TVEFURRANEhYK",
             "EkdBTUVfU1RBVEVfUkVRVUVTVBAOEhAKDFRBUkdFVF9GT1VORBAUEg4KCkFO",
-            "Q0hPUl9TRVQQHhIOCgpBTkNIT1JfR0VUEB8SEAoMQ0xFQVJfTUVTSEVTEGRi",
-            "BnByb3RvMw=="));
+            "Q0hPUl9TRVQQHhIOCgpBTkNIT1JfR0VUEB8SEAoMQ0xFQVJfTUVTSEVTEGQS",
+            "FAoQQ0xFQVJfR0FNRV9TVEFURRBlEhIKDlVQREFURV9UQVJHRVRTEGZiBnBy",
+            "b3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedCodeInfo(null, new pbr::GeneratedCodeInfo[] {
@@ -1339,6 +1340,8 @@ namespace Holoscanner.Proto {
         ANCHOR_SET = 30,
         ANCHOR_GET = 31,
         CLEAR_MESHES = 100,
+        CLEAR_GAME_STATE = 101,
+        UPDATE_TARGETS = 102,
       }
 
     }

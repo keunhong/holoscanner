@@ -214,7 +214,14 @@ class GameState:
         logger.info('Clearing meshes.')
         with self.clients_lock:
             for client in self.clients.values():
-                del client.meshes[:]
+                client.clear_meshes()
+
+    def clear_game_state(self):
+        with self.gs_lock:
+            self.target_pbs.clear()
+            self.floor = -5
+            self.ceiling = 5
+        self.send_to_websocket_clients(self.create_game_state_message())
 
     def update_planes(self):
         client_meshes = []

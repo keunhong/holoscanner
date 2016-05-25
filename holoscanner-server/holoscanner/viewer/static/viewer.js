@@ -166,5 +166,20 @@ $(document).ready(function () {
     }
     meshes.length = 0;
     console.log('Meshes cleared.');
-  })
+  });
+  
+  $('#reset-game-state').click(function () {
+    let message = new Holoscanner.Proto.Message();
+    message.type = Holoscanner.Proto.Message.Type.CLEAR_GAME_STATE;
+    test = message;
+    socket.send(message.toArrayBuffer());
+    console.log('Game state cleared.');
+  });
+  $('#update-targets').click(function () {
+    let message = new Holoscanner.Proto.Message();
+    message.type = Holoscanner.Proto.Message.Type.UPDATE_TARGETS;
+    test = message;
+    socket.send(message.toArrayBuffer());
+    console.log('Game state cleared.');
+  });
 });

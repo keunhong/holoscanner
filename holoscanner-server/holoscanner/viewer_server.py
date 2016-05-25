@@ -38,6 +38,12 @@ class RelayProtocol(WebSocketServerProtocol):
         message.ParseFromString(payload)
         if message.type == Message.CLEAR_MESHES:
             game_state.clear_meshes()
+        elif message.type == Message.CLEAR_GAME_STATE:
+            game_state.clear_game_state()
+        elif message.type == Message.UPDATE_TARGETS:
+            game_state.update_targets(100)
+            game_state.send_to_websocket_clients(
+                game_state.create_game_state_message())
 
     def onClose(self, wasClean, code, reason):
         logger.info("WebSocket connection closed: {0}".format(reason))
