@@ -46,6 +46,7 @@ public class AppStateManager : Singleton<AppStateManager>
                 {
                     CurrentAppState = AppState.Ready;
                     //GestureManager.Instance.OverrideFocusedObject = null;
+
                 }
                 break;
         }

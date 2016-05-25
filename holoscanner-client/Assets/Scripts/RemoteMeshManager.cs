@@ -15,7 +15,7 @@ namespace Holoscanner
     {
         public List<Vector3> targets;
         public List<uint> targetIDs;
-        #region Temporary
+        public bool anchorSet = false;
         /// <summary>
         /// Used for voice commands.
         /// </summary>
@@ -41,8 +41,7 @@ namespace Holoscanner
             // Register a callback for the KeywordRecognizer and start recognizing.
             keywordRecognizer.OnPhraseRecognized += KeywordRecognizer_OnPhraseRecognized;
             keywordRecognizer.Start();
-            
-
+        
         }
 
         /// <summary>
@@ -58,27 +57,25 @@ namespace Holoscanner
                 keywordAction.Invoke();
             }
         }
-#endregion
 
-        
+
         // Use this for initialization
-      
+
 
         // Update is called once per frame
-
+        public bool meshes_started = false;
         void Update()
         {
             // FIXME: Send meshes at regular intervals
 
             // Check for new messages
-            if (Time.frameCount % 200 == 0) SendMeshes();
+            if (!meshes_started) { StartCoroutine(SendMeshes()); meshes_started = true; }
             if (NetworkCommunication.Instance.numMessages() > 0)
             {
                 Proto.Message msg = ProtoMeshSerializer.parseMesssage(NetworkCommunication.Instance.getMessage());
                 Debug.Log("Received message of type: " + msg.Type);
                 switch (msg.Type)
                 {
-                    
                     case Proto.Message.Types.Type.GAME_STATE:
                         targets.Clear();
                         targetIDs.Clear();
@@ -124,7 +121,11 @@ namespace Holoscanner
 
         public IEnumerator SendMeshes()
         {
-            Debug.Log("Sending meshes...");
+            while (true)
+            {
+                if (anchorSet)
+                {
+                    Debug.Log("Sending meshes...");
 #if !UNITY_EDITOR
             List<MeshFilter> MeshFilters = SpatialMappingManager.Instance.GetMeshFilters();
             for (int index = 0; index < MeshFilters.Count; index++)
@@ -133,10 +134,13 @@ namespace Holoscanner
                 NetworkCommunication.Instance.SendData(ProtoMeshSerializer.Serialize(MeshFilters[index].sharedMesh, MeshFilters[index].transform, (uint) id, index==MeshFilters.Count-1));
                 yield return null;
             }
-            NetworkCommunication.Instance.SendData(ProtoMeshSerializer.DataRequest());
+            //NetworkCommunication.Instance.SendData(ProtoMeshSerializer.DataRequest());
 #endif
-            yield return null;
+                }
+                yield return new WaitForSecondsRealtime(10);
+            }
         }
+
     }
 
 }

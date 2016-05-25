@@ -72,8 +72,10 @@ public class OrbPlacement : Singleton<OrbPlacement>
         SharingSessionTracker.Instance.SessionJoined += Instance_SessionJoined;
         
        
-        this.gameObject.GetComponent<Renderer>().enabled = false;
-        this.gameObject.GetComponent<AudioSource>().enabled = false;
+     //   this.gameObject.GetComponent<Renderer>().enabled = false;
+    //    this.gameObject.GetComponent<AudioSource>().enabled = false;
+
+
 
     }
 
@@ -82,7 +84,10 @@ public class OrbPlacement : Singleton<OrbPlacement>
         if (GotTransform)
         {
             CustomMessages.Instance.SendStageTransform(transform.localPosition, transform.localRotation);
+            GameObject.Find("HologramCollection").GetComponent<Holoscanner.RemoteMeshManager>().anchorSet = true;
+            Debug.Log("Trying to set the anchor correctly.");
         }
+        
     }
 
 
@@ -93,6 +98,8 @@ public class OrbPlacement : Singleton<OrbPlacement>
             if (ImportExportAnchorManager.Instance.AnchorEstablished)
             {
                 // Here, activate the sound.
+                GameObject.Find("HologramCollection").GetComponent<Holoscanner.RemoteMeshManager>().anchorSet = true;
+                Debug.Log("Trying to set the anchor correctly.");
             }
         }
         else
@@ -122,6 +129,8 @@ public class OrbPlacement : Singleton<OrbPlacement>
         // swap its materials.
 
         GotTransform = true;
+        GameObject.Find("HologramCollection").GetComponent<Holoscanner.RemoteMeshManager>().anchorSet = true;
+        Debug.Log("Trying to set the anchor correctly.");
     }
 
     public void ResetStage()
