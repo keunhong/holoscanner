@@ -49,8 +49,13 @@ class HsServerProtocol(asyncio.Protocol):
     def connection_made(self, transport):
         ip, port = transport.get_extra_info('peername')
         logger.info('Hololense connection from {}:{}'.format(ip, port))
+        client_id = '{}:{}'.format(ip, port)
         self.transport = transport
-        self.client = game_state.new_hololens_client(ip, self)
+        self.client = game_state.new_hololens_client(client_id, ip, self)
+
+    def connection_lost(self, exc):
+        ip, port = self.transport.get_extra_info('peername')
+        game_state.remove_hololens_client(self.client.client_id)
 
     def handle_bytes(self, data):
         bytes_processed = 0
@@ -83,7 +88,7 @@ class HsServerProtocol(asyncio.Protocol):
                 self.transport.close()
             elif msg.type == Message.TARGET_FOUND:
                 logger.info('Target found: {}'.format(msg.target_id))
-                game_state.delete_target(msg.target_id)
+                game_state.target_found(self.client.client_id, msg.target_id)
             else:
                 logger.error('Unknown message type {} received'.format(
                     msg.type))

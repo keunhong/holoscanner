@@ -20,7 +20,7 @@ class RelayProtocol(WebSocketServerProtocol):
     def onOpen(self):
         logger.info('WebSocket connection established.')
 
-        with game_state.lock:
+        with game_state.gs_lock:
             self.send_message(game_state.create_game_state_message())
             for mesh in game_state.meshes:
                 self.send_message(game_state.create_mesh_message(mesh.to_proto()))

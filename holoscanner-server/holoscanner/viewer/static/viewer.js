@@ -72,14 +72,21 @@ function handleGameState(pbGameState) {
   }
   targets.length = 0;
 
-  for (let target of pbGameState.targets) {
+  for (let i in pbGameState.targets) {
+    let target = pbGameState.targets[i];
     let geom = new THREE.SphereGeometry(0.1, 32, 32);
-    let material = new THREE.MeshBasicMaterial({color: 0xff00ff})
-    // let targetMesh = new THREE.PointLight(
-    //     0xff0000, 1.0 / pbGameState.targets.length, 0);
-    // targetMesh.add(new THREE.Mesh(
-    //     sphere, new THREE.MeshBasicMaterial({color: 0xff00ff})));
-    let targetMesh = new THREE.Mesh(geom, material)
+    let color = (i == 0) ? 0xff0000 : 0x00ff00;
+    let material = new THREE.MeshBasicMaterial({color: color});
+    
+    let targetMesh;
+    if (i == 0) {
+      targetMesh = new THREE.PointLight(
+          0xff0000, 1.0 / pbGameState.targets.length, 0);
+      targetMesh.add(new THREE.Mesh(
+          geom, new THREE.MeshBasicMaterial({color: 0xff00ff})));
+    } else {
+      targetMesh = new THREE.Mesh(geom, material);
+    }
     targetMesh.position.set(
         target.position.x, target.position.y, target.position.z);
     scene.add(targetMesh);
