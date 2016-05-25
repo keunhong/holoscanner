@@ -97,6 +97,7 @@ function handleGameState(pbGameState) {
     }
     targetMesh.position.set(
         target.position.x, target.position.y, target.position.z);
+    targetMesh.target_id = target.target_id;
     scene.add(targetMesh);
     targets.push(targetMesh);
   }
@@ -181,5 +182,12 @@ $(document).ready(function () {
     test = message;
     socket.send(message.toArrayBuffer());
     console.log('Game state cleared.');
+  });
+  $('#acquire-target').click(function () {
+    let message = new Holoscanner.Proto.Message();
+    message.type = Holoscanner.Proto.Message.Type.TARGET_FOUND;
+    message.target_id = targets[0].target_id;
+    socket.send(message.toArrayBuffer());
+    console.log('Acquired target ' + message.target_id);
   });
 });

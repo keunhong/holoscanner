@@ -1,6 +1,7 @@
 import threading
 import random
 import numpy as np
+from collections import OrderedDict
 from scipy.signal import argrelextrema
 from scipy.ndimage.filters import gaussian_filter1d
 from PIL import Image, ImageDraw
@@ -53,8 +54,8 @@ def compute_hull_mask(faces, vertices, scale=100,
     transformed[:, 2] -= vertices[:, 2].min()
     offsetx = vertices[:, 0].min()
     offsety = vertices[:, 2].min()
-    width = int(round(vertices[:, 0].max() - vertices[:, 0].min()) * scale)
-    height = int(round(vertices[:, 2].max() - vertices[:, 2].min()) * scale)
+    width = int(round(vertices[:, 0].max() - vertices[:, 0].min()) * scale) + 1
+    height = int(round(vertices[:, 2].max() - vertices[:, 2].min()) * scale) + 1
 
     im = Image.new('L', (width, height))
     draw = ImageDraw.Draw(im)
@@ -153,16 +154,18 @@ class Client:
 
 class GameState:
 
-    clients = {}
+    clients = {
+        '__server__': Client('__server__', '127.0.0.1', None)
+    }
 
     clients_lock = threading.RLock()
     gs_lock = threading.RLock()
     listeners = []
 
-    floor = -10
-    ceiling = 10
+    floor = -5
+    ceiling = 5
     target_counter = 0
-    target_pbs = {}
+    target_pbs = OrderedDict()
 
     def new_hololens_client(self, client_id, ip, protocol):
         logger.info('Hololens client {} joined'.format(ip))
@@ -189,7 +192,8 @@ class GameState:
     def send_to_hololens_clients(self, message):
         with self.clients_lock:
             for client in self.clients.values():
-                client.send_message(message)
+                if not client.client_id == '__server__':
+                    client.send_message(message)
 
     def new_mesh(self, client_id, mesh_pb):
         with self.clients_lock:
@@ -231,7 +235,7 @@ class GameState:
             [m.vertices for m in client_meshes])[:, 1])
         sigma = len(y_coords) / config.MESH_PLANE_FINDING_BINS
         self.floor, self.ceiling = find_floor_and_ceiling(
-            y_coords, config.MESH_PLANE_FINDING_BINS, sigma / 5)
+            y_coords, config.MESH_PLANE_FINDING_BINS, sigma / 3)
         logger.info('Planes updates: floor={}, ceiling={}'.format(
             self.floor, self.ceiling))
 
@@ -327,10 +331,24 @@ class GameState:
         logger.info('Deleting target_id={} ({} targets exist)'.format(
             target_id, len(self.target_pbs)))
         if target_id in self.target_pbs:
+            old_target = self.target_pbs[target_id]
+
+            def comparator(item):
+                _, target = item
+                return np.linalg.norm(
+                    np.array([old_target.position.x,
+                              old_target.position.y,
+                              old_target.position.z]) -
+                    np.array([target.position.x,
+                              target.position.y,
+                              target.position.z]))
             self.clients[client_id].score += 1
             logger.info('Client {} found target_id={}, score={}'.format(
                 client_id, target_id, self.clients[client_id].score))
             del self.target_pbs[target_id]
+            self.target_pbs = OrderedDict(sorted(self.target_pbs.items(),
+                                                 key=comparator,
+                                                 reverse=True))
             if len(self.target_pbs) == 0:
                 self.update_targets(100)
             self.send_to_websocket_clients(self.create_game_state_message())
@@ -344,9 +362,11 @@ class GameState:
             msg.device_id = config.SERVER_DEVICE_ID
             msg.game_state.floor_y = self.floor
             msg.game_state.ceiling_y = self.ceiling
-            targets = self.target_pbs.values()
+            targets = list(self.target_pbs.items())
             if max_targets is not None:
-                targets = targets[:min(max_targets, len(targets))]
+                targets = [t[1] for t in targets[:min(max_targets, len(targets))]]
+            else:
+                targets = [t[1] for t in targets]
             msg.game_state.targets.extend(targets)
             msg.game_state.clients.extend(
                 [c.to_proto() for c in self.clients.values()])
