@@ -445,6 +445,10 @@ public class ImportExportAnchorManager : Singleton<ImportExportAnchorManager>
             anchorStore.Save(first, anchor);
             CurrentState = ImportExportState.Ready;
             GameObject.Find("HologramCollection").GetComponent<Holoscanner.RemoteMeshManager>().anchorSet = true;
+            //WorldAnchor a = GetComponent<WorldAnchor>();
+            Debug.Log(anchor.transform);
+            Debug.Log(GetComponent<WorldAnchor>().transform);
+            GameObject.Find("HologramCollection").GetComponent<Holoscanner.RemoteMeshManager>().worldtransform = GetComponent<WorldAnchor>().transform;
             //GameObject.Find("HologramCollection").GetComponent<Holoscanner.RemoteMeshManager>().SendTargetRequest();
 
         }
@@ -509,6 +513,9 @@ public class ImportExportAnchorManager : Singleton<ImportExportAnchorManager>
                 exportingAnchorBytes.ToArray(),
                 exportingAnchorBytes.Count);
             GameObject.Find("HologramCollection").GetComponent<Holoscanner.RemoteMeshManager>().anchorSet = true;
+            //Debug.Log(anchor.transform);
+            Debug.Log(GetComponent<WorldAnchor>().transform);
+            GameObject.Find("HologramCollection").GetComponent<Holoscanner.RemoteMeshManager>().worldtransform = GetComponent<WorldAnchor>().transform;
             //GameObject.Find("HologramCollection").GetComponent<Holoscanner.RemoteMeshManager>().SendTargetRequest();
         }
         else

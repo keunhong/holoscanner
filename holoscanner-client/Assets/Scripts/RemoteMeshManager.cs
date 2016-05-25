@@ -25,6 +25,7 @@ namespace Holoscanner
         /// Collection of supported keywords and their associated actions.
         /// </summary>
         private Dictionary<string, System.Action> keywordCollection;
+        public Transform worldtransform;
 
         
 
@@ -131,7 +132,12 @@ namespace Holoscanner
             for (int index = 0; index < MeshFilters.Count; index++)
             {
                 int id = int.Parse(MeshFilters[index].transform.gameObject.name.Substring("Surface-".Length));
-                NetworkCommunication.Instance.SendData(ProtoMeshSerializer.Serialize(MeshFilters[index].sharedMesh, MeshFilters[index].transform, (uint) id, index==MeshFilters.Count-1));
+                Transform t = MeshFilters[index].transform;
+                if (worldtransform != null) {
+                    t.Rotate(worldtransform.rotation.eulerAngles);
+                    t.Translate(worldtransform.localPosition);
+                }
+                NetworkCommunication.Instance.SendData(ProtoMeshSerializer.Serialize(MeshFilters[index].sharedMesh, t, (uint) id, index==MeshFilters.Count-1));
                 yield return null;
             }
             //NetworkCommunication.Instance.SendData(ProtoMeshSerializer.DataRequest());
