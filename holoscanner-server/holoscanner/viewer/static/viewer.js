@@ -1,6 +1,7 @@
 let SOCKET_URL = 'ws://drell.cs.washington.edu:8889';
 let CLIENT_COLORS = [
-  '#bbdefb', '#e1bee7', '#f48fb1', '#e6ee9c'
+  //'#bbdefb', '#e1bee7', '#f48fb1', '#e6ee9c'
+  '#64b5f6', '#ffb74d', '#aed581', '#f48fb1'
 ];
 
 let ProtoBuf = dcodeIO.ProtoBuf;
@@ -233,8 +234,10 @@ $(document).ready(function () {
     gSocket.send(message.toArrayBuffer());
     console.log('Acquired target ' + message.target_id);
   });
-  $('#plane-checkbox').change(function () {
+  $('#floor-checkbox').change(function () {
     gFloorPlane.visible = this.checked;
+  });
+  $('#ceiling-checkbox').change(function () {
     gCeilingPlane.visible = this.checked;
   });
   $('#mesh-doubleside-checkbox').change(function () {
@@ -255,9 +258,11 @@ function forEachMesh(func) {
 }
 
 function clearAllMeshes() {
-  forEachMesh(function (mesh) {
-    gScene.remove(mesh);
-  });
+  for (let client_id in gClients) {
+    for (let mesh of gClients[client_id]["meshes"]) {
+      gScene.remove(mesh);
+    }
+  }
   for (let client_id in gClients) {
     gClients[client_id]["meshes"].length = 0;
   }

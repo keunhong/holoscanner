@@ -1,80 +1,17 @@
 import threading
-import math
 import random
 import numpy as np
 from collections import OrderedDict
-from scipy.signal import argrelextrema
-from scipy.ndimage.filters import gaussian_filter1d
-from PIL import Image, ImageDraw
 from skimage import morphology
 from scipy.misc import imsave
 
 from holoscanner import config
+from holoscanner import proto
 from holoscanner.proto import holoscanner_pb2 as pb
 from holoscanner import base_logger
+from holoscanner import util
 
 logger = base_logger.getChild(__name__)
-
-
-def find_floor_and_ceiling(y_coords, nbins, sigma=None):
-    if sigma:
-        y_coords = gaussian_filter1d(y_coords, sigma)
-
-    hist, bin_edges = np.histogram(
-        y_coords,
-        bins=nbins)
-
-    candate_planes = bin_edges[argrelextrema(hist, np.greater, order=2)]
-    floor_y, ceiling_y = candate_planes.min(), candate_planes.max()
-
-    return floor_y, ceiling_y
-
-
-def quat_to_mat(x, y, z, w):
-    n = w * w + x * x + y * y + z * z
-    s = 0 if n == 0 else (2 / n)
-    wx = s * w * x
-    wy = s * w * y
-    wz = s * w * z
-    xx = s * x * x
-    xy = s * x * y
-    xz = s * x * z
-    yy = s * y * y
-    yz = s * y * z
-    zz = s * z * z
-    return np.array([
-        [1 - (yy + zz), xy - wz, xz + wy],
-        [xy + wz, 1 - (xx + zz), yz - wx],
-        [xz - wy, yz + wx, 1 - (xx + yy)]])
-
-
-def compute_hull_mask(faces, vertices, scale=config.HULL_SCALE,
-                      remove_holes=True, closing=False):
-    transformed = vertices.copy()
-    transformed[:, 0] -= vertices[:, 0].min()
-    transformed[:, 2] -= vertices[:, 2].min()
-    transformed *= scale
-    offsetx = vertices[:, 0].min()
-    offsety = vertices[:, 2].min()
-    width = int(math.ceil(vertices[:, 0].max() -
-                          vertices[:, 0].min()) * scale) + 1
-    height = int(math.ceil(vertices[:, 2].max() -
-                           vertices[:, 2].min()) * scale) + 1
-
-    im = Image.new('L', (width, height))
-    draw = ImageDraw.Draw(im)
-    for face in faces:
-        p = [(int(transformed[i, 0]), int(transformed[i, 2])) for i in face]
-        draw.polygon(p, fill='#fff')
-
-    im = np.array(im) == 255
-    if closing:
-        im = morphology.binary_closing(im, morphology.square(40))
-    imsave('/home/kpar/www/test.png', im)
-    if remove_holes and len(np.unique(im) >= 2):
-        im = morphology.remove_small_holes(im, min_size=scale ** 2)
-        imsave('/home/kpar/www/test2.png', im)
-    return im.T, offsetx, offsety
 
 
 class Mesh:
@@ -88,7 +25,7 @@ class Mesh:
             self.vertices[i, :] = (vert_pb.x, vert_pb.y, vert_pb.z)
 
         if mesh_pb.cam_rotation:
-            rotation_mat = quat_to_mat(mesh_pb.cam_rotation.x,
+            rotation_mat = util.quat_to_mat(mesh_pb.cam_rotation.x,
                                        mesh_pb.cam_rotation.y,
                                        mesh_pb.cam_rotation.z,
                                        mesh_pb.cam_rotation.w)
@@ -160,6 +97,10 @@ class Client:
         client_pb.score = self.score
         return client_pb
 
+    def __repr__(self):
+        return 'Client(id={}, score={})'.format(
+            self.client_id, self.score)
+
 
 class GameState:
 
@@ -206,8 +147,6 @@ class GameState:
 
     def new_mesh(self, client_id, mesh_pb):
         with self.clients_lock:
-            logger.info(client_id)
-            logger.info([c for c in self.clients])
             client = self.clients[client_id]
             mesh = Mesh(mesh_pb)
             was_cleared = client.new_mesh(mesh, mesh_pb.is_last)
@@ -222,7 +161,7 @@ class GameState:
                 msg.device_id = client_id
                 self.send_to_websocket_clients(msg)
         self.send_to_websocket_clients(
-            self.create_mesh_message(client_id, mesh.to_proto()))
+            proto.create_mesh_message(client_id, mesh.to_proto()))
 
         if mesh_pb.is_last:
             self.update_planes()
@@ -256,7 +195,7 @@ class GameState:
         y_coords = np.sort(np.vstack(
             [m.vertices for m in client_meshes])[:, 1])
         sigma = len(y_coords) / config.MESH_PLANE_FINDING_BINS
-        self.floor, self.ceiling = find_floor_and_ceiling(
+        self.floor, self.ceiling = util.find_floor_and_ceiling(
             y_coords, config.MESH_PLANE_FINDING_BINS, sigma / 4)
 
     def get_concatenated_meshes(self):
@@ -292,15 +231,17 @@ class GameState:
             logger.info('Not computing targets: not enough mesh data.')
             return
 
-        global_hull_mask, offsetx, offsetz = compute_hull_mask(
+        global_hull_mask, offsetx, offsetz = util.compute_hull_mask(
             faces, vertices, remove_holes=True, closing=False)
         erosion_size = 0.04 * min(global_hull_mask.shape)
         global_hull_mask = morphology.binary_erosion(
             global_hull_mask, selem=morphology.square(erosion_size))
         logger.debug('Eroding global mask by {}'.format(erosion_size))
 
-        near_floor_inds = set(np.where((vertices[:, 1] - self.floor) < 0.2)[0])
-        near_ceiling_inds = set(np.where((vertices[:, 1] - self.ceiling) < 0.2)[0])
+        near_floor_inds = set(np.where(
+            (vertices[:, 1] - self.floor) < 0.2)[0])
+        near_ceiling_inds = set(np.where(
+            (vertices[:, 1] - self.ceiling) < 0.2)[0])
 
         floor_faces = []
         ceiling_faces = []
@@ -315,13 +256,13 @@ class GameState:
                 ceiling_faces.append(face)
 
         floor_faces = np.array(floor_faces, dtype=np.uint32)
-        floor_hull_mask, _, _ = compute_hull_mask(
+        floor_hull_mask, _, _ = util.compute_hull_mask(
             floor_faces, vertices, remove_holes=False)
         floor_sample_mask = global_hull_mask & ~floor_hull_mask
         floor_cand_x, floor_cand_z = np.where(floor_sample_mask)
 
         ceiling_faces = np.array(ceiling_faces, dtype=np.uint32)
-        ceiling_hull_mask, _, _ = compute_hull_mask(
+        ceiling_hull_mask, _, _ = util.compute_hull_mask(
             ceiling_faces, vertices, remove_holes=False)
         ceiling_sample_mask = global_hull_mask & ~ceiling_hull_mask
         ceiling_cand_x, ceiling_cand_z = np.where(ceiling_sample_mask)
@@ -357,6 +298,7 @@ class GameState:
                 self.target_pbs[target_pb.target_id] = target_pb
 
         logger.info('Generated {} targets.'.format(len(self.target_pbs)))
+        self.print_game_state()
 
     def target_found(self, client_id, target_id):
         logger.info('Deleting target_id={} ({} targets exist)'.format(
@@ -389,6 +331,8 @@ class GameState:
             self.send_to_hololens_clients(
                 self.create_game_state_message(max_targets=1))
 
+            self.print_game_state()
+
     def create_game_state_message(self, max_targets=None):
         with self.gs_lock:
             msg = pb.Message()
@@ -402,21 +346,20 @@ class GameState:
             msg.game_state.targets.extend(targets)
             msg.game_state.clients.extend(
                 [c.to_proto() for c in self.clients.values()])
-            logger.info('Game state: {} targets, floor={}, ceiling={}'.format(
-                len(self.target_pbs), self.floor, self.ceiling))
             return msg
 
-    def create_mesh_message(self, client_id, mesh_pb):
-        msg = pb.Message()
-        msg.device_id = client_id
-        msg.type = pb.Message.MESH
-        msg.mesh.MergeFrom(mesh_pb)
-        return msg
+    def print_game_state(self):
+        logger.info("""
+=============
+State Summary
+=============
+Clients   : {}
+# Targets : {}
+Floor     : {}
+Ceiling   : {}
 
-    def create_ack(self):
-        msg = pb.Message()
-        msg.type = pb.Message.ACK
-        return msg
+""".format(list(self.clients.values()), len(self.target_pbs),
+           self.floor, self.ceiling))
 
 
 game_state = GameState()
