@@ -25,11 +25,13 @@ public class OrbPlacement : Singleton<OrbPlacement>
 
     private void setComponentsEnabled(bool enable)
     {
-        foreach (ParticleSystem sys in gameObject.GetComponentsInChildren<ParticleSystem>())
+        foreach (ParticleSystem sys in GameObject.Find("EnergyBall3").GetComponents<ParticleSystem>())
         {
             ParticleSystem.EmissionModule em = sys.emission;
             em.enabled = enable;
         }
+        GameObject.Find("Pickup2").GetComponent<ParticleSystem>().Clear();
+        GameObject.Find("Pickup2").GetComponent<ParticleSystem>().Play();
         Debug.Log("Setting playsound to:" + enable);
         gameObject.GetComponent<RandomNote>().playSound = enable;
 
