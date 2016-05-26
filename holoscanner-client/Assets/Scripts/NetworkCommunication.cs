@@ -131,7 +131,6 @@ namespace HoloToolkit.Unity
             }
             currentReceivedMessage = new byte[length];
             currentlength = 0;
-            Debug.Log("Receiving new message length " + length);
             ListenForMessage();
         }
         private void ListenForMessage()
@@ -143,14 +142,12 @@ namespace HoloToolkit.Unity
         public void MessageReceived(IAsyncOperationWithProgress<IBuffer, uint> asyncInfo, AsyncStatus status)
         {
             byte[] bytes = WindowsRuntimeBufferExtensions.ToArray(asyncInfo.GetResults());
-            Debug.Log("Processing message of total length " + bytes.Length);
             for (int i = 0; i < bytes.Length; i++)
             {
                 currentReceivedMessage[currentlength++] = bytes[i];
             }
             if (currentlength == currentReceivedMessage.Length)
             {
-                Debug.Log("Finished receiving message of length " + currentlength);
                 messageQueue.Enqueue(currentReceivedMessage);
                 currentlength = 0;
                 currentReceivedMessage = null;

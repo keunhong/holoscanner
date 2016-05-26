@@ -89,6 +89,7 @@ namespace Holoscanner
                         {
                             OrbPlacement op = this.gameObject.GetComponentInChildren<OrbPlacement>();
                             StartCoroutine(op.replaceTarget(targets[0], targetIDs[0]));
+                            Debug.Log("From server, got the new target :" + targets[0]);
                         }
                         break;
                     case Proto.Message.Types.Type.ANCHOR_SET:
@@ -98,6 +99,20 @@ namespace Holoscanner
                 }
                 NetworkCommunication.Instance.popMessage();
             }
+        }
+
+        public void StartGameRequest()
+        {
+            //request that the server starts the game and sends out targets to everyone.
+            //server should only send out targets once it has received the start game request from all the joined clients. in the future we can fix it so that it doesn't start until it has received this from 3 clients
+
+
+            Holoscanner.Proto.Message msg = new Holoscanner.Proto.Message();
+            msg.Type = Holoscanner.Proto.Message.Types.Type.START_GAME;
+            Debug.Log("Sending start-game request...");
+            NetworkCommunication.Instance.SendData(Google.Protobuf.MessageExtensions.ToByteArray(msg));
+
+            //for now, just request state. but change this in future:
         }
 
         public void SendTargetFoundMessage(uint targetid)
@@ -150,7 +165,7 @@ namespace Holoscanner
                 if (worldtransform != null) {
                     t = worldtransform.worldToLocalMatrix*t;
                 }
-                NetworkCommunication.Instance.SendData(ProtoMeshSerializer.Serialize(MeshFilters[index].sharedMesh, QuaternionFromMatrix(t), t.GetColumn(3), (uint) id, index==MeshFilters.Count-1));
+                NetworkCommunication.Instance.SendData(ProtoMeshSerializer.Serialize(MeshFilters[index].sharedMesh, QuaternionFromMatrix(t), t.GetColumn(3), (uint) id, index==MeshFilters.Count-1,index==0));
                 yield return null;
             }
             //NetworkCommunication.Instance.SendData(ProtoMeshSerializer.DataRequest());

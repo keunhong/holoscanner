@@ -24,15 +24,16 @@ public class WorldCursor : MonoBehaviour
         if (Physics.Raycast(headPosition, gazeDirection, out hitInfo))
         {
             // If the raycast hit a hologram...
-
+            float depthOfCursor = hitInfo.distance;
+            if (depthOfCursor > 2.0f) depthOfCursor = 2.0f;
             // Display the cursor mesh.
             meshRenderer.enabled = true;
             // Move the cursor to the point where the raycast hit.
-            this.transform.position = hitInfo.point;
+            this.transform.position = headPosition + gazeDirection * depthOfCursor;//hitInfo.point;
             // Rotate the cursor to hug the surface of the hologram.
             this.transform.rotation =
-                Quaternion.FromToRotation(Vector3.up, hitInfo.normal);
-            last_depth = hitInfo.distance;
+                Quaternion.FromToRotation(Vector3.up, -gazeDirection);
+            last_depth = depthOfCursor;
         }
         else
         {

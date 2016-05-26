@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 public static class ProtoMeshSerializer {
-    public static byte[] Serialize(Mesh mesh, Quaternion q, Vector3 v, uint id, bool islast)
+    public static byte[] Serialize(Mesh mesh, Quaternion q, Vector3 v, uint id, bool islast, bool isfirst)
     {
         IEnumerable<Holoscanner.Proto.Vec3D> vertices = mesh.vertices.Select(x => {
             Holoscanner.Proto.Vec3D ret = new Holoscanner.Proto.Vec3D();
@@ -16,6 +16,7 @@ public static class ProtoMeshSerializer {
         Holoscanner.Proto.Message msg = new Holoscanner.Proto.Message();
         msg.Type = Holoscanner.Proto.Message.Types.Type.MESH;
         msg.Mesh = new Holoscanner.Proto.Mesh();
+        
         msg.Mesh.Vertices.Add(vertices);
         msg.Mesh.Triangles.Add(mesh.triangles);
         msg.Mesh.CamPosition = new Holoscanner.Proto.Vec3D();
@@ -37,6 +38,7 @@ public static class ProtoMeshSerializer {
         msg.Mesh.Timestamp = (ulong)(System.DateTime.UtcNow - new System.DateTime(1970, 1, 1)).TotalMilliseconds;
         msg.Mesh.MeshId = id;
         msg.Mesh.IsLast = islast;
+        msg.Mesh.IsFirst = isfirst;
         //msg.Mesh.CamPosition;
         // end FIXME -----------------------------------------------------------------------------
         return Google.Protobuf.MessageExtensions.ToByteArray(msg);

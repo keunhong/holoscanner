@@ -9,7 +9,7 @@ public class GazeGestureManager : MonoBehaviour
     public GameObject FocusedObject { get; private set; }
 
     GestureRecognizer recognizer;
-
+    bool withinRange;
     // Use this for initialization
     void Start()
     {
@@ -20,11 +20,15 @@ public class GazeGestureManager : MonoBehaviour
         recognizer.TappedEvent += (source, tapCount, ray) =>
         {
             // Send an OnSelect message to the focused object and its ancestors.
-            Debug.Log("Tapped!");
+            
             if (FocusedObject != null)
             {
-                FocusedObject.SendMessageUpwards("OnSelect");
-                Debug.Log(FocusedObject.name);
+                if (withinRange)    
+                    FocusedObject.SendMessageUpwards("OnSelect");
+                else
+                {
+                    Debug.Log("Tapped, but too far away.");
+                }
             }
             else Debug.Log("Is null");
         };
@@ -50,11 +54,14 @@ public class GazeGestureManager : MonoBehaviour
         {
             // If the raycast hit a hologram, use that as the focused object.
             FocusedObject = hitInfo.collider.gameObject;
+            if (hitInfo.distance < 2.0f) withinRange = true;
+            else withinRange = false;
         }
         else
         {
             // If the raycast did not hit a hologram, clear the focused object.
             FocusedObject = null;
+            withinRange = false;
             
         }
 

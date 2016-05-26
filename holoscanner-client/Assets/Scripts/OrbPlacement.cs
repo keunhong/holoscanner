@@ -12,12 +12,15 @@ public class OrbPlacement : Singleton<OrbPlacement>
     public uint targetID;
     bool foundOnThisHololens = false;
     bool audioOn = true;
+    bool startOrb = true;
+    bool isEnabled = true;
     public bool GotTransform { get; private set; }
     // Called by GazeGestureManager when the user performs a Select gesture
     void OnSelect()
     {
         // TODO: Get the candidate position
-        Debug.Log("Clicked!");
+        if (foundOnThisHololens) return;
+        Debug.Log("Successfully clicked on orb!");
         StartCoroutine(Explode());
         foundOnThisHololens = true;
         targetFound();
@@ -25,15 +28,26 @@ public class OrbPlacement : Singleton<OrbPlacement>
 
     private void setComponentsEnabled(bool enable)
     {
+        if (isEnabled == enable)
+        {
+            Debug.Log("Warning: Trying to set state to what it already was...returning");
+            return;
+        }
         foreach (ParticleSystem sys in GameObject.Find("EnergyBall3").GetComponents<ParticleSystem>())
         {
             ParticleSystem.EmissionModule em = sys.emission;
             em.enabled = enable;
         }
-        GameObject.Find("Pickup2").GetComponent<ParticleSystem>().Clear();
-        GameObject.Find("Pickup2").GetComponent<ParticleSystem>().Play();
+        foreach (ParticleSystem sys in GameObject.Find("EnergyBall3").GetComponentsInChildren<ParticleSystem>())
+        {
+            ParticleSystem.EmissionModule em = sys.emission;
+            em.enabled = enable;
+        }
+        GameObject.Find("MagicBlast1").GetComponent<ParticleSystem>().Clear();
+        GameObject.Find("MagicBlast1").GetComponent<ParticleSystem>().Play();
         Debug.Log("Setting playsound to:" + enable);
         gameObject.GetComponent<RandomNote>().playSound = enable;
+        isEnabled = enable;
 
     }
     private System.Collections.IEnumerator setComponentsEnabledDelay(bool enable, float delay)
@@ -52,8 +66,10 @@ public class OrbPlacement : Singleton<OrbPlacement>
     void targetFound()
     {
         Holoscanner.RemoteMeshManager rmm = this.GetComponentInParent<Holoscanner.RemoteMeshManager>();
-        rmm.SendTargetFoundMessage(targetID);
-        rmm.SendTargetRequest(); 
+        if (startOrb) { rmm.StartGameRequest(); startOrb = false; }
+        else
+            rmm.SendTargetFoundMessage(targetID);
+        //rmm.SendTargetRequest(); 
     }
 
     public IEnumerator replaceTarget(Vector3 t_pos, uint t_id)
