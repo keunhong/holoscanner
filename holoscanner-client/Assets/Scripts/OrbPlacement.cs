@@ -59,7 +59,7 @@ public class OrbPlacement : Singleton<OrbPlacement>
     {
         setComponentsEnabled(false);
         yield return new WaitForSecondsRealtime(2.4f);
-        Debug.Log("AUDIO IS OFF");
+
         audioOn = false;
     }
 
@@ -79,7 +79,6 @@ public class OrbPlacement : Singleton<OrbPlacement>
         //replace object
         if (!foundOnThisHololens) StartCoroutine(Explode());
         while (audioOn) yield return null;
-        Debug.Log("AUDIO IS OFF CONFIRMED");
         this.gameObject.transform.localPosition = t_pos;
         targetID = t_id;
         setComponentsEnabled(true);

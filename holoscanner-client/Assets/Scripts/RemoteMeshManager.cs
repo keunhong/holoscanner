@@ -89,7 +89,6 @@ namespace Holoscanner
                         {
                             OrbPlacement op = this.gameObject.GetComponentInChildren<OrbPlacement>();
                             StartCoroutine(op.replaceTarget(targets[0], targetIDs[0]));
-                            Debug.Log("From server, got the new target :" + targets[0]);
                         }
                         break;
                     case Proto.Message.Types.Type.START_GAME:
