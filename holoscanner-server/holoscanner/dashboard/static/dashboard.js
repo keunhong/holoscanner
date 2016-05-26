@@ -85,14 +85,16 @@ function handleNewMesh(deviceId, pbMesh) {
   meshObj.scale.x = meshObj.scale.y = meshObj.scale.z = 1.0;
   meshObj.device_id = deviceId;
   meshObj.name = deviceId + "_" + gClients[deviceId]["meshes"].length;
-  gScene.add(meshObj);
-  gClients[deviceId]["newMeshes"].push(meshObj);
   meshObj.visible = gClients[deviceId]["visible"];
+  gClients[deviceId]["newMeshes"].push(meshObj);
 
   if (pbMesh.is_last) {
     clearMeshes(deviceId);
     gClients[deviceId]["meshes"] = gClients[deviceId]["newMeshes"];
     gClients[deviceId]["newMeshes"] = [];
+    for (let mesh of gClients[deviceId]["meshes"]){
+      gScene.add(mesh);
+    }
   }
 }
 
