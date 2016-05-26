@@ -54,20 +54,26 @@ message Message {
     enum Type {
         ACK = 0;
         FIN = 1;
+
         MESH = 10;
+
+        // Game state messages.
         GAME_STATE = 13;
         GAME_STATE_REQUEST = 14;
         TARGET_FOUND = 20;
         START_GAME = 21;
         END_GAME = 22;
-        ANCHOR_SET = 30;
-        ANCHOR_GET = 31;
         CLIENT_POSITION = 40;
+        CLIENT_READY = 41;
+        CLIENT_SET_NICKNAME = 42;
+
+        // Control messages from/to dashabord.
         CLEAR_MESHES = 100;
         CLEAR_GAME_STATE = 101;
         UPDATE_TARGETS = 102;
     }
 
+    // These should always be set.
     Type type = 1;
     string device_id = 2;
 

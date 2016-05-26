@@ -39,18 +39,18 @@ namespace Holoscanner.Proto {
             "LlByb3RvLlZlYzNEIocBCglHYW1lU3RhdGUSDwoHZmxvb3JfeRgBIAEoAhIR",
             "CgljZWlsaW5nX3kYAiABKAISKgoHdGFyZ2V0cxgKIAMoCzIZLkhvbG9zY2Fu",
             "bmVyLlByb3RvLlRhcmdldBIqCgdjbGllbnRzGBQgAygLMhkuSG9sb3NjYW5u",
-            "ZXIuUHJvdG8uQ2xpZW50IuMDCgdNZXNzYWdlEi0KBHR5cGUYASABKA4yHy5I",
+            "ZXIuUHJvdG8uQ2xpZW50Iu4DCgdNZXNzYWdlEi0KBHR5cGUYASABKA4yHy5I",
             "b2xvc2Nhbm5lci5Qcm90by5NZXNzYWdlLlR5cGUSEQoJZGV2aWNlX2lkGAIg",
             "ASgJEiUKBG1lc2gYZCABKAsyFy5Ib2xvc2Nhbm5lci5Qcm90by5NZXNoEjoK",
             "D2NsaWVudF9wb3NpdGlvbhhlIAEoCzIhLkhvbG9zY2FubmVyLlByb3RvLkNs",
             "aWVudFBvc2l0aW9uEjEKCmdhbWVfc3RhdGUY9AMgASgLMhwuSG9sb3NjYW5u",
-            "ZXIuUHJvdG8uR2FtZVN0YXRlEhIKCXRhcmdldF9pZBjYBCABKA0i6wEKBFR5",
+            "ZXIuUHJvdG8uR2FtZVN0YXRlEhIKCXRhcmdldF9pZBjYBCABKA0i9gEKBFR5",
             "cGUSBwoDQUNLEAASBwoDRklOEAESCAoETUVTSBAKEg4KCkdBTUVfU1RBVEUQ",
             "DRIWChJHQU1FX1NUQVRFX1JFUVVFU1QQDhIQCgxUQVJHRVRfRk9VTkQQFBIO",
-            "CgpTVEFSVF9HQU1FEBUSDAoIRU5EX0dBTUUQFhIOCgpBTkNIT1JfU0VUEB4S",
-            "DgoKQU5DSE9SX0dFVBAfEhMKD0NMSUVOVF9QT1NJVElPThAoEhAKDENMRUFS",
-            "X01FU0hFUxBkEhQKEENMRUFSX0dBTUVfU1RBVEUQZRISCg5VUERBVEVfVEFS",
-            "R0VUUxBmYgZwcm90bzM="));
+            "CgpTVEFSVF9HQU1FEBUSDAoIRU5EX0dBTUUQFhITCg9DTElFTlRfUE9TSVRJ",
+            "T04QKBIQCgxDTElFTlRfUkVBRFkQKRIXChNDTElFTlRfU0VUX05JQ0tOQU1F",
+            "ECoSEAoMQ0xFQVJfTUVTSEVTEGQSFAoQQ0xFQVJfR0FNRV9TVEFURRBlEhIK",
+            "DlVQREFURV9UQVJHRVRTEGZiBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedCodeInfo(null, new pbr::GeneratedCodeInfo[] {
@@ -1312,6 +1312,9 @@ namespace Holoscanner.Proto {
     /// <summary>Field number for the "type" field.</summary>
     public const int TypeFieldNumber = 1;
     private global::Holoscanner.Proto.Message.Types.Type type_ = global::Holoscanner.Proto.Message.Types.Type.ACK;
+    /// <summary>
+    ///  These should always be set.
+    /// </summary>
     public global::Holoscanner.Proto.Message.Types.Type Type {
       get { return type_; }
       set {
@@ -1542,14 +1545,20 @@ namespace Holoscanner.Proto {
         ACK = 0,
         FIN = 1,
         MESH = 10,
+        /// <summary>
+        ///  Game state messages.
+        /// </summary>
         GAME_STATE = 13,
         GAME_STATE_REQUEST = 14,
         TARGET_FOUND = 20,
         START_GAME = 21,
         END_GAME = 22,
-        ANCHOR_SET = 30,
-        ANCHOR_GET = 31,
         CLIENT_POSITION = 40,
+        CLIENT_READY = 41,
+        CLIENT_SET_NICKNAME = 42,
+        /// <summary>
+        ///  Control messages from/to dashabord.
+        /// </summary>
         CLEAR_MESHES = 100,
         CLEAR_GAME_STATE = 101,
         UPDATE_TARGETS = 102,
