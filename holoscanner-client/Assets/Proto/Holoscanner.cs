@@ -29,27 +29,28 @@ namespace Holoscanner.Proto {
             "CgZDbGllbnQSEQoJZGV2aWNlX2lkGAEgASgJEg0KBXNjb3JlGAogASgNImgK",
             "DkNsaWVudFBvc2l0aW9uEioKCHBvc2l0aW9uGGQgASgLMhguSG9sb3NjYW5u",
             "ZXIuUHJvdG8uVmVjM0QSKgoIcm90YXRpb24YZSABKAsyGC5Ib2xvc2Nhbm5l",
-            "ci5Qcm90by5WZWM0RCLcAQoETWVzaBIPCgdtZXNoX2lkGAIgASgNEhEKCXRp",
-            "bWVzdGFtcBgDIAEoBBIPCgdpc19sYXN0GAQgASgIEi4KDGNhbV9wb3NpdGlv",
-            "bhhkIAEoCzIYLkhvbG9zY2FubmVyLlByb3RvLlZlYzNEEi4KDGNhbV9yb3Rh",
-            "dGlvbhhlIAEoCzIYLkhvbG9zY2FubmVyLlByb3RvLlZlYzREEisKCHZlcnRp",
-            "Y2VzGMgBIAMoCzIYLkhvbG9zY2FubmVyLlByb3RvLlZlYzNEEhIKCXRyaWFu",
-            "Z2xlcxjJASADKAUiRwoGVGFyZ2V0EhEKCXRhcmdldF9pZBgBIAEoDRIqCghw",
-            "b3NpdGlvbhgCIAEoCzIYLkhvbG9zY2FubmVyLlByb3RvLlZlYzNEIocBCglH",
-            "YW1lU3RhdGUSDwoHZmxvb3JfeRgBIAEoAhIRCgljZWlsaW5nX3kYAiABKAIS",
-            "KgoHdGFyZ2V0cxgKIAMoCzIZLkhvbG9zY2FubmVyLlByb3RvLlRhcmdldBIq",
-            "CgdjbGllbnRzGBQgAygLMhkuSG9sb3NjYW5uZXIuUHJvdG8uQ2xpZW50IsUD",
-            "CgdNZXNzYWdlEi0KBHR5cGUYASABKA4yHy5Ib2xvc2Nhbm5lci5Qcm90by5N",
-            "ZXNzYWdlLlR5cGUSEQoJZGV2aWNlX2lkGAIgASgJEiUKBG1lc2gYZCABKAsy",
-            "Fy5Ib2xvc2Nhbm5lci5Qcm90by5NZXNoEjoKD2NsaWVudF9wb3NpdGlvbhhl",
-            "IAEoCzIhLkhvbG9zY2FubmVyLlByb3RvLkNsaWVudFBvc2l0aW9uEjEKCmdh",
-            "bWVfc3RhdGUY9AMgASgLMhwuSG9sb3NjYW5uZXIuUHJvdG8uR2FtZVN0YXRl",
-            "EhIKCXRhcmdldF9pZBjYBCABKA0izQEKBFR5cGUSBwoDQUNLEAASBwoDRklO",
-            "EAESCAoETUVTSBAKEg4KCkdBTUVfU1RBVEUQDRIWChJHQU1FX1NUQVRFX1JF",
-            "UVVFU1QQDhIQCgxUQVJHRVRfRk9VTkQQFBIOCgpBTkNIT1JfU0VUEB4SDgoK",
-            "QU5DSE9SX0dFVBAfEhMKD0NMSUVOVF9QT1NJVElPThAoEhAKDENMRUFSX01F",
-            "U0hFUxBkEhQKEENMRUFSX0dBTUVfU1RBVEUQZRISCg5VUERBVEVfVEFSR0VU",
-            "UxBmYgZwcm90bzM="));
+            "ci5Qcm90by5WZWM0RCLuAQoETWVzaBIPCgdtZXNoX2lkGAIgASgNEhEKCXRp",
+            "bWVzdGFtcBgDIAEoBBIPCgdpc19sYXN0GAQgASgIEhAKCGlzX2ZpcnN0GAUg",
+            "ASgIEi4KDGNhbV9wb3NpdGlvbhhkIAEoCzIYLkhvbG9zY2FubmVyLlByb3Rv",
+            "LlZlYzNEEi4KDGNhbV9yb3RhdGlvbhhlIAEoCzIYLkhvbG9zY2FubmVyLlBy",
+            "b3RvLlZlYzREEisKCHZlcnRpY2VzGMgBIAMoCzIYLkhvbG9zY2FubmVyLlBy",
+            "b3RvLlZlYzNEEhIKCXRyaWFuZ2xlcxjJASADKAUiRwoGVGFyZ2V0EhEKCXRh",
+            "cmdldF9pZBgBIAEoDRIqCghwb3NpdGlvbhgCIAEoCzIYLkhvbG9zY2FubmVy",
+            "LlByb3RvLlZlYzNEIocBCglHYW1lU3RhdGUSDwoHZmxvb3JfeRgBIAEoAhIR",
+            "CgljZWlsaW5nX3kYAiABKAISKgoHdGFyZ2V0cxgKIAMoCzIZLkhvbG9zY2Fu",
+            "bmVyLlByb3RvLlRhcmdldBIqCgdjbGllbnRzGBQgAygLMhkuSG9sb3NjYW5u",
+            "ZXIuUHJvdG8uQ2xpZW50IuMDCgdNZXNzYWdlEi0KBHR5cGUYASABKA4yHy5I",
+            "b2xvc2Nhbm5lci5Qcm90by5NZXNzYWdlLlR5cGUSEQoJZGV2aWNlX2lkGAIg",
+            "ASgJEiUKBG1lc2gYZCABKAsyFy5Ib2xvc2Nhbm5lci5Qcm90by5NZXNoEjoK",
+            "D2NsaWVudF9wb3NpdGlvbhhlIAEoCzIhLkhvbG9zY2FubmVyLlByb3RvLkNs",
+            "aWVudFBvc2l0aW9uEjEKCmdhbWVfc3RhdGUY9AMgASgLMhwuSG9sb3NjYW5u",
+            "ZXIuUHJvdG8uR2FtZVN0YXRlEhIKCXRhcmdldF9pZBjYBCABKA0i6wEKBFR5",
+            "cGUSBwoDQUNLEAASBwoDRklOEAESCAoETUVTSBAKEg4KCkdBTUVfU1RBVEUQ",
+            "DRIWChJHQU1FX1NUQVRFX1JFUVVFU1QQDhIQCgxUQVJHRVRfRk9VTkQQFBIO",
+            "CgpTVEFSVF9HQU1FEBUSDAoIRU5EX0dBTUUQFhIOCgpBTkNIT1JfU0VUEB4S",
+            "DgoKQU5DSE9SX0dFVBAfEhMKD0NMSUVOVF9QT1NJVElPThAoEhAKDENMRUFS",
+            "X01FU0hFUxBkEhQKEENMRUFSX0dBTUVfU1RBVEUQZRISCg5VUERBVEVfVEFS",
+            "R0VUUxBmYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedCodeInfo(null, new pbr::GeneratedCodeInfo[] {
@@ -57,7 +58,7 @@ namespace Holoscanner.Proto {
             new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.Vec4D), global::Holoscanner.Proto.Vec4D.Parser, new[]{ "X", "Y", "Z", "W" }, null, null, null),
             new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.Client), global::Holoscanner.Proto.Client.Parser, new[]{ "DeviceId", "Score" }, null, null, null),
             new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.ClientPosition), global::Holoscanner.Proto.ClientPosition.Parser, new[]{ "Position", "Rotation" }, null, null, null),
-            new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.Mesh), global::Holoscanner.Proto.Mesh.Parser, new[]{ "MeshId", "Timestamp", "IsLast", "CamPosition", "CamRotation", "Vertices", "Triangles" }, null, null, null),
+            new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.Mesh), global::Holoscanner.Proto.Mesh.Parser, new[]{ "MeshId", "Timestamp", "IsLast", "IsFirst", "CamPosition", "CamRotation", "Vertices", "Triangles" }, null, null, null),
             new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.Target), global::Holoscanner.Proto.Target.Parser, new[]{ "TargetId", "Position" }, null, null, null),
             new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.GameState), global::Holoscanner.Proto.GameState.Parser, new[]{ "FloorY", "CeilingY", "Targets", "Clients" }, null, null, null),
             new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.Message), global::Holoscanner.Proto.Message.Parser, new[]{ "Type", "DeviceId", "Mesh", "ClientPosition", "GameState", "TargetId" }, null, new[]{ typeof(global::Holoscanner.Proto.Message.Types.Type) }, null)
@@ -703,6 +704,7 @@ namespace Holoscanner.Proto {
       meshId_ = other.meshId_;
       timestamp_ = other.timestamp_;
       isLast_ = other.isLast_;
+      isFirst_ = other.isFirst_;
       CamPosition = other.camPosition_ != null ? other.CamPosition.Clone() : null;
       CamRotation = other.camRotation_ != null ? other.CamRotation.Clone() : null;
       vertices_ = other.vertices_.Clone();
@@ -740,6 +742,16 @@ namespace Holoscanner.Proto {
       get { return isLast_; }
       set {
         isLast_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "is_first" field.</summary>
+    public const int IsFirstFieldNumber = 5;
+    private bool isFirst_;
+    public bool IsFirst {
+      get { return isFirst_; }
+      set {
+        isFirst_ = value;
       }
     }
 
@@ -798,6 +810,7 @@ namespace Holoscanner.Proto {
       if (MeshId != other.MeshId) return false;
       if (Timestamp != other.Timestamp) return false;
       if (IsLast != other.IsLast) return false;
+      if (IsFirst != other.IsFirst) return false;
       if (!object.Equals(CamPosition, other.CamPosition)) return false;
       if (!object.Equals(CamRotation, other.CamRotation)) return false;
       if(!vertices_.Equals(other.vertices_)) return false;
@@ -810,6 +823,7 @@ namespace Holoscanner.Proto {
       if (MeshId != 0) hash ^= MeshId.GetHashCode();
       if (Timestamp != 0UL) hash ^= Timestamp.GetHashCode();
       if (IsLast != false) hash ^= IsLast.GetHashCode();
+      if (IsFirst != false) hash ^= IsFirst.GetHashCode();
       if (camPosition_ != null) hash ^= CamPosition.GetHashCode();
       if (camRotation_ != null) hash ^= CamRotation.GetHashCode();
       hash ^= vertices_.GetHashCode();
@@ -834,6 +848,10 @@ namespace Holoscanner.Proto {
         output.WriteRawTag(32);
         output.WriteBool(IsLast);
       }
+      if (IsFirst != false) {
+        output.WriteRawTag(40);
+        output.WriteBool(IsFirst);
+      }
       if (camPosition_ != null) {
         output.WriteRawTag(162, 6);
         output.WriteMessage(CamPosition);
@@ -855,6 +873,9 @@ namespace Holoscanner.Proto {
         size += 1 + pb::CodedOutputStream.ComputeUInt64Size(Timestamp);
       }
       if (IsLast != false) {
+        size += 1 + 1;
+      }
+      if (IsFirst != false) {
         size += 1 + 1;
       }
       if (camPosition_ != null) {
@@ -880,6 +901,9 @@ namespace Holoscanner.Proto {
       }
       if (other.IsLast != false) {
         IsLast = other.IsLast;
+      }
+      if (other.IsFirst != false) {
+        IsFirst = other.IsFirst;
       }
       if (other.camPosition_ != null) {
         if (camPosition_ == null) {
@@ -914,6 +938,10 @@ namespace Holoscanner.Proto {
           }
           case 32: {
             IsLast = input.ReadBool();
+            break;
+          }
+          case 40: {
+            IsFirst = input.ReadBool();
             break;
           }
           case 802: {
@@ -1517,6 +1545,8 @@ namespace Holoscanner.Proto {
         GAME_STATE = 13,
         GAME_STATE_REQUEST = 14,
         TARGET_FOUND = 20,
+        START_GAME = 21,
+        END_GAME = 22,
         ANCHOR_SET = 30,
         ANCHOR_GET = 31,
         CLIENT_POSITION = 40,
