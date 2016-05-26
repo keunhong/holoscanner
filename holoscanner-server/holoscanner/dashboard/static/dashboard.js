@@ -49,6 +49,8 @@ gSocket.onmessage = function (e) {
       if (pbMessage.device_id) {
         clearMeshes(pbMessage.device_id);
       }
+    } else if (pbMessage.type === Holoscanner.Proto.Message.Type.CLIENT_POSITION) {
+      console.log(pbMessage.client_position);
     }
   }
 };

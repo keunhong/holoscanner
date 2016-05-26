@@ -90,6 +90,9 @@ class HsServerProtocol(asyncio.Protocol):
             elif msg.type == Message.TARGET_FOUND:
                 logger.info('Target found: {}'.format(msg.target_id))
                 game_state.target_found(self.client_id, msg.target_id)
+            elif msg.type == Message.CLIENT_POSITION:
+                game_state.client_position_updated(self.client_id,
+                                                   msg.client_position)
             else:
                 logger.error('Unknown message type {} received'.format(
                     msg.type))

@@ -338,6 +338,12 @@ class GameState:
         self.send_to_hololens_clients(
             self.create_game_state_message(max_targets=1))
 
+    def client_position_updated(self, client_id, client_position_pb):
+        msg = pb.Message()
+        msg.device_id = client_id
+        msg.type = pb.Message.CLIENT_POSITION
+        msg.client_position.MergeFrom(client_position_pb)
+        self.send_to_websocket_clients(msg)
 
     def create_game_state_message(self, max_targets=None):
         with self.gs_lock:
