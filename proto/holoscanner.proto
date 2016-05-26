@@ -17,6 +17,7 @@ message Vec4D {
 message Client {
     string device_id = 1;
     uint32 score = 10;
+    bool is_ready = 20;
 }
 
 message ClientPosition {

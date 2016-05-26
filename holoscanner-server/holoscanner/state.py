@@ -64,12 +64,13 @@ class Mesh:
 
 
 class Client:
-    def __init__(self, client_id, ip, protocol):
+    def __init__(self, client_id, ip, protocol, is_ready=False):
         self.client_id = client_id
         self.ip = ip
         self.score = 0
         self.protocol = protocol
         self.meshes = []
+        self.is_ready = is_ready
         self.is_next_mesh_new = True
 
     def send_message(self, message):
@@ -97,6 +98,7 @@ class Client:
         client_pb = pb.Client()
         client_pb.device_id = self.client_id
         client_pb.score = self.score
+        client_pb.is_ready = self.is_ready
         return client_pb
 
     def __repr__(self):
@@ -107,7 +109,10 @@ class Client:
 class GameState:
 
     clients = {
-        config.SERVER_DEVICE_ID: Client(config.SERVER_DEVICE_ID, '127.0.0.1', None)
+        config.SERVER_DEVICE_ID: Client(config.SERVER_DEVICE_ID,
+                                        ip='127.0.0.1',
+                                        protocol=None,
+                                        is_ready=True)
     }
 
     clients_lock = threading.RLock()
@@ -223,6 +228,12 @@ class GameState:
         return vertices, normals, faces
 
     def update_targets(self, num_targets, keep_first=True):
+        if not self.is_game_started():
+            logger.info('Game has not started;'
+                        'skipping target generation. {}'.format(
+                self.game_state_summary()))
+            return
+
         with self.gs_lock:
             first_target = None
             if keep_first and len(self.target_pbs) > 0:
@@ -302,8 +313,8 @@ class GameState:
                 self.target_counter += 1
                 self.target_pbs[target_pb.target_id] = target_pb
 
-        logger.info('Generated {} targets.'.format(len(self.target_pbs)))
-        self.print_game_state()
+        logger.info('Generated {} targets. {}'.format(
+            len(self.target_pbs), self.game_state_summary()))
 
     def target_found(self, client_id, target_id):
         logger.info('Deleting target_id={} ({} targets exist)'.format(
@@ -332,7 +343,7 @@ class GameState:
             self.target_pbs = OrderedDict(sorted_items)
             if len(self.target_pbs) == 0:
                 self.update_targets(config.NUM_TARGETS_GEN)
-            self.print_game_state()
+            self.game_state_summary()
 
         self.send_to_websocket_clients(self.create_game_state_message())
         self.send_to_hololens_clients(
@@ -344,6 +355,30 @@ class GameState:
         msg.type = pb.Message.CLIENT_POSITION
         msg.client_position.MergeFrom(client_position_pb)
         self.send_to_websocket_clients(msg)
+
+    def client_ready(self, client_id):
+        if client_id not in self.clients:
+            logger.warning(
+                'Client {} is ready but is not in game state.'.format(
+                    client_id))
+            return
+
+        logger.info('Client {} is ready!'.format(client_id))
+        self.clients[client_id].is_ready = True
+
+        if self.is_game_started():
+            logger.info('All clients ready: GAME HAS STARTED!')
+            self.send_to_hololens_clients(proto.create_game_started_message())
+            self.send_to_hololens_clients(
+                self.create_game_state_message(max_targets=1))
+            self.send_to_websocket_clients(self.create_game_state_message())
+
+    def is_game_started(self):
+        is_started = True
+        for client_id, client in self.clients.items():
+            if client_id != config.SERVER_DEVICE_ID:
+                is_started &= client.is_ready
+        return is_started
 
     def create_game_state_message(self, max_targets=None):
         with self.gs_lock:
@@ -360,8 +395,8 @@ class GameState:
                 [c.to_proto() for c in self.clients.values()])
             return msg
 
-    def print_game_state(self):
-        logger.info("""
+    def game_state_summary(self):
+        return """
 =============
 State Summary
 =============
@@ -371,7 +406,7 @@ Floor     : {}
 Ceiling   : {}
 
 """.format(list(self.clients.values()), len(self.target_pbs),
-           self.floor, self.ceiling))
+           self.floor, self.ceiling)
 
 
 game_state = GameState()

@@ -135,6 +135,11 @@ function handleGameState(pbGameState) {
       clientDiv.append(clientCheckbox);
     }
     clientDiv.append("[" + pbClient.device_id + "]: " + pbClient.score);
+    if (pbClient.is_ready) {
+      clientDiv.append("<span class='client-status client-ready'>✓</span>");
+    } else {
+      clientDiv.append("<span class='client-status client-not-ready'>✗</span>");
+    }
     scoreboardElem.append(clientDiv);
   }
 
@@ -156,7 +161,7 @@ function handleGameState(pbGameState) {
     let geom = new THREE.SphereGeometry(0.1, 32, 32);
     let color = (targetIdx == 0) ? 0xff0000 : 0x00ff00;
     let material = new THREE.MeshPhongMaterial({color: color});
-    
+
     let targetMesh;
     // if (i == 0) {
     //   targetMesh = new THREE.PointLight(0xff0000, 0.5, 0, 10);
@@ -203,10 +208,10 @@ function initRenderer() {
   let light5 = new THREE.PointLight(0xffffff, 0.4, 0);
   light5.position.set(100, -100, 0);
   gScene.add(light5);
-  
+
   let camera = new THREE.PerspectiveCamera(
       75, container.width() / container.height(), 0.1, 1000);
-  
+
   camera.position.x = 0;
   camera.position.y = 0;
   camera.position.z = 5;
@@ -238,7 +243,7 @@ $(document).ready(function () {
     clearAllMeshes();
     console.log('Meshes cleared.');
   });
-  
+
   $('#reset-game-state').click(function () {
     let message = new Holoscanner.Proto.Message();
     message.type = Holoscanner.Proto.Message.Type.CLEAR_GAME_STATE;

@@ -43,3 +43,15 @@ html, body {
 #scoreboard span {
     font-weight: bold;
 }
+
+.client-status {
+    margin-left: 3px;
+}
+
+.client-ready {
+    color: #62CC3F;
+}
+
+.client-not-ready {
+    color: #BF443B
+}
