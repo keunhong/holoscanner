@@ -66,6 +66,7 @@ public class OrbPlacement : Singleton<OrbPlacement>
         targetID = t_id;
         setComponentsEnabled(true);
         audioOn = true;
+        foundOnThisHololens = false;
     }
 
     void Start()
