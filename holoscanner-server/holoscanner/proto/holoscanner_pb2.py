@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='holoscanner.proto',
   package='Holoscanner.Proto',
   syntax='proto3',
-  serialized_pb=_b('\n\x11holoscanner.proto\x12\x11Holoscanner.Proto\"(\n\x05Vec3D\x12\t\n\x01x\x18\x01 \x01(\x02\x12\t\n\x01y\x18\x02 \x01(\x02\x12\t\n\x01z\x18\x03 \x01(\x02\"3\n\x05Vec4D\x12\t\n\x01x\x18\x01 \x01(\x02\x12\t\n\x01y\x18\x02 \x01(\x02\x12\t\n\x01z\x18\x03 \x01(\x02\x12\t\n\x01w\x18\x04 \x01(\x02\"*\n\x06\x43lient\x12\x11\n\tdevice_id\x18\x01 \x01(\t\x12\r\n\x05score\x18\n \x01(\r\"\xdc\x01\n\x04Mesh\x12\x0f\n\x07mesh_id\x18\x02 \x01(\r\x12\x11\n\ttimestamp\x18\x03 \x01(\x04\x12\x0f\n\x07is_last\x18\x04 \x01(\x08\x12.\n\x0c\x63\x61m_position\x18\x64 \x01(\x0b\x32\x18.Holoscanner.Proto.Vec3D\x12.\n\x0c\x63\x61m_rotation\x18\x65 \x01(\x0b\x32\x18.Holoscanner.Proto.Vec4D\x12+\n\x08vertices\x18\xc8\x01 \x03(\x0b\x32\x18.Holoscanner.Proto.Vec3D\x12\x12\n\ttriangles\x18\xc9\x01 \x03(\x05\"G\n\x06Target\x12\x11\n\ttarget_id\x18\x01 \x01(\r\x12*\n\x08position\x18\x02 \x01(\x0b\x32\x18.Holoscanner.Proto.Vec3D\"\x87\x01\n\tGameState\x12\x0f\n\x07\x66loor_y\x18\x01 \x01(\x02\x12\x11\n\tceiling_y\x18\x02 \x01(\x02\x12*\n\x07targets\x18\n \x03(\x0b\x32\x19.Holoscanner.Proto.Target\x12*\n\x07\x63lients\x18\x14 \x03(\x0b\x32\x19.Holoscanner.Proto.Client\"\xf4\x02\n\x07Message\x12-\n\x04type\x18\x01 \x01(\x0e\x32\x1f.Holoscanner.Proto.Message.Type\x12\x11\n\tdevice_id\x18\x02 \x01(\t\x12%\n\x04mesh\x18\x64 \x01(\x0b\x32\x17.Holoscanner.Proto.Mesh\x12\x31\n\ngame_state\x18\xf4\x03 \x01(\x0b\x32\x1c.Holoscanner.Proto.GameState\x12\x12\n\ttarget_id\x18\xd8\x04 \x01(\r\"\xb8\x01\n\x04Type\x12\x07\n\x03\x41\x43K\x10\x00\x12\x07\n\x03\x46IN\x10\x01\x12\x08\n\x04MESH\x10\n\x12\x0e\n\nGAME_STATE\x10\r\x12\x16\n\x12GAME_STATE_REQUEST\x10\x0e\x12\x10\n\x0cTARGET_FOUND\x10\x14\x12\x0e\n\nANCHOR_SET\x10\x1e\x12\x0e\n\nANCHOR_GET\x10\x1f\x12\x10\n\x0c\x43LEAR_MESHES\x10\x64\x12\x14\n\x10\x43LEAR_GAME_STATE\x10\x65\x12\x12\n\x0eUPDATE_TARGETS\x10\x66\x62\x06proto3')
+  serialized_pb=_b('\n\x11holoscanner.proto\x12\x11Holoscanner.Proto\"(\n\x05Vec3D\x12\t\n\x01x\x18\x01 \x01(\x02\x12\t\n\x01y\x18\x02 \x01(\x02\x12\t\n\x01z\x18\x03 \x01(\x02\"3\n\x05Vec4D\x12\t\n\x01x\x18\x01 \x01(\x02\x12\t\n\x01y\x18\x02 \x01(\x02\x12\t\n\x01z\x18\x03 \x01(\x02\x12\t\n\x01w\x18\x04 \x01(\x02\"*\n\x06\x43lient\x12\x11\n\tdevice_id\x18\x01 \x01(\t\x12\r\n\x05score\x18\n \x01(\r\"h\n\x0e\x43lientPosition\x12*\n\x08position\x18\x64 \x01(\x0b\x32\x18.Holoscanner.Proto.Vec3D\x12*\n\x08rotation\x18\x65 \x01(\x0b\x32\x18.Holoscanner.Proto.Vec4D\"\xdc\x01\n\x04Mesh\x12\x0f\n\x07mesh_id\x18\x02 \x01(\r\x12\x11\n\ttimestamp\x18\x03 \x01(\x04\x12\x0f\n\x07is_last\x18\x04 \x01(\x08\x12.\n\x0c\x63\x61m_position\x18\x64 \x01(\x0b\x32\x18.Holoscanner.Proto.Vec3D\x12.\n\x0c\x63\x61m_rotation\x18\x65 \x01(\x0b\x32\x18.Holoscanner.Proto.Vec4D\x12+\n\x08vertices\x18\xc8\x01 \x03(\x0b\x32\x18.Holoscanner.Proto.Vec3D\x12\x12\n\ttriangles\x18\xc9\x01 \x03(\x05\"G\n\x06Target\x12\x11\n\ttarget_id\x18\x01 \x01(\r\x12*\n\x08position\x18\x02 \x01(\x0b\x32\x18.Holoscanner.Proto.Vec3D\"\x87\x01\n\tGameState\x12\x0f\n\x07\x66loor_y\x18\x01 \x01(\x02\x12\x11\n\tceiling_y\x18\x02 \x01(\x02\x12*\n\x07targets\x18\n \x03(\x0b\x32\x19.Holoscanner.Proto.Target\x12*\n\x07\x63lients\x18\x14 \x03(\x0b\x32\x19.Holoscanner.Proto.Client\"\xc5\x03\n\x07Message\x12-\n\x04type\x18\x01 \x01(\x0e\x32\x1f.Holoscanner.Proto.Message.Type\x12\x11\n\tdevice_id\x18\x02 \x01(\t\x12%\n\x04mesh\x18\x64 \x01(\x0b\x32\x17.Holoscanner.Proto.Mesh\x12:\n\x0f\x63lient_position\x18\x65 \x01(\x0b\x32!.Holoscanner.Proto.ClientPosition\x12\x31\n\ngame_state\x18\xf4\x03 \x01(\x0b\x32\x1c.Holoscanner.Proto.GameState\x12\x12\n\ttarget_id\x18\xd8\x04 \x01(\r\"\xcd\x01\n\x04Type\x12\x07\n\x03\x41\x43K\x10\x00\x12\x07\n\x03\x46IN\x10\x01\x12\x08\n\x04MESH\x10\n\x12\x0e\n\nGAME_STATE\x10\r\x12\x16\n\x12GAME_STATE_REQUEST\x10\x0e\x12\x10\n\x0cTARGET_FOUND\x10\x14\x12\x0e\n\nANCHOR_SET\x10\x1e\x12\x0e\n\nANCHOR_GET\x10\x1f\x12\x13\n\x0f\x43LIENT_POSITION\x10(\x12\x10\n\x0c\x43LEAR_MESHES\x10\x64\x12\x14\n\x10\x43LEAR_GAME_STATE\x10\x65\x12\x12\n\x0eUPDATE_TARGETS\x10\x66\x62\x06proto3')
 )
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
@@ -64,22 +64,26 @@ _MESSAGE_TYPE = _descriptor.EnumDescriptor(
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='CLEAR_MESHES', index=8, number=100,
+      name='CLIENT_POSITION', index=8, number=40,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='CLEAR_GAME_STATE', index=9, number=101,
+      name='CLEAR_MESHES', index=9, number=100,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='UPDATE_TARGETS', index=10, number=102,
+      name='CLEAR_GAME_STATE', index=10, number=101,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='UPDATE_TARGETS', index=11, number=102,
       options=None,
       type=None),
   ],
   containing_type=None,
   options=None,
-  serialized_start=802,
-  serialized_end=986,
+  serialized_start=968,
+  serialized_end=1173,
 )
 _sym_db.RegisterEnumDescriptor(_MESSAGE_TYPE)
 
@@ -219,6 +223,44 @@ _CLIENT = _descriptor.Descriptor(
 )
 
 
+_CLIENTPOSITION = _descriptor.Descriptor(
+  name='ClientPosition',
+  full_name='Holoscanner.Proto.ClientPosition',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='position', full_name='Holoscanner.Proto.ClientPosition.position', index=0,
+      number=100, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='rotation', full_name='Holoscanner.Proto.ClientPosition.rotation', index=1,
+      number=101, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=179,
+  serialized_end=283,
+)
+
+
 _MESH = _descriptor.Descriptor(
   name='Mesh',
   full_name='Holoscanner.Proto.Mesh',
@@ -287,8 +329,8 @@ _MESH = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=180,
-  serialized_end=400,
+  serialized_start=286,
+  serialized_end=506,
 )
 
 
@@ -325,8 +367,8 @@ _TARGET = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=402,
-  serialized_end=473,
+  serialized_start=508,
+  serialized_end=579,
 )
 
 
@@ -377,8 +419,8 @@ _GAMESTATE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=476,
-  serialized_end=611,
+  serialized_start=582,
+  serialized_end=717,
 )
 
 
@@ -411,14 +453,21 @@ _MESSAGE = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='game_state', full_name='Holoscanner.Proto.Message.game_state', index=3,
+      name='client_position', full_name='Holoscanner.Proto.Message.client_position', index=3,
+      number=101, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='game_state', full_name='Holoscanner.Proto.Message.game_state', index=4,
       number=500, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='target_id', full_name='Holoscanner.Proto.Message.target_id', index=4,
+      name='target_id', full_name='Holoscanner.Proto.Message.target_id', index=5,
       number=600, type=13, cpp_type=3, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
@@ -437,10 +486,12 @@ _MESSAGE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=614,
-  serialized_end=986,
+  serialized_start=720,
+  serialized_end=1173,
 )
 
+_CLIENTPOSITION.fields_by_name['position'].message_type = _VEC3D
+_CLIENTPOSITION.fields_by_name['rotation'].message_type = _VEC4D
 _MESH.fields_by_name['cam_position'].message_type = _VEC3D
 _MESH.fields_by_name['cam_rotation'].message_type = _VEC4D
 _MESH.fields_by_name['vertices'].message_type = _VEC3D
@@ -449,11 +500,13 @@ _GAMESTATE.fields_by_name['targets'].message_type = _TARGET
 _GAMESTATE.fields_by_name['clients'].message_type = _CLIENT
 _MESSAGE.fields_by_name['type'].enum_type = _MESSAGE_TYPE
 _MESSAGE.fields_by_name['mesh'].message_type = _MESH
+_MESSAGE.fields_by_name['client_position'].message_type = _CLIENTPOSITION
 _MESSAGE.fields_by_name['game_state'].message_type = _GAMESTATE
 _MESSAGE_TYPE.containing_type = _MESSAGE
 DESCRIPTOR.message_types_by_name['Vec3D'] = _VEC3D
 DESCRIPTOR.message_types_by_name['Vec4D'] = _VEC4D
 DESCRIPTOR.message_types_by_name['Client'] = _CLIENT
+DESCRIPTOR.message_types_by_name['ClientPosition'] = _CLIENTPOSITION
 DESCRIPTOR.message_types_by_name['Mesh'] = _MESH
 DESCRIPTOR.message_types_by_name['Target'] = _TARGET
 DESCRIPTOR.message_types_by_name['GameState'] = _GAMESTATE
@@ -479,6 +532,13 @@ Client = _reflection.GeneratedProtocolMessageType('Client', (_message.Message,),
   # @@protoc_insertion_point(class_scope:Holoscanner.Proto.Client)
   ))
 _sym_db.RegisterMessage(Client)
+
+ClientPosition = _reflection.GeneratedProtocolMessageType('ClientPosition', (_message.Message,), dict(
+  DESCRIPTOR = _CLIENTPOSITION,
+  __module__ = 'holoscanner_pb2'
+  # @@protoc_insertion_point(class_scope:Holoscanner.Proto.ClientPosition)
+  ))
+_sym_db.RegisterMessage(ClientPosition)
 
 Mesh = _reflection.GeneratedProtocolMessageType('Mesh', (_message.Message,), dict(
   DESCRIPTOR = _MESH,

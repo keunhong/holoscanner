@@ -5,7 +5,7 @@ PROTOC_VERSION="$(protoc --version)"
 
 SERVER_PROTO_DIR="$DIR/holoscanner-server/holoscanner/proto/"
 CLIENT_PROTO_DIR="$DIR/holoscanner-client/Assets/Proto/"
-JS_PROTO_DIR="$DIR/holoscanner-server/holoscanner/viewer/static/"
+JS_PROTO_DIR="$DIR/holoscanner-server/holoscanner/dashboard/static/"
 
 if [[ "$PROTOC_VERSION" != "libprotoc 3."* ]]; then
   echo "Protobuf version >=3.0.0 required."

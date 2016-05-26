@@ -75,14 +75,14 @@ class Client:
     def send_message(self, message):
         self.protocol.send_message(message)
 
-    def new_mesh(self, mesh, is_last):
+    def new_mesh(self, mesh):
         cleared = False
         if self.is_next_mesh_new:
             cleared = True
             self.clear_meshes()
             self.is_next_mesh_new = False
 
-        if is_last:
+        if mesh.is_last:
             self.is_next_mesh_new = True
 
         self.meshes.append(mesh)
@@ -116,7 +116,7 @@ class GameState:
 
     floor = -5
     ceiling = 5
-    target_counter = 0
+    target_counter = 1
     target_pbs = OrderedDict()
 
     def new_hololens_client(self, client_id, ip, protocol):
@@ -151,12 +151,15 @@ class GameState:
         with self.clients_lock:
             client = self.clients[client_id]
             mesh = Mesh(mesh_pb, mesh_pb.is_last)
-            was_cleared = client.new_mesh(mesh, mesh_pb.is_last)
-            logger.info('New mesh from client {}, '
-                        'nvertices={}, '
-                        'nfaces={}, '
-                        'is_last={}'.format(
-                client_id, mesh.nvertices, mesh.nfaces, mesh_pb.is_last))
+            was_cleared = client.new_mesh(mesh)
+            if was_cleared:
+                logger.info('Starting to receive meshes from client {}'.format(
+                    client_id))
+            # logger.info('New mesh from client {}, '
+            #             'nvertices={}, '
+            #             'nfaces={}, '
+            #             'is_last={}'.format(
+            #     client_id, mesh.nvertices, mesh.nfaces, mesh_pb.is_last))
             # if was_cleared:
             #     msg = pb.Message()
             #     msg.type = pb.Message.CLEAR_MESHES
@@ -329,11 +332,12 @@ class GameState:
             self.target_pbs = OrderedDict(sorted_items)
             if len(self.target_pbs) == 0:
                 self.update_targets(config.NUM_TARGETS_GEN)
-            self.send_to_websocket_clients(self.create_game_state_message())
-            self.send_to_hololens_clients(
-                self.create_game_state_message(max_targets=1))
-
             self.print_game_state()
+
+        self.send_to_websocket_clients(self.create_game_state_message())
+        self.send_to_hololens_clients(
+            self.create_game_state_message(max_targets=1))
+
 
     def create_game_state_message(self, max_targets=None):
         with self.gs_lock:

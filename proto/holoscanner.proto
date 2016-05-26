@@ -19,6 +19,11 @@ message Client {
     uint32 score = 10;
 }
 
+message ClientPosition {
+    Vec3D position = 100;
+    Vec4D rotation = 101;
+}
+
 message Mesh {
     uint32 mesh_id = 2;
     uint64 timestamp = 3;
@@ -54,6 +59,7 @@ message Message {
         TARGET_FOUND = 20;
         ANCHOR_SET = 30;
         ANCHOR_GET = 31;
+        CLIENT_POSITION = 40;
         CLEAR_MESHES = 100;
         CLEAR_GAME_STATE = 101;
         UPDATE_TARGETS = 102;
@@ -64,6 +70,7 @@ message Message {
 
     // One or less of the following will be filled in.
     Mesh mesh = 100;
+    ClientPosition client_position = 101;
     GameState game_state = 500;
     uint32 target_id = 600;
 }
