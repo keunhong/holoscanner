@@ -170,10 +170,10 @@ namespace Holoscanner
                         if (worldtransform != null) {
                       
                             t = worldtransform.worldToLocalMatrix*t;
-                            Debug.Log("6");
+                          
                         }
                 NetworkCommunication.Instance.SendData(ProtoMeshSerializer.Serialize(MeshFilters[index].sharedMesh, QuaternionFromMatrix(t), t.GetColumn(3), (uint) id, index==MeshFilters.Count-1,index==0));
-                        Debug.Log("7");
+                   
                         yield return null;
             }
             //NetworkCommunication.Instance.SendData(ProtoMeshSerializer.DataRequest());

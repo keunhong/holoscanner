@@ -272,7 +272,7 @@ Prefab:
     - target: {fileID: 114000011154029958, guid: 2ed75ffdf9031c94e8bce4b3d17b9928,
         type: 2}
       propertyPath: PhysicsLayer
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2ed75ffdf9031c94e8bce4b3d17b9928, type: 2}
@@ -287,7 +287,7 @@ GameObject:
   - 4: {fileID: 244377153}
   - 198: {fileID: 244377155}
   - 199: {fileID: 244377154}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2177,7 +2177,7 @@ GameObject:
   - 4: {fileID: 498590879}
   - 198: {fileID: 498590881}
   - 199: {fileID: 498590880}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Lines
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4077,7 +4077,7 @@ GameObject:
   - 198: {fileID: 661556988}
   - 199: {fileID: 661556987}
   - 114: {fileID: 661556986}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: MagicBlast1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6113,6 +6113,10 @@ Prefab:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: be4d7bf906486eb448ebf6a6993137cc, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 2300000, guid: be4d7bf906486eb448ebf6a6993137cc, type: 3}
     - {fileID: 3300000, guid: be4d7bf906486eb448ebf6a6993137cc, type: 3}
@@ -6191,7 +6195,7 @@ GameObject:
   - 198: {fileID: 1046038398}
   - 199: {fileID: 1046038397}
   - 114: {fileID: 1046038396}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Spots
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8216,6 +8220,18 @@ Prefab:
       propertyPath: InitialModule.startLifetime.scalar
       value: 0.4
       objectReference: {fileID: 0}
+    - target: {fileID: 190108, guid: bfa009db65d06314da7056613a28f1c1, type: 2}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 171286, guid: bfa009db65d06314da7056613a28f1c1, type: 2}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 147486, guid: bfa009db65d06314da7056613a28f1c1, type: 2}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: bfa009db65d06314da7056613a28f1c1, type: 2}
   m_IsPrefabParent: 0
@@ -8229,7 +8245,7 @@ GameObject:
   - 4: {fileID: 1559951308}
   - 198: {fileID: 1559951310}
   - 199: {fileID: 1559951309}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Sparkles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10045,7 +10061,7 @@ GameObject:
   - 4: {fileID: 2055605502}
   - 198: {fileID: 2055605504}
   - 199: {fileID: 2055605503}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Rays
   m_TagString: Untagged
   m_Icon: {fileID: 0}

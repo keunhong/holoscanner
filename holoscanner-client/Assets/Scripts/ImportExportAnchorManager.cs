@@ -395,10 +395,12 @@ public class ImportExportAnchorManager : Singleton<ImportExportAnchorManager>
                 //GameObject.Find("HologramCollection").GetComponent<Holoscanner.RemoteMeshManager>().SendTargetRequest();
                 if (wa.isLocated)
                 {
+                    Debug.Log("If...");
                     CurrentState = ImportExportState.Ready;
                 }
                 else
                 {
+                    Debug.Log("Else...");
                     wa.OnTrackingChanged += ImportExportAnchorManager_OnTrackingChanged_Attaching;
                 }
                 return true;
