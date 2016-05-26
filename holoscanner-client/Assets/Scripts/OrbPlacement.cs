@@ -13,7 +13,7 @@ public class OrbPlacement : Singleton<OrbPlacement>
     bool foundOnThisHololens = false;
     bool audioOn = true;
     bool startOrb = true;
-    bool isEnabled = true;
+    bool isEnabled = false;
     public bool GotTransform { get; private set; }
     // Called by GazeGestureManager when the user performs a Select gesture
     void OnSelect()
@@ -26,20 +26,23 @@ public class OrbPlacement : Singleton<OrbPlacement>
         targetFound();
     }
 
-    private void setComponentsEnabled(bool enable)
+    public void setComponentsEnabled(bool enable)
     {
         if (isEnabled == enable)
         {
             Debug.Log("Warning: Trying to set state to what it already was...returning");
             return;
         }
+        gameObject.GetComponent<MeshCollider>().enabled = enable;
         foreach (ParticleSystem sys in GameObject.Find("EnergyBall3").GetComponents<ParticleSystem>())
         {
+            if (enable) sys.Play();
             ParticleSystem.EmissionModule em = sys.emission;
             em.enabled = enable;
         }
         foreach (ParticleSystem sys in GameObject.Find("EnergyBall3").GetComponentsInChildren<ParticleSystem>())
         {
+            if (enable) sys.Play();
             ParticleSystem.EmissionModule em = sys.emission;
             em.enabled = enable;
         }
@@ -93,6 +96,7 @@ public class OrbPlacement : Singleton<OrbPlacement>
 
         // And when a new user join we will send the anchor transform we have.
         SharingSessionTracker.Instance.SessionJoined += Instance_SessionJoined;
+
 
     }
 
