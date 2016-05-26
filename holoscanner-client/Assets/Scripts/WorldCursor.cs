@@ -21,7 +21,7 @@ public class WorldCursor : MonoBehaviour
         var gazeDirection = Camera.main.transform.forward;
 
         RaycastHit hitInfo;
-        if (Physics.Raycast(headPosition, gazeDirection, out hitInfo))
+        if (Physics.Raycast(headPosition, gazeDirection, out hitInfo,1))
         {
             // If the raycast hit a hologram...
             float depthOfCursor = hitInfo.distance;
@@ -34,13 +34,21 @@ public class WorldCursor : MonoBehaviour
             this.transform.rotation =
                 Quaternion.FromToRotation(Vector3.up, -gazeDirection);
             last_depth = depthOfCursor;
+            if (hitInfo.collider.gameObject.name == "orb")
+            {
+                meshRenderer.enabled = true;
+            }
+            else
+            {
+                meshRenderer.enabled = false;
+            }
         }
         else
         {
             // If the raycast did not hit a hologram, hide the cursor mesh.
-            // meshRenderer.enabled = false;
-            this.transform.position = headPosition + gazeDirection * last_depth;
-            this.transform.rotation = Quaternion.FromToRotation(Vector3.up, -gazeDirection);
+            meshRenderer.enabled = false;
+            //this.transform.position = headPosition + gazeDirection * last_depth;
+            //this.transform.rotation = Quaternion.FromToRotation(Vector3.up, -gazeDirection);
         }
     }
 }

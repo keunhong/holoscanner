@@ -92,7 +92,7 @@ namespace Holoscanner
                             Debug.Log("From server, got the new target :" + targets[0]);
                         }
                         break;
-                    case Proto.Message.Types.Type.ANCHOR_SET:
+                    case Proto.Message.Types.Type.START_GAME:
                         break;
                     
                         // TODO: others
@@ -106,13 +106,14 @@ namespace Holoscanner
             //request that the server starts the game and sends out targets to everyone.
             //server should only send out targets once it has received the start game request from all the joined clients. in the future we can fix it so that it doesn't start until it has received this from 3 clients
 
+            //for now, just request state. but change this in future:
+            SendTargetRequest();
 
             Holoscanner.Proto.Message msg = new Holoscanner.Proto.Message();
-            msg.Type = Holoscanner.Proto.Message.Types.Type.START_GAME;
+            msg.Type = Holoscanner.Proto.Message.Types.Type.CLIENT_READY;
             Debug.Log("Sending start-game request...");
             NetworkCommunication.Instance.SendData(Google.Protobuf.MessageExtensions.ToByteArray(msg));
 
-            //for now, just request state. but change this in future:
         }
 
         public void SendTargetFoundMessage(uint targetid)
@@ -158,15 +159,22 @@ namespace Holoscanner
                     Debug.Log("Sending meshes...");
 #if !UNITY_EDITOR
             List<MeshFilter> MeshFilters = SpatialMappingManager.Instance.GetMeshFilters();
-            for (int index = 0; index < MeshFilters.Count; index++)
+              
+                    for (int index = 0; index < MeshFilters.Count; index++)
             {
-                int id = int.Parse(MeshFilters[index].transform.gameObject.name.Substring("Surface-".Length));
-                Matrix4x4 t = MeshFilters[index].transform.localToWorldMatrix;
-                if (worldtransform != null) {
-                    t = worldtransform.worldToLocalMatrix*t;
-                }
+              
+                        int id = int.Parse(MeshFilters[index].transform.gameObject.name.Substring("Surface-".Length));
+                     
+                        Matrix4x4 t = MeshFilters[index].transform.localToWorldMatrix;
+                    
+                        if (worldtransform != null) {
+                      
+                            t = worldtransform.worldToLocalMatrix*t;
+                            Debug.Log("6");
+                        }
                 NetworkCommunication.Instance.SendData(ProtoMeshSerializer.Serialize(MeshFilters[index].sharedMesh, QuaternionFromMatrix(t), t.GetColumn(3), (uint) id, index==MeshFilters.Count-1,index==0));
-                yield return null;
+                        Debug.Log("7");
+                        yield return null;
             }
             //NetworkCommunication.Instance.SendData(ProtoMeshSerializer.DataRequest());
 #endif
