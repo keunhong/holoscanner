@@ -10,7 +10,7 @@ public class OrbPlacement : Singleton<OrbPlacement>
 {
 
     public uint targetID;
-    public bool active = false;
+    bool foundOnThisHololens = false;
     bool audioOn = true;
     public bool GotTransform { get; private set; }
     // Called by GazeGestureManager when the user performs a Select gesture
@@ -19,6 +19,7 @@ public class OrbPlacement : Singleton<OrbPlacement>
         // TODO: Get the candidate position
         Debug.Log("Clicked!");
         StartCoroutine(Explode());
+        foundOnThisHololens = true;
         targetFound();
     }
 
@@ -58,6 +59,7 @@ public class OrbPlacement : Singleton<OrbPlacement>
         //disable randomsound
         //yield for length of sousnd
         //replace object
+        if (!foundOnThisHololens) StartCoroutine(Explode());
         while (audioOn) yield return null;
         Debug.Log("AUDIO IS OFF CONFIRMED");
         this.gameObject.transform.localPosition = t_pos;
