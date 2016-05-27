@@ -112,6 +112,7 @@ public class OrbPlacement : Singleton<OrbPlacement>
         SharingSessionTracker.Instance.SessionJoined += Instance_SessionJoined;
 
         gameObject.GetComponent<RandomNote>().playSound = false;
+        gameObject.GetComponent<MeshCollider>().enabled = false;
     }
 
     private void Instance_SessionJoined(object sender, SharingSessionTracker.SessionJoinedEventArgs e)
