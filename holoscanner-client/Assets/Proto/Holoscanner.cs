@@ -25,38 +25,38 @@ namespace Holoscanner.Proto {
           string.Concat(
             "ChFob2xvc2Nhbm5lci5wcm90bxIRSG9sb3NjYW5uZXIuUHJvdG8iKAoFVmVj",
             "M0QSCQoBeBgBIAEoAhIJCgF5GAIgASgCEgkKAXoYAyABKAIiMwoFVmVjNEQS",
-            "CQoBeBgBIAEoAhIJCgF5GAIgASgCEgkKAXoYAyABKAISCQoBdxgEIAEoAiIq",
-            "CgZDbGllbnQSEQoJZGV2aWNlX2lkGAEgASgJEg0KBXNjb3JlGAogASgNImgK",
-            "DkNsaWVudFBvc2l0aW9uEioKCHBvc2l0aW9uGGQgASgLMhguSG9sb3NjYW5u",
-            "ZXIuUHJvdG8uVmVjM0QSKgoIcm90YXRpb24YZSABKAsyGC5Ib2xvc2Nhbm5l",
-            "ci5Qcm90by5WZWM0RCLuAQoETWVzaBIPCgdtZXNoX2lkGAIgASgNEhEKCXRp",
-            "bWVzdGFtcBgDIAEoBBIPCgdpc19sYXN0GAQgASgIEhAKCGlzX2ZpcnN0GAUg",
-            "ASgIEi4KDGNhbV9wb3NpdGlvbhhkIAEoCzIYLkhvbG9zY2FubmVyLlByb3Rv",
-            "LlZlYzNEEi4KDGNhbV9yb3RhdGlvbhhlIAEoCzIYLkhvbG9zY2FubmVyLlBy",
-            "b3RvLlZlYzREEisKCHZlcnRpY2VzGMgBIAMoCzIYLkhvbG9zY2FubmVyLlBy",
-            "b3RvLlZlYzNEEhIKCXRyaWFuZ2xlcxjJASADKAUiRwoGVGFyZ2V0EhEKCXRh",
-            "cmdldF9pZBgBIAEoDRIqCghwb3NpdGlvbhgCIAEoCzIYLkhvbG9zY2FubmVy",
-            "LlByb3RvLlZlYzNEIocBCglHYW1lU3RhdGUSDwoHZmxvb3JfeRgBIAEoAhIR",
-            "CgljZWlsaW5nX3kYAiABKAISKgoHdGFyZ2V0cxgKIAMoCzIZLkhvbG9zY2Fu",
-            "bmVyLlByb3RvLlRhcmdldBIqCgdjbGllbnRzGBQgAygLMhkuSG9sb3NjYW5u",
-            "ZXIuUHJvdG8uQ2xpZW50Iu4DCgdNZXNzYWdlEi0KBHR5cGUYASABKA4yHy5I",
-            "b2xvc2Nhbm5lci5Qcm90by5NZXNzYWdlLlR5cGUSEQoJZGV2aWNlX2lkGAIg",
-            "ASgJEiUKBG1lc2gYZCABKAsyFy5Ib2xvc2Nhbm5lci5Qcm90by5NZXNoEjoK",
-            "D2NsaWVudF9wb3NpdGlvbhhlIAEoCzIhLkhvbG9zY2FubmVyLlByb3RvLkNs",
-            "aWVudFBvc2l0aW9uEjEKCmdhbWVfc3RhdGUY9AMgASgLMhwuSG9sb3NjYW5u",
-            "ZXIuUHJvdG8uR2FtZVN0YXRlEhIKCXRhcmdldF9pZBjYBCABKA0i9gEKBFR5",
-            "cGUSBwoDQUNLEAASBwoDRklOEAESCAoETUVTSBAKEg4KCkdBTUVfU1RBVEUQ",
-            "DRIWChJHQU1FX1NUQVRFX1JFUVVFU1QQDhIQCgxUQVJHRVRfRk9VTkQQFBIO",
-            "CgpTVEFSVF9HQU1FEBUSDAoIRU5EX0dBTUUQFhITCg9DTElFTlRfUE9TSVRJ",
-            "T04QKBIQCgxDTElFTlRfUkVBRFkQKRIXChNDTElFTlRfU0VUX05JQ0tOQU1F",
-            "ECoSEAoMQ0xFQVJfTUVTSEVTEGQSFAoQQ0xFQVJfR0FNRV9TVEFURRBlEhIK",
-            "DlVQREFURV9UQVJHRVRTEGZiBnByb3RvMw=="));
+            "CQoBeBgBIAEoAhIJCgF5GAIgASgCEgkKAXoYAyABKAISCQoBdxgEIAEoAiI8",
+            "CgZDbGllbnQSEQoJZGV2aWNlX2lkGAEgASgJEg0KBXNjb3JlGAogASgNEhAK",
+            "CGlzX3JlYWR5GBQgASgIImgKDkNsaWVudFBvc2l0aW9uEioKCHBvc2l0aW9u",
+            "GGQgASgLMhguSG9sb3NjYW5uZXIuUHJvdG8uVmVjM0QSKgoIcm90YXRpb24Y",
+            "ZSABKAsyGC5Ib2xvc2Nhbm5lci5Qcm90by5WZWM0RCLuAQoETWVzaBIPCgdt",
+            "ZXNoX2lkGAIgASgNEhEKCXRpbWVzdGFtcBgDIAEoBBIPCgdpc19sYXN0GAQg",
+            "ASgIEhAKCGlzX2ZpcnN0GAUgASgIEi4KDGNhbV9wb3NpdGlvbhhkIAEoCzIY",
+            "LkhvbG9zY2FubmVyLlByb3RvLlZlYzNEEi4KDGNhbV9yb3RhdGlvbhhlIAEo",
+            "CzIYLkhvbG9zY2FubmVyLlByb3RvLlZlYzREEisKCHZlcnRpY2VzGMgBIAMo",
+            "CzIYLkhvbG9zY2FubmVyLlByb3RvLlZlYzNEEhIKCXRyaWFuZ2xlcxjJASAD",
+            "KAUiRwoGVGFyZ2V0EhEKCXRhcmdldF9pZBgBIAEoDRIqCghwb3NpdGlvbhgC",
+            "IAEoCzIYLkhvbG9zY2FubmVyLlByb3RvLlZlYzNEIocBCglHYW1lU3RhdGUS",
+            "DwoHZmxvb3JfeRgBIAEoAhIRCgljZWlsaW5nX3kYAiABKAISKgoHdGFyZ2V0",
+            "cxgKIAMoCzIZLkhvbG9zY2FubmVyLlByb3RvLlRhcmdldBIqCgdjbGllbnRz",
+            "GBQgAygLMhkuSG9sb3NjYW5uZXIuUHJvdG8uQ2xpZW50Iu4DCgdNZXNzYWdl",
+            "Ei0KBHR5cGUYASABKA4yHy5Ib2xvc2Nhbm5lci5Qcm90by5NZXNzYWdlLlR5",
+            "cGUSEQoJZGV2aWNlX2lkGAIgASgJEiUKBG1lc2gYZCABKAsyFy5Ib2xvc2Nh",
+            "bm5lci5Qcm90by5NZXNoEjoKD2NsaWVudF9wb3NpdGlvbhhlIAEoCzIhLkhv",
+            "bG9zY2FubmVyLlByb3RvLkNsaWVudFBvc2l0aW9uEjEKCmdhbWVfc3RhdGUY",
+            "9AMgASgLMhwuSG9sb3NjYW5uZXIuUHJvdG8uR2FtZVN0YXRlEhIKCXRhcmdl",
+            "dF9pZBjYBCABKA0i9gEKBFR5cGUSBwoDQUNLEAASBwoDRklOEAESCAoETUVT",
+            "SBAKEg4KCkdBTUVfU1RBVEUQDRIWChJHQU1FX1NUQVRFX1JFUVVFU1QQDhIQ",
+            "CgxUQVJHRVRfRk9VTkQQFBIOCgpTVEFSVF9HQU1FEBUSDAoIRU5EX0dBTUUQ",
+            "FhITCg9DTElFTlRfUE9TSVRJT04QKBIQCgxDTElFTlRfUkVBRFkQKRIXChND",
+            "TElFTlRfU0VUX05JQ0tOQU1FECoSEAoMQ0xFQVJfTUVTSEVTEGQSFAoQQ0xF",
+            "QVJfR0FNRV9TVEFURRBlEhIKDlVQREFURV9UQVJHRVRTEGZiBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedCodeInfo(null, new pbr::GeneratedCodeInfo[] {
             new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.Vec3D), global::Holoscanner.Proto.Vec3D.Parser, new[]{ "X", "Y", "Z" }, null, null, null),
             new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.Vec4D), global::Holoscanner.Proto.Vec4D.Parser, new[]{ "X", "Y", "Z", "W" }, null, null, null),
-            new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.Client), global::Holoscanner.Proto.Client.Parser, new[]{ "DeviceId", "Score" }, null, null, null),
+            new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.Client), global::Holoscanner.Proto.Client.Parser, new[]{ "DeviceId", "Score", "IsReady" }, null, null, null),
             new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.ClientPosition), global::Holoscanner.Proto.ClientPosition.Parser, new[]{ "Position", "Rotation" }, null, null, null),
             new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.Mesh), global::Holoscanner.Proto.Mesh.Parser, new[]{ "MeshId", "Timestamp", "IsLast", "IsFirst", "CamPosition", "CamRotation", "Vertices", "Triangles" }, null, null, null),
             new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.Target), global::Holoscanner.Proto.Target.Parser, new[]{ "TargetId", "Position" }, null, null, null),
@@ -431,6 +431,7 @@ namespace Holoscanner.Proto {
     public Client(Client other) : this() {
       deviceId_ = other.deviceId_;
       score_ = other.score_;
+      isReady_ = other.isReady_;
     }
 
     public Client Clone() {
@@ -457,6 +458,16 @@ namespace Holoscanner.Proto {
       }
     }
 
+    /// <summary>Field number for the "is_ready" field.</summary>
+    public const int IsReadyFieldNumber = 20;
+    private bool isReady_;
+    public bool IsReady {
+      get { return isReady_; }
+      set {
+        isReady_ = value;
+      }
+    }
+
     public override bool Equals(object other) {
       return Equals(other as Client);
     }
@@ -470,6 +481,7 @@ namespace Holoscanner.Proto {
       }
       if (DeviceId != other.DeviceId) return false;
       if (Score != other.Score) return false;
+      if (IsReady != other.IsReady) return false;
       return true;
     }
 
@@ -477,6 +489,7 @@ namespace Holoscanner.Proto {
       int hash = 1;
       if (DeviceId.Length != 0) hash ^= DeviceId.GetHashCode();
       if (Score != 0) hash ^= Score.GetHashCode();
+      if (IsReady != false) hash ^= IsReady.GetHashCode();
       return hash;
     }
 
@@ -493,6 +506,10 @@ namespace Holoscanner.Proto {
         output.WriteRawTag(80);
         output.WriteUInt32(Score);
       }
+      if (IsReady != false) {
+        output.WriteRawTag(160, 1);
+        output.WriteBool(IsReady);
+      }
     }
 
     public int CalculateSize() {
@@ -502,6 +519,9 @@ namespace Holoscanner.Proto {
       }
       if (Score != 0) {
         size += 1 + pb::CodedOutputStream.ComputeUInt32Size(Score);
+      }
+      if (IsReady != false) {
+        size += 2 + 1;
       }
       return size;
     }
@@ -515,6 +535,9 @@ namespace Holoscanner.Proto {
       }
       if (other.Score != 0) {
         Score = other.Score;
+      }
+      if (other.IsReady != false) {
+        IsReady = other.IsReady;
       }
     }
 
@@ -531,6 +554,10 @@ namespace Holoscanner.Proto {
           }
           case 80: {
             Score = input.ReadUInt32();
+            break;
+          }
+          case 160: {
+            IsReady = input.ReadBool();
             break;
           }
         }

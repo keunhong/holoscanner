@@ -1,12 +1,12 @@
 let SOCKET_URL = 'ws://drell.cs.washington.edu:8889';
 let CLIENT_COLORS = [
-  //'#bbdefb', '#e1bee7', '#f48fb1', '#e6ee9c'
   '#64b5f6', '#ffb74d', '#aed581', '#f48fb1'
 ];
 
 let ProtoBuf = dcodeIO.ProtoBuf;
 let builder = ProtoBuf.loadProtoFile("static/holoscanner.proto");
 let Holoscanner = builder.build("Holoscanner");
+let Message = Holoscanner.Proto.Message;
 
 let gRenderer = new THREE.WebGLRenderer();
 let gScene = new THREE.Scene();
@@ -33,34 +33,59 @@ let gCeilingPlane = new THREE.Mesh(
     }));
 gCeilingPlane.rotation.x = Math.PI / 2;
 
-let gSocket = new WebSocket(SOCKET_URL);
-gSocket.binaryType = "arraybuffer";
+let gSocket = new ReconnectingWebSocket(SOCKET_URL, null, {
+  binaryType: 'arraybuffer'
+});
+gSocket.onopen = function (e) {
+  console.log('Websocket connected!');
+};
+gSocket.onclose = function (e) {
+  console.log('Websocket connection lost, resetting!');
+  resetAll();
+};
 gSocket.onmessage = function (e) {
+  console.log(e);
   if (e.data instanceof ArrayBuffer) {
     let pbMessage = Holoscanner.Proto.Message.decode(e.data);
     console.log(pbMessage);
 
-    if (pbMessage.type === Holoscanner.Proto.Message.Type.MESH) {
-      handleNewMesh(pbMessage.device_id, pbMessage.mesh);
-    } else if (pbMessage.type === Holoscanner.Proto.Message.Type.GAME_STATE) {
-      handleGameState(pbMessage.game_state);
-    } else if (pbMessage.type === Holoscanner.Proto.Message.Type.CLEAR_MESHES) {
-      console.log(pbMessage.device_id);
-      if (pbMessage.device_id) {
-        clearMeshes(pbMessage.device_id);
-      }
-    } else if (pbMessage.type === Holoscanner.Proto.Message.Type.CLIENT_POSITION) {
-      console.log(pbMessage.client_position);
+    switch (pbMessage.type) {
+      case Holoscanner.Proto.Message.Type.MESH:
+        handleNewMesh(pbMessage.device_id, pbMessage.mesh);
+        break;
+      case Message.Type.GAME_STATE:
+        handleGameState(pbMessage.game_state);
+        break;
+      case Message.Type.CLEAR_MESHES:
+        console.log(pbMessage.device_id);
+        if (pbMessage.device_id) {
+          clearMeshes(pbMessage.device_id);
+        }
+        break;
+      case Message.Type.CLIENT_POSITION:
+        console.log(pbMessage.client_position);
+        break;
+      default:
+        console.log('Unknown message type ' + pbMessage);
     }
   }
 };
 
+function resetAll() {
+  clearAllMeshes();
+  for (let target of gTargets) {
+    gRenderer.remove(target);
+  }
+}
+
 function handleNewMesh(deviceId, pbMesh) {
   if (!(deviceId in gClients)) {
+    let clientIndex = gNumClients++;
     gClients[deviceId] = {
       "meshes": [],
       "newMeshes": [],
-      "color": CLIENT_COLORS[gNumClients++ % CLIENT_COLORS.length],
+      "color": CLIENT_COLORS[clientIndex % CLIENT_COLORS.length],
+      "index": clientIndex,
       "visible": true
     };
   }
@@ -72,7 +97,10 @@ function handleNewMesh(deviceId, pbMesh) {
   }
   for (let i = 0; i < pbMesh.triangles.length / 3; i++) {
     meshGeometry.faces.push(
-        new THREE.Face3(pbMesh.triangles[i*3], pbMesh.triangles[i*3+1], pbMesh.triangles[i*3+2]));
+        new THREE.Face3(
+            pbMesh.triangles[i * 3],
+            pbMesh.triangles[i * 3 + 1],
+            pbMesh.triangles[i * 3 + 2]));
   }
   let meshMaterial = new THREE.MeshLambertMaterial({
     color: gClients[deviceId]["color"],
@@ -92,7 +120,7 @@ function handleNewMesh(deviceId, pbMesh) {
     clearMeshes(deviceId);
     gClients[deviceId]["meshes"] = gClients[deviceId]["newMeshes"];
     gClients[deviceId]["newMeshes"] = [];
-    for (let mesh of gClients[deviceId]["meshes"]){
+    for (let mesh of gClients[deviceId]["meshes"]) {
       gScene.add(mesh);
     }
   }
@@ -111,30 +139,43 @@ function handleGameState(pbGameState) {
     gScene.remove(target);
   }
   gTargets.length = 0;
-  let scoreboardElem = $('#scoreboard');
-  scoreboardElem.empty();
-  scoreboardElem.append('<span>Client Scores</span>');
+  let scoreboardElem = $('#scoreboard')
+      .empty();
   for (let pbClient of pbGameState.clients) {
     console.log(pbClient);
     let clientColor = (pbClient.device_id in gClients)
         ? gClients[pbClient.device_id]["color"]
         : 0xffffff;
-    let clientDiv = $('<div>').addClass('scoreboard-client');
-    clientDiv.css('color', clientColor);
-    if (pbClient.device_id !== '__server__') {
-      let clientCheckbox = $("<input type='checkbox' checked='true'>");
-      if (pbClient.device_id in gClients) {
-        clientCheckbox.prop('checked', gClients[pbClient.device_id]["visible"]);
-      }
-      clientCheckbox.change(function () {
-        gClients[pbClient.device_id]["visible"] = this.checked;
-        for (let mesh of gClients[pbClient.device_id]["meshes"]) {
-          mesh.visible = this.checked;
-        }
-      });
+    let clientDiv = $('<div>')
+        .addClass('scoreboard-client')
+        .css('color', clientColor);
+
+    let clientLabel = "[" + pbClient.device_id + "]: " + pbClient.score;
+    if (pbClient.device_id !== '__server__'
+        && pbClient.device_id in gClients) {
+      let client = gClients[pbClient.device_id];
+      let clientCheckbox = $("<input type='checkbox'>")
+          .prop('id', 'client-' + client["index"] + '-checkbox')
+          .prop('checked', client["visible"])
+          .change(function () {
+            client["visible"] = this.checked;
+            for (let mesh of gClients[pbClient.device_id]["meshes"]) {
+              mesh.visible = this.checked;
+            }
+          });
       clientDiv.append(clientCheckbox);
+      clientLabel = $('<label>')
+          .prop('for', clientCheckbox.attr('id'))
+          .append(clientLabel);
     }
-    clientDiv.append("[" + pbClient.device_id + "]: " + pbClient.score);
+    clientDiv.append(clientLabel);
+    if (pbClient.is_ready) {
+      clientDiv.append(
+          "<span class='client-status client-ready'>✓</span>");
+    } else {
+      clientDiv.append(
+          "<span class='client-status client-not-ready'>✗</span>");
+    }
     scoreboardElem.append(clientDiv);
   }
 
@@ -152,27 +193,25 @@ function handleGameState(pbGameState) {
   }
 
   for (let targetIdx in pbGameState.targets) {
-    let target = pbGameState.targets[targetIdx];
+    let pbTarget = pbGameState.targets[targetIdx];
     let geom = new THREE.SphereGeometry(0.1, 32, 32);
     let color = (targetIdx == 0) ? 0xff0000 : 0x00ff00;
     let material = new THREE.MeshPhongMaterial({color: color});
-    
-    let targetMesh;
-    // if (i == 0) {
-    //   targetMesh = new THREE.PointLight(0xff0000, 0.5, 0, 10);
-    //   targetMesh.add(new THREE.Mesh(
-    //       geom, new THREE.MeshPhongMaterial({color: 0xff00ff})));
-    // } else {
-      targetMesh = new THREE.Mesh(geom, material);
-      material.transparent = true;
-      material.opacity = 0.5;
-    // }
+    let targetMesh = new THREE.Mesh(geom, material);
+    material.transparent = true;
+    material.opacity = 0.5;
     targetMesh.position.set(
-        target.position.x, target.position.y, target.position.z);
-    targetMesh.target_id = target.target_id;
+        pbTarget.position.x, pbTarget.position.y, pbTarget.position.z);
+    targetMesh.target_id = pbTarget.target_id;
     gScene.add(targetMesh);
     gTargets.push(targetMesh);
   }
+}
+
+function newLight(color, intensity, x, y, z) {
+  let light = new THREE.PointLight(color, intensity, 0);
+  light.position.set(x, y, z);
+  return light;
 }
 
 function initRenderer() {
@@ -184,32 +223,22 @@ function initRenderer() {
   let ambientLight = new THREE.AmbientLight(0x333333);
   gScene.add(ambientLight);
 
-  let light = new THREE.PointLight(0xffffff, 0.4, 0);
-  light.position.set(0, 10, 0);
-  gScene.add(light);
-
-  let light2 = new THREE.PointLight(0xffffff, 0.4, 0);
-  light2.position.set(100, 100, 0);
-  gScene.add(light2);
-
-  let light3 = new THREE.PointLight(0xffffff, 0.4, 0);
-  light3.position.set(-100, 100, 0);
-  gScene.add(light3);
-
-  let light4 = new THREE.PointLight(0xffffff, 0.4, 0);
-  light4.position.set(-100, -100, 0);
-  gScene.add(light4);
-
-  let light5 = new THREE.PointLight(0xffffff, 0.4, 0);
-  light5.position.set(100, -100, 0);
-  gScene.add(light5);
+  let lights = [
+    newLight(0xffffff, 0.4, 0, 10, 0),
+    newLight(0xffffff, 0.4, 100, 100, 0),
+    newLight(0xffffff, 0.4, -100, 100, 0),
+    newLight(0xffffff, 0.4, -100, -100, 0),
+    newLight(0xffffff, 0.4, 100, -100, 0)
+  ];
   
+  for (let light of lights) {
+    gScene.add(light);
+  }
+
   let camera = new THREE.PerspectiveCamera(
       75, container.width() / container.height(), 0.1, 1000);
-  
-  camera.position.x = 0;
-  camera.position.y = 0;
-  camera.position.z = 5;
+  camera.position.set(0, 0, 5);
+
   gScene.add(camera);
   gScene.add(gFloorPlane);
   gScene.add(gCeilingPlane);
@@ -222,34 +251,29 @@ function initRenderer() {
     requestAnimationFrame(render);
     gRenderer.render(gScene, camera);
   }
-
   render();
 }
 
-let test;
 $(document).ready(function () {
   initRenderer();
 
   $('#reset-meshes').click(function () {
     let message = new Holoscanner.Proto.Message();
     message.type = Holoscanner.Proto.Message.Type.CLEAR_MESHES;
-    test = message;
     gSocket.send(message.toArrayBuffer());
     clearAllMeshes();
     console.log('Meshes cleared.');
   });
-  
+
   $('#reset-game-state').click(function () {
     let message = new Holoscanner.Proto.Message();
     message.type = Holoscanner.Proto.Message.Type.CLEAR_GAME_STATE;
-    test = message;
     gSocket.send(message.toArrayBuffer());
     console.log('Game state cleared.');
   });
   $('#update-gTargets').click(function () {
     let message = new Holoscanner.Proto.Message();
     message.type = Holoscanner.Proto.Message.Type.UPDATE_TARGETS;
-    test = message;
     gSocket.send(message.toArrayBuffer());
     console.log('Game state cleared.');
   });
