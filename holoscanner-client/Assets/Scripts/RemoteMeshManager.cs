@@ -90,6 +90,9 @@ namespace Holoscanner
                             OrbPlacement op = this.gameObject.GetComponentInChildren<OrbPlacement>();
                             StartCoroutine(op.replaceTarget(targets[0], targetIDs[0]));                          
                         }
+                        GameObject go = GameObject.Find("Scoreboard");
+                        ScoreScript ss = go.GetComponent<ScoreScript>();
+                        ss.UpdateScores(msg.GameState);
                         break;
                     case Proto.Message.Types.Type.START_GAME:
                         break;
