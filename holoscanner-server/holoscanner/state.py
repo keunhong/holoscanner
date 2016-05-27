@@ -369,6 +369,7 @@ class GameState:
 
         if self.is_game_started():
             logger.info('All clients ready: GAME HAS STARTED!')
+            self.update_targets(config.NUM_TARGETS_GEN)
             self.send_to_hololens_clients(proto.create_game_started_message())
             self.send_to_hololens_clients(
                 self.create_game_state_message(max_targets=1))
