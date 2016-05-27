@@ -71,12 +71,12 @@ gSocket.onmessage = function (e) {
   }
 };
 
-// function resetAll() {
-//   clearAllMeshes();
-//   for (let target of gTargets) {
-//     gRenderer.remove(target);
-//   }
-// }
+function resetAll() {
+  clearAllMeshes();
+  for (let target of gTargets) {
+    gRenderer.remove(target);
+  }
+}
 
 function handleNewMesh(deviceId, pbMesh) {
   if (!(deviceId in gClients)) {
