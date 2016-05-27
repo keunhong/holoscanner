@@ -90,6 +90,9 @@ namespace Holoscanner
                             OrbPlacement op = this.gameObject.GetComponentInChildren<OrbPlacement>();
                             StartCoroutine(op.replaceTarget(targets[0], targetIDs[0]));                          
                         }
+                        GameObject go = GameObject.Find("Scoreboard");
+                        ScoreScript ss = go.GetComponent<ScoreScript>();
+                        ss.UpdateScores(msg.GameState);
                         break;
                     case Proto.Message.Types.Type.START_GAME:
                         break;
@@ -165,7 +168,11 @@ namespace Holoscanner
                     
                     for (int index = 0; index < MeshFilters.Count; index++)
                      {
-              
+                        if (MeshFilters[index] == null)
+                        {
+                            Debug.Log("index null");
+                            continue;
+                        }
                         int id = int.Parse(MeshFilters[index].transform.gameObject.name.Substring("Surface-".Length));
                         Matrix4x4 t = MeshFilters[index].transform.localToWorldMatrix;
                     

@@ -26,7 +26,20 @@ public class OrbPlacement : Singleton<OrbPlacement>
        
         targetFound();
     }
+    public Vector3 getPositionAhead()
+    {
+        var headPosition = Camera.main.transform.position;
+        var gazeDirection = Camera.main.transform.forward;
 
+        RaycastHit hitInfo;
+        if (Physics.Raycast(headPosition, gazeDirection, out hitInfo, 2))
+        {
+            return hitInfo.point - gazeDirection/20;
+        } else
+        {
+            return headPosition + 2*gazeDirection;
+        }
+    }
     public void setComponentsEnabled(bool enable)
     {
         if (isEnabled == enable)
@@ -64,6 +77,10 @@ public class OrbPlacement : Singleton<OrbPlacement>
     {
         if (foundOnThisHololens) playFastChime();
         else playSlowChime();
+        GameObject go = GameObject.Find("Scoreboard");
+        ScoreScript ss = go.GetComponent<ScoreScript>();
+        ss.setScoreboardLocation(getPositionAhead());
+        ss.showScoreboard();
         setComponentsEnabled(false);
         yield return new WaitForSecondsRealtime(2.4f);
 
