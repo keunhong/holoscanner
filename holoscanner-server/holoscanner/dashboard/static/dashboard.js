@@ -57,10 +57,12 @@ gSocket.onmessage = function (e) {
 
 function handleNewMesh(deviceId, pbMesh) {
   if (!(deviceId in gClients)) {
+    let clientIndex = gNumClients++;
     gClients[deviceId] = {
       "meshes": [],
       "newMeshes": [],
-      "color": CLIENT_COLORS[gNumClients++ % CLIENT_COLORS.length],
+      "color": CLIENT_COLORS[clientIndex % CLIENT_COLORS.length],
+      "index": clientIndex,
       "visible": true
     };
   }
@@ -111,34 +113,42 @@ function handleGameState(pbGameState) {
     gScene.remove(target);
   }
   gTargets.length = 0;
-  let scoreboardElem = $('#scoreboard');
-  scoreboardElem.empty();
-  scoreboardElem.append('<span>Client Scores</span>');
+  let scoreboardElem = $('#scoreboard')
+      .empty();
   for (let pbClient of pbGameState.clients) {
     console.log(pbClient);
     let clientColor = (pbClient.device_id in gClients)
         ? gClients[pbClient.device_id]["color"]
         : 0xffffff;
-    let clientDiv = $('<div>').addClass('scoreboard-client');
-    clientDiv.css('color', clientColor);
-    if (pbClient.device_id !== '__server__') {
-      let clientCheckbox = $("<input type='checkbox' checked='true'>");
-      if (pbClient.device_id in gClients) {
-        clientCheckbox.prop('checked', gClients[pbClient.device_id]["visible"]);
-      }
-      clientCheckbox.change(function () {
-        gClients[pbClient.device_id]["visible"] = this.checked;
-        for (let mesh of gClients[pbClient.device_id]["meshes"]) {
-          mesh.visible = this.checked;
-        }
-      });
+    let clientDiv = $('<div>')
+        .addClass('scoreboard-client')
+        .css('color', clientColor);
+
+    let clientLabel = "[" + pbClient.device_id + "]: " + pbClient.score;
+    if (pbClient.device_id !== '__server__'
+        && pbClient.device_id in gClients) {
+      let client = gClients[pbClient.device_id];
+      let clientCheckbox = $("<input type='checkbox'>")
+          .prop('id', 'client-' + client["index"] + '-checkbox')
+          .prop('checked', client["visible"])
+          .change(function () {
+            client["visible"] = this.checked;
+            for (let mesh of gClients[pbClient.device_id]["meshes"]) {
+              mesh.visible = this.checked;
+            }
+          });
       clientDiv.append(clientCheckbox);
+      clientLabel = $('<label>')
+          .prop('for', clientCheckbox.attr('id'))
+          .append(clientLabel);
     }
-    clientDiv.append("[" + pbClient.device_id + "]: " + pbClient.score);
+    clientDiv.append(clientLabel);
     if (pbClient.is_ready) {
-      clientDiv.append("<span class='client-status client-ready'>✓</span>");
+      clientDiv.append(
+          "<span class='client-status client-ready'>✓</span>");
     } else {
-      clientDiv.append("<span class='client-status client-not-ready'>✗</span>");
+      clientDiv.append(
+          "<span class='client-status client-not-ready'>✗</span>");
     }
     scoreboardElem.append(clientDiv);
   }

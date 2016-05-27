@@ -30,7 +30,7 @@ html, body {
 #controls button {
 }
 
-#scoreboard {
+#scoreboard-container {
     position: absolute;
     top: 10px;
     right: 10px;
@@ -40,8 +40,12 @@ html, body {
     border-radius: 10px;
 }
 
-#scoreboard span {
+#scoreboard-title {
     font-weight: bold;
+}
+
+#scoreboard label {
+    margin: 0;
 }
 
 .client-status {
