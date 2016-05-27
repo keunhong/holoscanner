@@ -140,6 +140,7 @@ class GameState:
         with self.clients_lock:
             if client_id in self.clients:
                 del self.clients[client_id]
+                self.clear_game_state()
         self.send_to_websocket_clients(self.create_game_state_message())
 
     def send_to_websocket_clients(self, message):
