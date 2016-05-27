@@ -34,6 +34,8 @@ public class OrbPlacement : Singleton<OrbPlacement>
             Debug.Log("Warning: Trying to set state to what it already was...returning");
             return;
         }
+        GameObject.Find("MagicBlast1").GetComponent<ParticleSystem>().Stop();
+        GameObject.Find("MagicBlast1").GetComponent<ParticleSystem>().Clear();
         gameObject.GetComponent<MeshCollider>().enabled = enable;
         foreach (ParticleSystem sys in GameObject.Find("EnergyBall3").GetComponents<ParticleSystem>())
         {
@@ -47,7 +49,6 @@ public class OrbPlacement : Singleton<OrbPlacement>
             ParticleSystem.EmissionModule em = sys.emission;
             em.enabled = enable;
         }
-        GameObject.Find("MagicBlast1").GetComponent<ParticleSystem>().Clear();
         GameObject.Find("MagicBlast1").GetComponent<ParticleSystem>().Play();
         Debug.Log("Setting playsound to:" + enable);
         gameObject.GetComponent<RandomNote>().playSound = enable;

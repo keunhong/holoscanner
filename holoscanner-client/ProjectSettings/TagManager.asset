@@ -13,7 +13,7 @@ TagManager:
   - UI
   - 
   - 
-  - 
+  - orb
   - 
   - 
   - 
@@ -40,4 +40,7 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Particles
+    uniqueID: 3120632751
     locked: 0
