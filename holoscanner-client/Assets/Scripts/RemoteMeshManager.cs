@@ -168,7 +168,11 @@ namespace Holoscanner
                     
                     for (int index = 0; index < MeshFilters.Count; index++)
                      {
-              
+                        if (MeshFilters[index] == null)
+                        {
+                            Debug.Log("index null");
+                            continue;
+                        }
                         int id = int.Parse(MeshFilters[index].transform.gameObject.name.Substring("Surface-".Length));
                         Matrix4x4 t = MeshFilters[index].transform.localToWorldMatrix;
                     
