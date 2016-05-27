@@ -21,8 +21,9 @@ public class OrbPlacement : Singleton<OrbPlacement>
         // TODO: Get the candidate position
         if (foundOnThisHololens) return;
         Debug.Log("Successfully clicked on orb!");
-        StartCoroutine(Explode());
         foundOnThisHololens = true;
+        StartCoroutine(Explode());
+       
         targetFound();
     }
 
@@ -60,6 +61,8 @@ public class OrbPlacement : Singleton<OrbPlacement>
     }
     IEnumerator Explode()
     {
+        if (foundOnThisHololens) playFastChime();
+        else playSlowChime();
         setComponentsEnabled(false);
         yield return new WaitForSecondsRealtime(2.4f);
 
@@ -73,6 +76,16 @@ public class OrbPlacement : Singleton<OrbPlacement>
         else
             rmm.SendTargetFoundMessage(targetID);
         //rmm.SendTargetRequest(); 
+    }
+
+    void playSlowChime()
+    {
+        GameObject.Find("MagicBlast1").GetComponents < AudioSource >()[1].Play();
+    }
+
+    void playFastChime()
+    {
+        GameObject.Find("MagicBlast1").GetComponents < AudioSource >()[0].Play();
     }
 
     public IEnumerator replaceTarget(Vector3 t_pos, uint t_id)
@@ -97,7 +110,7 @@ public class OrbPlacement : Singleton<OrbPlacement>
         // And when a new user join we will send the anchor transform we have.
         SharingSessionTracker.Instance.SessionJoined += Instance_SessionJoined;
 
-
+        gameObject.GetComponent<RandomNote>().playSound = false;
     }
 
     private void Instance_SessionJoined(object sender, SharingSessionTracker.SessionJoinedEventArgs e)
@@ -158,4 +171,4 @@ public class OrbPlacement : Singleton<OrbPlacement>
     {
         // We'll use this later.
     }
-}
+} 

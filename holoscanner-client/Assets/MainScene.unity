@@ -566,7 +566,7 @@ ParticleSystem:
       maxColor: {r: 1, g: 1, b: 1, a: 1}
       minMaxState: 0
     startSize:
-      scalar: 0.14999999
+      scalar: 0.099999994
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -774,12 +774,12 @@ ParticleSystem:
     serializedVersion: 2
     enabled: 1
     type: 0
-    radius: 0.03
+    radius: 0.02
     angle: 25
     length: 5
-    boxX: 0.03
-    boxY: 0.03
-    boxZ: 0.03
+    boxX: 0.02
+    boxY: 0.02
+    boxZ: 0.02
     arc: 360
     placementMode: 0
     m_Mesh: {fileID: 0}
@@ -1481,7 +1481,7 @@ ParticleSystem:
   ClampVelocityModule:
     enabled: 0
     x:
-      scalar: 0.03
+      scalar: 0.02
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -1516,7 +1516,7 @@ ParticleSystem:
         m_RotationOrder: 4
       minMaxState: 0
     y:
-      scalar: 0.03
+      scalar: 0.02
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -1551,7 +1551,7 @@ ParticleSystem:
         m_RotationOrder: 4
       minMaxState: 0
     z:
-      scalar: 0.03
+      scalar: 0.02
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -1730,7 +1730,7 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
       minMaxState: 0
-    range: {x: 0, y: 0.03}
+    range: {x: 0, y: 0.02}
     separateAxes: 0
   RotationBySpeedModule:
     enabled: 0
@@ -1840,7 +1840,7 @@ ParticleSystem:
         m_RotationOrder: 4
       minMaxState: 0
     separateAxes: 0
-    range: {x: 0, y: 0.03}
+    range: {x: 0, y: 0.02}
   ColorBySpeedModule:
     enabled: 0
     gradient:
@@ -1934,7 +1934,7 @@ ParticleSystem:
       minColor: {r: 1, g: 1, b: 1, a: 1}
       maxColor: {r: 1, g: 1, b: 1, a: 1}
       minMaxState: 1
-    range: {x: 0, y: 0.03}
+    range: {x: 0, y: 0.02}
   CollisionModule:
     enabled: 0
     serializedVersion: 2
@@ -2320,7 +2320,7 @@ ParticleSystem:
         m_RotationOrder: 4
       minMaxState: 3
     startSpeed:
-      scalar: 0.29999998
+      scalar: 0.19999999
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -2446,7 +2446,7 @@ ParticleSystem:
       maxColor: {r: 1, g: 1, b: 1, a: 0.3764706}
       minMaxState: 0
     startSize:
-      scalar: 0.006
+      scalar: 0.004
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -2654,12 +2654,12 @@ ParticleSystem:
     serializedVersion: 2
     enabled: 1
     type: 0
-    radius: 0.0519
+    radius: 0.0346
     angle: 25
     length: 5
-    boxX: 0.03
-    boxY: 0.03
-    boxZ: 0.03
+    boxX: 0.02
+    boxY: 0.02
+    boxZ: 0.02
     arc: 360
     placementMode: 0
     m_Mesh: {fileID: 0}
@@ -3366,7 +3366,7 @@ ParticleSystem:
   ClampVelocityModule:
     enabled: 0
     x:
-      scalar: 0.03
+      scalar: 0.02
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -3401,7 +3401,7 @@ ParticleSystem:
         m_RotationOrder: 4
       minMaxState: 0
     y:
-      scalar: 0.03
+      scalar: 0.02
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -3436,7 +3436,7 @@ ParticleSystem:
         m_RotationOrder: 4
       minMaxState: 0
     z:
-      scalar: 0.03
+      scalar: 0.02
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -3615,7 +3615,7 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
       minMaxState: 0
-    range: {x: 0, y: 0.03}
+    range: {x: 0, y: 0.02}
     separateAxes: 0
   RotationBySpeedModule:
     enabled: 0
@@ -3725,7 +3725,7 @@ ParticleSystem:
         m_RotationOrder: 4
       minMaxState: 0
     separateAxes: 0
-    range: {x: 0, y: 0.03}
+    range: {x: 0, y: 0.02}
   ColorBySpeedModule:
     enabled: 0
     gradient:
@@ -3819,7 +3819,7 @@ ParticleSystem:
       minColor: {r: 1, g: 1, b: 1, a: 1}
       maxColor: {r: 1, g: 1, b: 1, a: 1}
       minMaxState: 1
-    range: {x: 0, y: 0.03}
+    range: {x: 0, y: 0.02}
   CollisionModule:
     enabled: 0
     serializedVersion: 2
@@ -4077,6 +4077,8 @@ GameObject:
   - 198: {fileID: 661556988}
   - 199: {fileID: 661556987}
   - 114: {fileID: 661556986}
+  - 82: {fileID: 661556990}
+  - 82: {fileID: 661556989}
   m_Layer: 8
   m_Name: MagicBlast1
   m_TagString: Untagged
@@ -4114,7 +4116,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ab95173be0959043acf91c75e5d379d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scale: 0.03
+  scale: 0.02
 --- !u!199 &661556987
 ParticleSystemRenderer:
   m_ObjectHideFlags: 0
@@ -4374,7 +4376,7 @@ ParticleSystem:
       maxColor: {r: 1, g: 1, b: 1, a: 1}
       minMaxState: 0
     startSize:
-      scalar: 0.12
+      scalar: 0.08
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -4592,12 +4594,12 @@ ParticleSystem:
     serializedVersion: 2
     enabled: 1
     type: 0
-    radius: 0.03
+    radius: 0.02
     angle: 25
     length: 5
-    boxX: 0.03
-    boxY: 0.03
-    boxZ: 0.03
+    boxX: 0.02
+    boxY: 0.02
+    boxZ: 0.02
     arc: 360
     placementMode: 0
     m_Mesh: {fileID: 0}
@@ -5309,7 +5311,7 @@ ParticleSystem:
   ClampVelocityModule:
     enabled: 0
     x:
-      scalar: 0.03
+      scalar: 0.02
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -5344,7 +5346,7 @@ ParticleSystem:
         m_RotationOrder: 4
       minMaxState: 0
     y:
-      scalar: 0.03
+      scalar: 0.02
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -5379,7 +5381,7 @@ ParticleSystem:
         m_RotationOrder: 4
       minMaxState: 0
     z:
-      scalar: 0.03
+      scalar: 0.02
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -5558,7 +5560,7 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
       minMaxState: 0
-    range: {x: 0, y: 0.03}
+    range: {x: 0, y: 0.02}
     separateAxes: 0
   RotationBySpeedModule:
     enabled: 0
@@ -5668,7 +5670,7 @@ ParticleSystem:
         m_RotationOrder: 4
       minMaxState: 0
     separateAxes: 0
-    range: {x: 0, y: 0.03}
+    range: {x: 0, y: 0.02}
   ColorBySpeedModule:
     enabled: 0
     gradient:
@@ -5762,7 +5764,7 @@ ParticleSystem:
       minColor: {r: 1, g: 1, b: 1, a: 1}
       maxColor: {r: 1, g: 1, b: 1, a: 1}
       minMaxState: 1
-    range: {x: 0, y: 0.03}
+    range: {x: 0, y: 0.02}
   CollisionModule:
     enabled: 0
     serializedVersion: 2
@@ -5912,6 +5914,154 @@ ParticleSystem:
     subEmitterCollision1: {fileID: 0}
     subEmitterDeath: {fileID: 0}
     subEmitterDeath1: {fileID: 0}
+--- !u!82 &661556989
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 661556984}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 8a80de69cda32db479c6ae7dcd967171, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 0.5
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+--- !u!82 &661556990
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 661556984}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: b17318a21ff9ec34fa8f6b95b9a60872, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 0.503
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
 --- !u!1 &673095297 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 154114, guid: c8685776cafe5d24493303e077fffcfb, type: 2}
@@ -6117,6 +6267,18 @@ Prefab:
       propertyPath: m_Layer
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: be4d7bf906486eb448ebf6a6993137cc, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: be4d7bf906486eb448ebf6a6993137cc, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: be4d7bf906486eb448ebf6a6993137cc, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.2
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 2300000, guid: be4d7bf906486eb448ebf6a6993137cc, type: 3}
     - {fileID: 3300000, guid: be4d7bf906486eb448ebf6a6993137cc, type: 3}
@@ -6227,8 +6389,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f218b3f838f1c4c42923f00bdbdee436, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  frequency: 23.333334
-  amplitude: 0.4077
+  frequency: 35
+  amplitude: 0.2718
   evolutionSpeed: 0
 --- !u!199 &1046038397
 ParticleSystemRenderer:
@@ -6353,7 +6515,7 @@ ParticleSystem:
         m_RotationOrder: 4
       minMaxState: 3
     startSpeed:
-      scalar: 1.1999999
+      scalar: 0.79999995
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -6479,7 +6641,7 @@ ParticleSystem:
       maxColor: {r: 1, g: 1, b: 1, a: 1}
       minMaxState: 0
     startSize:
-      scalar: 0.003
+      scalar: 0.002
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -6697,12 +6859,12 @@ ParticleSystem:
     serializedVersion: 2
     enabled: 1
     type: 0
-    radius: 0.03
+    radius: 0.02
     angle: 25
     length: 5
-    boxX: 0.03
-    boxY: 0.03
-    boxZ: 0.03
+    boxX: 0.02
+    boxY: 0.02
+    boxZ: 0.02
     arc: 360
     placementMode: 0
     m_Mesh: {fileID: 0}
@@ -7414,7 +7576,7 @@ ParticleSystem:
   ClampVelocityModule:
     enabled: 1
     x:
-      scalar: 0.03
+      scalar: 0.02
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -7449,7 +7611,7 @@ ParticleSystem:
         m_RotationOrder: 4
       minMaxState: 0
     y:
-      scalar: 0.03
+      scalar: 0.02
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -7484,7 +7646,7 @@ ParticleSystem:
         m_RotationOrder: 4
       minMaxState: 0
     z:
-      scalar: 0.03
+      scalar: 0.02
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -7663,7 +7825,7 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
       minMaxState: 0
-    range: {x: 0, y: 0.03}
+    range: {x: 0, y: 0.02}
     separateAxes: 0
   RotationBySpeedModule:
     enabled: 0
@@ -7773,7 +7935,7 @@ ParticleSystem:
         m_RotationOrder: 4
       minMaxState: 0
     separateAxes: 0
-    range: {x: 0, y: 0.03}
+    range: {x: 0, y: 0.02}
   ColorBySpeedModule:
     enabled: 0
     gradient:
@@ -7867,7 +8029,7 @@ ParticleSystem:
       minColor: {r: 1, g: 1, b: 1, a: 1}
       maxColor: {r: 1, g: 1, b: 1, a: 1}
       minMaxState: 1
-    range: {x: 0, y: 0.03}
+    range: {x: 0, y: 0.02}
   CollisionModule:
     enabled: 0
     serializedVersion: 2
@@ -8058,139 +8220,139 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 19872230, guid: bfa009db65d06314da7056613a28f1c1, type: 2}
       propertyPath: InitialModule.startSize.scalar
-      value: 0.15399998
+      value: 0.109999985
       objectReference: {fileID: 0}
     - target: {fileID: 19872230, guid: bfa009db65d06314da7056613a28f1c1, type: 2}
       propertyPath: ShapeModule.boxX
-      value: 0.06999999
+      value: 0.049999993
       objectReference: {fileID: 0}
     - target: {fileID: 19872230, guid: bfa009db65d06314da7056613a28f1c1, type: 2}
       propertyPath: ShapeModule.boxY
-      value: 0.06999999
+      value: 0.049999993
       objectReference: {fileID: 0}
     - target: {fileID: 19872230, guid: bfa009db65d06314da7056613a28f1c1, type: 2}
       propertyPath: ShapeModule.boxZ
-      value: 0.06999999
+      value: 0.049999993
       objectReference: {fileID: 0}
     - target: {fileID: 19872230, guid: bfa009db65d06314da7056613a28f1c1, type: 2}
       propertyPath: ClampVelocityModule.x.scalar
-      value: 0.06999999
+      value: 0.049999993
       objectReference: {fileID: 0}
     - target: {fileID: 19872230, guid: bfa009db65d06314da7056613a28f1c1, type: 2}
       propertyPath: ClampVelocityModule.y.scalar
-      value: 0.06999999
+      value: 0.049999993
       objectReference: {fileID: 0}
     - target: {fileID: 19872230, guid: bfa009db65d06314da7056613a28f1c1, type: 2}
       propertyPath: ClampVelocityModule.z.scalar
-      value: 0.06999999
+      value: 0.049999993
       objectReference: {fileID: 0}
     - target: {fileID: 19872230, guid: bfa009db65d06314da7056613a28f1c1, type: 2}
       propertyPath: SizeBySpeedModule.range.y
-      value: 0.06999999
+      value: 0.049999993
       objectReference: {fileID: 0}
     - target: {fileID: 19872230, guid: bfa009db65d06314da7056613a28f1c1, type: 2}
       propertyPath: RotationBySpeedModule.range.y
-      value: 0.06999999
+      value: 0.049999993
       objectReference: {fileID: 0}
     - target: {fileID: 19872230, guid: bfa009db65d06314da7056613a28f1c1, type: 2}
       propertyPath: ColorBySpeedModule.range.y
-      value: 0.06999999
+      value: 0.049999993
       objectReference: {fileID: 0}
     - target: {fileID: 19863362, guid: bfa009db65d06314da7056613a28f1c1, type: 2}
       propertyPath: InitialModule.startSize.scalar
-      value: 0.27999997
+      value: 0.19999997
       objectReference: {fileID: 0}
     - target: {fileID: 19863362, guid: bfa009db65d06314da7056613a28f1c1, type: 2}
       propertyPath: ShapeModule.boxX
-      value: 0.06999999
+      value: 0.049999993
       objectReference: {fileID: 0}
     - target: {fileID: 19863362, guid: bfa009db65d06314da7056613a28f1c1, type: 2}
       propertyPath: ShapeModule.boxY
-      value: 0.06999999
+      value: 0.049999993
       objectReference: {fileID: 0}
     - target: {fileID: 19863362, guid: bfa009db65d06314da7056613a28f1c1, type: 2}
       propertyPath: ShapeModule.boxZ
-      value: 0.06999999
+      value: 0.049999993
       objectReference: {fileID: 0}
     - target: {fileID: 19863362, guid: bfa009db65d06314da7056613a28f1c1, type: 2}
       propertyPath: ClampVelocityModule.x.scalar
-      value: 0.06999999
+      value: 0.049999993
       objectReference: {fileID: 0}
     - target: {fileID: 19863362, guid: bfa009db65d06314da7056613a28f1c1, type: 2}
       propertyPath: ClampVelocityModule.y.scalar
-      value: 0.06999999
+      value: 0.049999993
       objectReference: {fileID: 0}
     - target: {fileID: 19863362, guid: bfa009db65d06314da7056613a28f1c1, type: 2}
       propertyPath: ClampVelocityModule.z.scalar
-      value: 0.06999999
+      value: 0.049999993
       objectReference: {fileID: 0}
     - target: {fileID: 19863362, guid: bfa009db65d06314da7056613a28f1c1, type: 2}
       propertyPath: SizeBySpeedModule.range.y
-      value: 0.06999999
+      value: 0.049999993
       objectReference: {fileID: 0}
     - target: {fileID: 19863362, guid: bfa009db65d06314da7056613a28f1c1, type: 2}
       propertyPath: RotationBySpeedModule.range.y
-      value: 0.06999999
+      value: 0.049999993
       objectReference: {fileID: 0}
     - target: {fileID: 19863362, guid: bfa009db65d06314da7056613a28f1c1, type: 2}
       propertyPath: ColorBySpeedModule.range.y
-      value: 0.06999999
+      value: 0.049999993
       objectReference: {fileID: 0}
     - target: {fileID: 19810464, guid: bfa009db65d06314da7056613a28f1c1, type: 2}
       propertyPath: InitialModule.startSize.scalar
-      value: 0.13999999
+      value: 0.09999999
       objectReference: {fileID: 0}
     - target: {fileID: 19810464, guid: bfa009db65d06314da7056613a28f1c1, type: 2}
       propertyPath: ShapeModule.boxX
-      value: 0.06999999
+      value: 0.049999993
       objectReference: {fileID: 0}
     - target: {fileID: 19810464, guid: bfa009db65d06314da7056613a28f1c1, type: 2}
       propertyPath: ShapeModule.boxY
-      value: 0.06999999
+      value: 0.049999993
       objectReference: {fileID: 0}
     - target: {fileID: 19810464, guid: bfa009db65d06314da7056613a28f1c1, type: 2}
       propertyPath: ShapeModule.boxZ
-      value: 0.06999999
+      value: 0.049999993
       objectReference: {fileID: 0}
     - target: {fileID: 19810464, guid: bfa009db65d06314da7056613a28f1c1, type: 2}
       propertyPath: ClampVelocityModule.x.scalar
-      value: 0.06999999
+      value: 0.049999993
       objectReference: {fileID: 0}
     - target: {fileID: 19810464, guid: bfa009db65d06314da7056613a28f1c1, type: 2}
       propertyPath: ClampVelocityModule.y.scalar
-      value: 0.06999999
+      value: 0.049999993
       objectReference: {fileID: 0}
     - target: {fileID: 19810464, guid: bfa009db65d06314da7056613a28f1c1, type: 2}
       propertyPath: ClampVelocityModule.z.scalar
-      value: 0.06999999
+      value: 0.049999993
       objectReference: {fileID: 0}
     - target: {fileID: 19810464, guid: bfa009db65d06314da7056613a28f1c1, type: 2}
       propertyPath: SizeBySpeedModule.range.y
-      value: 0.06999999
+      value: 0.049999993
       objectReference: {fileID: 0}
     - target: {fileID: 19810464, guid: bfa009db65d06314da7056613a28f1c1, type: 2}
       propertyPath: RotationBySpeedModule.range.y
-      value: 0.06999999
+      value: 0.049999993
       objectReference: {fileID: 0}
     - target: {fileID: 19810464, guid: bfa009db65d06314da7056613a28f1c1, type: 2}
       propertyPath: ColorBySpeedModule.range.y
-      value: 0.06999999
+      value: 0.049999993
       objectReference: {fileID: 0}
     - target: {fileID: 11406508, guid: bfa009db65d06314da7056613a28f1c1, type: 2}
       propertyPath: scale
-      value: 0.07
+      value: 0.05
       objectReference: {fileID: 0}
     - target: {fileID: 19872230, guid: bfa009db65d06314da7056613a28f1c1, type: 2}
       propertyPath: ShapeModule.radius
-      value: 0.07
+      value: 0.049999997
       objectReference: {fileID: 0}
     - target: {fileID: 19863362, guid: bfa009db65d06314da7056613a28f1c1, type: 2}
       propertyPath: ShapeModule.radius
-      value: 0.07
+      value: 0.049999997
       objectReference: {fileID: 0}
     - target: {fileID: 19810464, guid: bfa009db65d06314da7056613a28f1c1, type: 2}
       propertyPath: ShapeModule.radius
-      value: 0.07
+      value: 0.049999997
       objectReference: {fileID: 0}
     - target: {fileID: 19961074, guid: bfa009db65d06314da7056613a28f1c1, type: 2}
       propertyPath: m_CastShadows
@@ -8410,7 +8572,7 @@ ParticleSystem:
         m_RotationOrder: 4
       minMaxState: 0
     startSpeed:
-      scalar: 0.14999999
+      scalar: 0.099999994
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -8536,7 +8698,7 @@ ParticleSystem:
       maxColor: {r: 1, g: 1, b: 1, a: 0.3764706}
       minMaxState: 0
     startSize:
-      scalar: 0.009
+      scalar: 0.006
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -8744,12 +8906,12 @@ ParticleSystem:
     serializedVersion: 2
     enabled: 1
     type: 0
-    radius: 0.0348
+    radius: 0.023200002
     angle: 25
     length: 5
-    boxX: 0.03
-    boxY: 0.03
-    boxZ: 0.03
+    boxX: 0.02
+    boxY: 0.02
+    boxZ: 0.02
     arc: 360
     placementMode: 0
     m_Mesh: {fileID: 0}
@@ -9456,7 +9618,7 @@ ParticleSystem:
   ClampVelocityModule:
     enabled: 0
     x:
-      scalar: 0.03
+      scalar: 0.02
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -9491,7 +9653,7 @@ ParticleSystem:
         m_RotationOrder: 4
       minMaxState: 0
     y:
-      scalar: 0.03
+      scalar: 0.02
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -9526,7 +9688,7 @@ ParticleSystem:
         m_RotationOrder: 4
       minMaxState: 0
     z:
-      scalar: 0.03
+      scalar: 0.02
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -9705,7 +9867,7 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
       minMaxState: 0
-    range: {x: 0, y: 0.03}
+    range: {x: 0, y: 0.02}
     separateAxes: 0
   RotationBySpeedModule:
     enabled: 0
@@ -9815,7 +9977,7 @@ ParticleSystem:
         m_RotationOrder: 4
       minMaxState: 0
     separateAxes: 0
-    range: {x: 0, y: 0.03}
+    range: {x: 0, y: 0.02}
   ColorBySpeedModule:
     enabled: 0
     gradient:
@@ -9909,7 +10071,7 @@ ParticleSystem:
       minColor: {r: 1, g: 1, b: 1, a: 1}
       maxColor: {r: 1, g: 1, b: 1, a: 1}
       minMaxState: 1
-    range: {x: 0, y: 0.03}
+    range: {x: 0, y: 0.02}
   CollisionModule:
     enabled: 0
     serializedVersion: 2
@@ -10352,7 +10514,7 @@ ParticleSystem:
       maxColor: {r: 1, g: 1, b: 1, a: 1}
       minMaxState: 0
     startSize:
-      scalar: 0.089999996
+      scalar: 0.06
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -10560,12 +10722,12 @@ ParticleSystem:
     serializedVersion: 2
     enabled: 1
     type: 0
-    radius: 0.03
+    radius: 0.02
     angle: 25
     length: 5
-    boxX: 0.03
-    boxY: 0.03
-    boxZ: 0.03
+    boxX: 0.02
+    boxY: 0.02
+    boxZ: 0.02
     arc: 360
     placementMode: 0
     m_Mesh: {fileID: 0}
@@ -11267,7 +11429,7 @@ ParticleSystem:
   ClampVelocityModule:
     enabled: 0
     x:
-      scalar: 0.03
+      scalar: 0.02
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -11302,7 +11464,7 @@ ParticleSystem:
         m_RotationOrder: 4
       minMaxState: 0
     y:
-      scalar: 0.03
+      scalar: 0.02
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -11337,7 +11499,7 @@ ParticleSystem:
         m_RotationOrder: 4
       minMaxState: 0
     z:
-      scalar: 0.03
+      scalar: 0.02
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -11516,7 +11678,7 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
       minMaxState: 0
-    range: {x: 0, y: 0.03}
+    range: {x: 0, y: 0.02}
     separateAxes: 0
   RotationBySpeedModule:
     enabled: 0
@@ -11626,7 +11788,7 @@ ParticleSystem:
         m_RotationOrder: 4
       minMaxState: 0
     separateAxes: 0
-    range: {x: 0, y: 0.03}
+    range: {x: 0, y: 0.02}
   ColorBySpeedModule:
     enabled: 0
     gradient:
@@ -11720,7 +11882,7 @@ ParticleSystem:
       minColor: {r: 1, g: 1, b: 1, a: 1}
       maxColor: {r: 1, g: 1, b: 1, a: 1}
       minMaxState: 1
-    range: {x: 0, y: 0.03}
+    range: {x: 0, y: 0.02}
   CollisionModule:
     enabled: 0
     serializedVersion: 2

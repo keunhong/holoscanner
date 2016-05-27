@@ -34,7 +34,7 @@ namespace Holoscanner
         {
             // Create our keyword collection.
             keywordCollection = new Dictionary<string, System.Action>();
-            keywordCollection.Add("send meshes", () => StartCoroutine(SendMeshes()));
+     //       keywordCollection.Add("send meshes", () => StartCoroutine(SendMeshes()));
 
             // Tell the KeywordRecognizer about our keywords.
             keywordRecognizer = new KeywordRecognizer(keywordCollection.Keys.ToArray());
@@ -88,7 +88,7 @@ namespace Holoscanner
                         if (targets.Count > 0)
                         {
                             OrbPlacement op = this.gameObject.GetComponentInChildren<OrbPlacement>();
-                            StartCoroutine(op.replaceTarget(targets[0], targetIDs[0]));
+                            StartCoroutine(op.replaceTarget(targets[0], targetIDs[0]));                          
                         }
                         break;
                     case Proto.Message.Types.Type.START_GAME:
@@ -106,7 +106,6 @@ namespace Holoscanner
             //server should only send out targets once it has received the start game request from all the joined clients. in the future we can fix it so that it doesn't start until it has received this from 3 clients
 
             //for now, just request state. but change this in future:
-            SendTargetRequest();
 
             Holoscanner.Proto.Message msg = new Holoscanner.Proto.Message();
             msg.Type = Holoscanner.Proto.Message.Types.Type.CLIENT_READY;
@@ -157,21 +156,26 @@ namespace Holoscanner
                 {
                     Debug.Log("Sending meshes...");
 #if !UNITY_EDITOR
-            List<MeshFilter> MeshFilters = SpatialMappingManager.Instance.GetMeshFilters();
-              
+                    if (SpatialMappingManager.Instance == null || SpatialMappingManager.Instance.GetMeshFilters() == null)
+                    {
+                        Debug.Log("Spatial Stuff was NULL!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                        yield return null; continue;
+                    }
+                    List<MeshFilter> MeshFilters = SpatialMappingManager.Instance.GetMeshFilters();
+                    
                     for (int index = 0; index < MeshFilters.Count; index++)
-            {
+                     {
               
                         int id = int.Parse(MeshFilters[index].transform.gameObject.name.Substring("Surface-".Length));
-                     
                         Matrix4x4 t = MeshFilters[index].transform.localToWorldMatrix;
                     
-                        if (worldtransform != null) {
-                      
+                        if (worldtransform != null)
+                        {
                             t = worldtransform.worldToLocalMatrix*t;
-                          
                         }
-                NetworkCommunication.Instance.SendData(ProtoMeshSerializer.Serialize(MeshFilters[index].sharedMesh, QuaternionFromMatrix(t), t.GetColumn(3), (uint) id, index==MeshFilters.Count-1,index==0));
+                        byte[] data = ProtoMeshSerializer.Serialize(MeshFilters[index].sharedMesh, QuaternionFromMatrix(t), t.GetColumn(3), (uint)id, index == MeshFilters.Count - 1, index == 0);
+                        yield return null;
+                NetworkCommunication.Instance.SendData(data);
                    
                         yield return null;
             }
