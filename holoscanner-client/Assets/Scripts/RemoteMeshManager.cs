@@ -70,7 +70,7 @@ namespace Holoscanner
             // FIXME: Send meshes at regular intervals
 
             // Check for new messages
-            if (!meshes_started) { StartCoroutine(SendMeshes()); meshes_started = true; }
+            if (!meshes_started) { StartCoroutine(SendMeshes()); meshes_started = true; StartCoroutine(SendPosition()); }
             if (NetworkCommunication.Instance.numMessages() > 0)
             {
                 Proto.Message msg = ProtoMeshSerializer.parseMesssage(NetworkCommunication.Instance.getMessage());
@@ -149,6 +149,37 @@ namespace Holoscanner
             q.y *= Mathf.Sign(q.y * (m[0, 2] - m[2, 0]));
             q.z *= Mathf.Sign(q.z * (m[1, 0] - m[0, 1]));
             return q;
+        }
+
+        public IEnumerator SendPosition()
+        {
+            while (true)
+            {
+                if (anchorSet)
+                {
+                    Holoscanner.Proto.Message msg = new Holoscanner.Proto.Message();
+                    msg.Type = Holoscanner.Proto.Message.Types.Type.CLIENT_POSITION;
+                    Transform t = GameObject.Find("HologramCollection").transform;
+                    Vector3 t_pos = t.TransformPoint(GameObject.Find("Main Camera").transform.position);
+                    Vector3 axis; float angle;
+                    GameObject.Find("Main Camera").transform.rotation.ToAngleAxis(out angle, out axis);
+                    axis = t.TransformDirection(axis);
+                    Quaternion t_ori = Quaternion.AngleAxis(angle, axis);
+                    msg.ClientPosition = new Proto.ClientPosition();
+                    msg.ClientPosition.Position = new Proto.Vec3D();
+                    msg.ClientPosition.Rotation = new Proto.Vec4D();
+                    msg.ClientPosition.Position.X = t_pos.x;
+                    msg.ClientPosition.Position.Y = t_pos.y;
+                    msg.ClientPosition.Position.Z = t_pos.z;
+                    msg.ClientPosition.Rotation.X = t_ori.x;
+                    msg.ClientPosition.Rotation.Y = t_ori.y;
+                    msg.ClientPosition.Rotation.Z = t_ori.z;
+                    msg.ClientPosition.Rotation.W = t_ori.w;
+                    Debug.Log("Sending position");
+                    NetworkCommunication.Instance.SendData(Google.Protobuf.MessageExtensions.ToByteArray(msg));
+                }
+                yield return new WaitForSecondsRealtime(0.05f);
+            }
         }
 
         public IEnumerator SendMeshes()
