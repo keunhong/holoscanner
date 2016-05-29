@@ -216,6 +216,7 @@ GameObject:
   - 4: {fileID: 161385112}
   - 23: {fileID: 161385114}
   - 102: {fileID: 161385113}
+  - 114: {fileID: 161385115}
   m_Layer: 0
   m_Name: Score3
   m_TagString: Untagged
@@ -253,7 +254,7 @@ TextMesh:
   m_FontSize: 40
   m_FontStyle: 0
   m_RichText: 1
-  m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Font: {fileID: 12800000, guid: cfe9310453a9d2944802c4459148abae, type: 3}
   m_Color:
     serializedVersion: 2
     rgba: 4294967295
@@ -269,7 +270,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 10100, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 2100000, guid: cfe9310453a9d2944802c4459148abae, type: 3}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_ProbeAnchor: {fileID: 0}
@@ -284,6 +285,20 @@ MeshRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingOrder: 0
+--- !u!114 &161385115
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 161385111}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f0e48db6aeec6643a69524be8543526, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  duration: 30
+  endcolor: {r: 1, g: 1, b: 1, a: 1}
+  startcolor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1001 &203273925
 Prefab:
   m_ObjectHideFlags: 0
@@ -709,7 +724,6 @@ ParticleSystem:
         m_RotationOrder: 4
       minMaxState: 0
     startColor:
-      serializedVersion: 2
       maxGradient:
         key0:
           serializedVersion: 2
@@ -796,8 +810,12 @@ ParticleSystem:
         atime7: 0
         m_NumColorKeys: 2
         m_NumAlphaKeys: 2
-      minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 1, g: 1, b: 1, a: 1}
+      minColor:
+        serializedVersion: 2
+        rgba: 4294967295
+      maxColor:
+        serializedVersion: 2
+        rgba: 4294967295
       minMaxState: 0
     startSize:
       scalar: 0.099999994
@@ -1285,7 +1303,6 @@ ParticleSystem:
   ColorModule:
     enabled: 1
     gradient:
-      serializedVersion: 2
       maxGradient:
         key0:
           serializedVersion: 2
@@ -1372,8 +1389,12 @@ ParticleSystem:
         atime7: 0
         m_NumColorKeys: 2
         m_NumAlphaKeys: 2
-      minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 1, g: 1, b: 1, a: 1}
+      minColor:
+        serializedVersion: 2
+        rgba: 4294967295
+      maxColor:
+        serializedVersion: 2
+        rgba: 4294967295
       minMaxState: 1
   UVModule:
     enabled: 0
@@ -2078,7 +2099,6 @@ ParticleSystem:
   ColorBySpeedModule:
     enabled: 0
     gradient:
-      serializedVersion: 2
       maxGradient:
         key0:
           serializedVersion: 2
@@ -2165,8 +2185,12 @@ ParticleSystem:
         atime7: 0
         m_NumColorKeys: 2
         m_NumAlphaKeys: 2
-      minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 1, g: 1, b: 1, a: 1}
+      minColor:
+        serializedVersion: 2
+        rgba: 4294967295
+      maxColor:
+        serializedVersion: 2
+        rgba: 4294967295
       minMaxState: 1
     range: {x: 0, y: 0.02}
   CollisionModule:
@@ -2286,7 +2310,6 @@ ParticleSystem:
         m_RotationOrder: 4
       minMaxState: 0
     minKillSpeed: 0
-    maxKillSpeed: 10000
     radiusScale: 1
     collidesWith:
       serializedVersion: 2
@@ -2333,6 +2356,7 @@ GameObject:
   - 4: {fileID: 275354346}
   - 23: {fileID: 275354348}
   - 102: {fileID: 275354347}
+  - 114: {fileID: 275354349}
   m_Layer: 0
   m_Name: Score1
   m_TagString: Untagged
@@ -2370,7 +2394,7 @@ TextMesh:
   m_FontSize: 40
   m_FontStyle: 0
   m_RichText: 1
-  m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Font: {fileID: 12800000, guid: cfe9310453a9d2944802c4459148abae, type: 3}
   m_Color:
     serializedVersion: 2
     rgba: 4294967295
@@ -2386,7 +2410,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 10100, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 2100000, guid: cfe9310453a9d2944802c4459148abae, type: 3}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_ProbeAnchor: {fileID: 0}
@@ -2401,6 +2425,20 @@ MeshRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingOrder: 0
+--- !u!114 &275354349
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 275354345}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f0e48db6aeec6643a69524be8543526, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  duration: 30
+  endcolor: {r: 1, g: 1, b: 1, a: 1}
+  startcolor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1001 &324446279
 Prefab:
   m_ObjectHideFlags: 0
@@ -2479,6 +2517,101 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: c8685776cafe5d24493303e077fffcfb, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &342370249
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 342370250}
+  - 23: {fileID: 342370252}
+  - 102: {fileID: 342370251}
+  - 114: {fileID: 342370253}
+  m_Layer: 0
+  m_Name: InstructionText
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &342370250
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 342370249}
+  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: -0.7071068}
+  m_LocalPosition: {x: 0, y: 0.0201, z: 2.5}
+  m_LocalScale: {x: -0.12, y: 0.24000005, z: 0.24000005}
+  m_Children: []
+  m_Father: {fileID: 1862086743}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 270, y: 0, z: 0}
+--- !u!102 &342370251
+TextMesh:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 342370249}
+  m_Text: 'Achieve Zen by finding the orbs
+
+    before the other players'
+  m_OffsetZ: 0
+  m_CharacterSize: 1
+  m_LineSpacing: 0.55
+  m_Anchor: 4
+  m_Alignment: 1
+  m_TabSize: 4
+  m_FontSize: 40
+  m_FontStyle: 0
+  m_RichText: 1
+  m_Font: {fileID: 12800000, guid: cfe9310453a9d2944802c4459148abae, type: 3}
+  m_Color:
+    serializedVersion: 2
+    rgba: 4294967295
+--- !u!23 &342370252
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 342370249}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_Materials:
+  - {fileID: 2100000, guid: cfe9310453a9d2944802c4459148abae, type: 3}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+--- !u!114 &342370253
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 342370249}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f0e48db6aeec6643a69524be8543526, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  duration: 30
+  endcolor: {r: 0, g: 0, b: 0, a: 0}
+  startcolor: {r: 0.05882353, g: 0.05882353, b: 0.05882353, a: 0}
 --- !u!1 &498590878
 GameObject:
   m_ObjectHideFlags: 0
@@ -2667,7 +2800,6 @@ ParticleSystem:
         m_RotationOrder: 4
       minMaxState: 0
     startColor:
-      serializedVersion: 2
       maxGradient:
         key0:
           serializedVersion: 2
@@ -2754,8 +2886,12 @@ ParticleSystem:
         atime7: 0
         m_NumColorKeys: 2
         m_NumAlphaKeys: 2
-      minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 1, g: 1, b: 1, a: 1}
+      minColor:
+        serializedVersion: 2
+        rgba: 4294967295
+      maxColor:
+        serializedVersion: 2
+        rgba: 4294967295
       minMaxState: 0
     startSize:
       scalar: 0.004
@@ -3248,7 +3384,6 @@ ParticleSystem:
   ColorModule:
     enabled: 1
     gradient:
-      serializedVersion: 2
       maxGradient:
         key0:
           serializedVersion: 2
@@ -3335,8 +3470,12 @@ ParticleSystem:
         atime7: 0
         m_NumColorKeys: 2
         m_NumAlphaKeys: 2
-      minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 1, g: 1, b: 1, a: 1}
+      minColor:
+        serializedVersion: 2
+        rgba: 4294967295
+      maxColor:
+        serializedVersion: 2
+        rgba: 4294967295
       minMaxState: 1
   UVModule:
     enabled: 0
@@ -4041,7 +4180,6 @@ ParticleSystem:
   ColorBySpeedModule:
     enabled: 0
     gradient:
-      serializedVersion: 2
       maxGradient:
         key0:
           serializedVersion: 2
@@ -4128,8 +4266,12 @@ ParticleSystem:
         atime7: 0
         m_NumColorKeys: 2
         m_NumAlphaKeys: 2
-      minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 1, g: 1, b: 1, a: 1}
+      minColor:
+        serializedVersion: 2
+        rgba: 4294967295
+      maxColor:
+        serializedVersion: 2
+        rgba: 4294967295
       minMaxState: 1
     range: {x: 0, y: 0.02}
   CollisionModule:
@@ -4249,7 +4391,6 @@ ParticleSystem:
         m_RotationOrder: 4
       minMaxState: 0
     minKillSpeed: 0
-    maxKillSpeed: 10000
     radiusScale: 1
     collidesWith:
       serializedVersion: 2
@@ -4597,7 +4738,6 @@ ParticleSystem:
         m_RotationOrder: 4
       minMaxState: 0
     startColor:
-      serializedVersion: 2
       maxGradient:
         key0:
           serializedVersion: 2
@@ -4684,8 +4824,12 @@ ParticleSystem:
         atime7: 0
         m_NumColorKeys: 2
         m_NumAlphaKeys: 2
-      minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 1, g: 1, b: 1, a: 1}
+      minColor:
+        serializedVersion: 2
+        rgba: 4294967295
+      maxColor:
+        serializedVersion: 2
+        rgba: 4294967295
       minMaxState: 0
     startSize:
       scalar: 0.08
@@ -5193,7 +5337,6 @@ ParticleSystem:
   ColorModule:
     enabled: 1
     gradient:
-      serializedVersion: 2
       maxGradient:
         key0:
           serializedVersion: 2
@@ -5280,8 +5423,12 @@ ParticleSystem:
         atime7: 0
         m_NumColorKeys: 2
         m_NumAlphaKeys: 2
-      minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 1, g: 1, b: 1, a: 1}
+      minColor:
+        serializedVersion: 2
+        rgba: 4294967295
+      maxColor:
+        serializedVersion: 2
+        rgba: 4294967295
       minMaxState: 1
   UVModule:
     enabled: 0
@@ -5986,7 +6133,6 @@ ParticleSystem:
   ColorBySpeedModule:
     enabled: 0
     gradient:
-      serializedVersion: 2
       maxGradient:
         key0:
           serializedVersion: 2
@@ -6073,8 +6219,12 @@ ParticleSystem:
         atime7: 0
         m_NumColorKeys: 2
         m_NumAlphaKeys: 2
-      minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 1, g: 1, b: 1, a: 1}
+      minColor:
+        serializedVersion: 2
+        rgba: 4294967295
+      maxColor:
+        serializedVersion: 2
+        rgba: 4294967295
       minMaxState: 1
     range: {x: 0, y: 0.02}
   CollisionModule:
@@ -6194,7 +6344,6 @@ ParticleSystem:
         m_RotationOrder: 4
       minMaxState: 0
     minKillSpeed: 0
-    maxKillSpeed: 10000
     radiusScale: 1
     collidesWith:
       serializedVersion: 2
@@ -6486,6 +6635,7 @@ GameObject:
   - 4: {fileID: 841773565}
   - 23: {fileID: 841773567}
   - 102: {fileID: 841773566}
+  - 114: {fileID: 841773568}
   m_Layer: 0
   m_Name: Score2
   m_TagString: Untagged
@@ -6523,7 +6673,7 @@ TextMesh:
   m_FontSize: 40
   m_FontStyle: 0
   m_RichText: 1
-  m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Font: {fileID: 12800000, guid: cfe9310453a9d2944802c4459148abae, type: 3}
   m_Color:
     serializedVersion: 2
     rgba: 4294967295
@@ -6539,7 +6689,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 10100, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 2100000, guid: cfe9310453a9d2944802c4459148abae, type: 3}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_ProbeAnchor: {fileID: 0}
@@ -6554,6 +6704,20 @@ MeshRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingOrder: 0
+--- !u!114 &841773568
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 841773564}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f0e48db6aeec6643a69524be8543526, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  duration: 30
+  endcolor: {r: 1, g: 1, b: 1, a: 1}
+  startcolor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1001 &888621240
 Prefab:
   m_ObjectHideFlags: 0
@@ -6596,7 +6760,7 @@ Prefab:
     - target: {fileID: 114000012667812730, guid: 8aaf37823b26ee449bb3b3d7775965c3,
         type: 2}
       propertyPath: ServerAddress
-      value: 172.25.2.46
+      value: 69.91.159.234
       objectReference: {fileID: 0}
     - target: {fileID: 114000012667812730, guid: 8aaf37823b26ee449bb3b3d7775965c3,
         type: 2}
@@ -6940,7 +7104,6 @@ ParticleSystem:
         m_RotationOrder: 4
       minMaxState: 0
     startColor:
-      serializedVersion: 2
       maxGradient:
         key0:
           serializedVersion: 2
@@ -7027,8 +7190,12 @@ ParticleSystem:
         atime7: 0
         m_NumColorKeys: 2
         m_NumAlphaKeys: 2
-      minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 1, g: 1, b: 1, a: 1}
+      minColor:
+        serializedVersion: 2
+        rgba: 4294967295
+      maxColor:
+        serializedVersion: 2
+        rgba: 4294967295
       minMaxState: 0
     startSize:
       scalar: 0.002
@@ -7536,7 +7703,6 @@ ParticleSystem:
   ColorModule:
     enabled: 1
     gradient:
-      serializedVersion: 2
       maxGradient:
         key0:
           serializedVersion: 2
@@ -7623,8 +7789,12 @@ ParticleSystem:
         atime7: 0
         m_NumColorKeys: 2
         m_NumAlphaKeys: 2
-      minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 1, g: 1, b: 1, a: 1}
+      minColor:
+        serializedVersion: 2
+        rgba: 4294967295
+      maxColor:
+        serializedVersion: 2
+        rgba: 4294967295
       minMaxState: 1
   UVModule:
     enabled: 0
@@ -8329,7 +8499,6 @@ ParticleSystem:
   ColorBySpeedModule:
     enabled: 0
     gradient:
-      serializedVersion: 2
       maxGradient:
         key0:
           serializedVersion: 2
@@ -8416,8 +8585,12 @@ ParticleSystem:
         atime7: 0
         m_NumColorKeys: 2
         m_NumAlphaKeys: 2
-      minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 1, g: 1, b: 1, a: 1}
+      minColor:
+        serializedVersion: 2
+        rgba: 4294967295
+      maxColor:
+        serializedVersion: 2
+        rgba: 4294967295
       minMaxState: 1
     range: {x: 0, y: 0.02}
   CollisionModule:
@@ -8537,7 +8710,6 @@ ParticleSystem:
         m_RotationOrder: 4
       minMaxState: 0
     minKillSpeed: 0
-    maxKillSpeed: 10000
     radiusScale: 1
     collidesWith:
       serializedVersion: 2
@@ -8809,6 +8981,7 @@ GameObject:
   - 4: {fileID: 1287710404}
   - 23: {fileID: 1287710406}
   - 102: {fileID: 1287710405}
+  - 114: {fileID: 1287710407}
   m_Layer: 0
   m_Name: Score4
   m_TagString: Untagged
@@ -8846,7 +9019,7 @@ TextMesh:
   m_FontSize: 40
   m_FontStyle: 0
   m_RichText: 1
-  m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Font: {fileID: 12800000, guid: cfe9310453a9d2944802c4459148abae, type: 3}
   m_Color:
     serializedVersion: 2
     rgba: 4294967295
@@ -8862,7 +9035,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 10100, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 2100000, guid: cfe9310453a9d2944802c4459148abae, type: 3}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_ProbeAnchor: {fileID: 0}
@@ -8877,6 +9050,113 @@ MeshRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingOrder: 0
+--- !u!114 &1287710407
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1287710403}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f0e48db6aeec6643a69524be8543526, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  duration: 30
+  endcolor: {r: 1, g: 1, b: 1, a: 1}
+  startcolor: {r: 0, g: 0, b: 0, a: 0}
+--- !u!1 &1303501369
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1303501370}
+  - 23: {fileID: 1303501372}
+  - 102: {fileID: 1303501371}
+  - 114: {fileID: 1303501373}
+  m_Layer: 0
+  m_Name: TitleText
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1303501370
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1303501369}
+  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: -0.7071068}
+  m_LocalPosition: {x: 0, y: 0.02, z: -0.5}
+  m_LocalScale: {x: -0.18, y: 0.36, z: 0.36}
+  m_Children: []
+  m_Father: {fileID: 1862086743}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 270, y: 0, z: 0}
+--- !u!102 &1303501371
+TextMesh:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1303501369}
+  m_Text: Searching for Zen
+  m_OffsetZ: 0
+  m_CharacterSize: 1
+  m_LineSpacing: 1
+  m_Anchor: 4
+  m_Alignment: 0
+  m_TabSize: 4
+  m_FontSize: 60
+  m_FontStyle: 0
+  m_RichText: 1
+  m_Font: {fileID: 12800000, guid: cfe9310453a9d2944802c4459148abae, type: 3}
+  m_Color:
+    serializedVersion: 2
+    rgba: 4294967295
+--- !u!23 &1303501372
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1303501369}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_Materials:
+  - {fileID: 2100000, guid: cfe9310453a9d2944802c4459148abae, type: 3}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+--- !u!114 &1303501373
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1303501369}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f0e48db6aeec6643a69524be8543526, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  duration: 30
+  endcolor: {r: 0, g: 0, b: 0, a: 0}
+  startcolor: {r: 0.05882353, g: 0.05882353, b: 0.05882353, a: 0}
 --- !u!1 &1559951307
 GameObject:
   m_ObjectHideFlags: 0
@@ -9075,7 +9355,6 @@ ParticleSystem:
         m_RotationOrder: 4
       minMaxState: 0
     startColor:
-      serializedVersion: 2
       maxGradient:
         key0:
           serializedVersion: 2
@@ -9162,8 +9441,12 @@ ParticleSystem:
         atime7: 0
         m_NumColorKeys: 2
         m_NumAlphaKeys: 2
-      minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 1, g: 1, b: 1, a: 1}
+      minColor:
+        serializedVersion: 2
+        rgba: 4294967295
+      maxColor:
+        serializedVersion: 2
+        rgba: 4294967295
       minMaxState: 0
     startSize:
       scalar: 0.006
@@ -9656,7 +9939,6 @@ ParticleSystem:
   ColorModule:
     enabled: 1
     gradient:
-      serializedVersion: 2
       maxGradient:
         key0:
           serializedVersion: 2
@@ -9743,8 +10025,12 @@ ParticleSystem:
         atime7: 0
         m_NumColorKeys: 2
         m_NumAlphaKeys: 2
-      minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 1, g: 1, b: 1, a: 1}
+      minColor:
+        serializedVersion: 2
+        rgba: 4294967295
+      maxColor:
+        serializedVersion: 2
+        rgba: 4294967295
       minMaxState: 1
   UVModule:
     enabled: 0
@@ -10449,7 +10735,6 @@ ParticleSystem:
   ColorBySpeedModule:
     enabled: 0
     gradient:
-      serializedVersion: 2
       maxGradient:
         key0:
           serializedVersion: 2
@@ -10536,8 +10821,12 @@ ParticleSystem:
         atime7: 0
         m_NumColorKeys: 2
         m_NumAlphaKeys: 2
-      minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 1, g: 1, b: 1, a: 1}
+      minColor:
+        serializedVersion: 2
+        rgba: 4294967295
+      maxColor:
+        serializedVersion: 2
+        rgba: 4294967295
       minMaxState: 1
     range: {x: 0, y: 0.02}
   CollisionModule:
@@ -10657,7 +10946,6 @@ ParticleSystem:
         m_RotationOrder: 4
       minMaxState: 0
     minKillSpeed: 0
-    maxKillSpeed: 10000
     radiusScale: 1
     collidesWith:
       serializedVersion: 2
@@ -10689,6 +10977,269 @@ ParticleSystem:
     subEmitterCollision1: {fileID: 0}
     subEmitterDeath: {fileID: 0}
     subEmitterDeath1: {fileID: 0}
+--- !u!1 &1573561695
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1573561696}
+  - 23: {fileID: 1573561698}
+  - 102: {fileID: 1573561697}
+  - 114: {fileID: 1573561699}
+  m_Layer: 0
+  m_Name: StartGameText
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1573561696
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1573561695}
+  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: -0.7071068}
+  m_LocalPosition: {x: 0, y: 0.02, z: 2.5}
+  m_LocalScale: {x: -0.12, y: 0.24, z: 0.24}
+  m_Children: []
+  m_Father: {fileID: 1862086743}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 270, y: 0, z: 0}
+--- !u!102 &1573561697
+TextMesh:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1573561695}
+  m_Text: Air tap orb to start game
+  m_OffsetZ: 0
+  m_CharacterSize: 1
+  m_LineSpacing: 1
+  m_Anchor: 4
+  m_Alignment: 0
+  m_TabSize: 4
+  m_FontSize: 40
+  m_FontStyle: 0
+  m_RichText: 1
+  m_Font: {fileID: 12800000, guid: cfe9310453a9d2944802c4459148abae, type: 3}
+  m_Color:
+    serializedVersion: 2
+    rgba: 4294967295
+--- !u!23 &1573561698
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1573561695}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_Materials:
+  - {fileID: 2100000, guid: cfe9310453a9d2944802c4459148abae, type: 3}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+--- !u!114 &1573561699
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1573561695}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f0e48db6aeec6643a69524be8543526, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  duration: 30
+  endcolor: {r: 0, g: 0, b: 0, a: 0}
+  startcolor: {r: 0.05882353, g: 0.05882353, b: 0.05882353, a: 0}
+--- !u!1 &1862086735
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1862086743}
+  - 33: {fileID: 1862086742}
+  - 64: {fileID: 1862086741}
+  - 23: {fileID: 1862086740}
+  - 65: {fileID: 1862086739}
+  - 114: {fileID: 1862086738}
+  - 114: {fileID: 1862086737}
+  - 114: {fileID: 1862086736}
+  - 114: {fileID: 1862086744}
+  - 114: {fileID: 1862086745}
+  m_Layer: 0
+  m_Name: TitleScreen
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1862086736
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1862086735}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac8d5b128a1d8204fb76c86f47b75912, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PivotAxis: 0
+--- !u!114 &1862086737
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1862086735}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2be8bd2ebd8277c448d6d81c75517fee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TagalongDistance: 2
+  EnforceDistance: 1
+  PositionUpdateSpeed: 9.8
+  SmoothMotion: 1
+  SmoothingFactor: 0.75
+--- !u!114 &1862086738
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1862086735}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb69de839bd015f4099b5bd2c45e53e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PositionPerSecond: 30
+  RotationDegreesPerSecond: 720
+  RotationSpeedScaler: 0
+  ScalePerSecond: 5
+  SmoothLerpToTarget: 0
+  SmoothPositionLerpRatio: 0.5
+  SmoothRotationLerpRatio: 0.5
+  SmoothScaleLerpRatio: 0.5
+--- !u!65 &1862086739
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1862086735}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 10, y: 2.2204463e-16, z: 10.000001}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &1862086740
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1862086735}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_Materials:
+  - {fileID: 2100000, guid: 53352f14b341010439266f064173af91, type: 2}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 1
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+--- !u!64 &1862086741
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1862086735}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Convex: 0
+  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!33 &1862086742
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1862086735}
+  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &1862086743
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1862086735}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0, z: 3}
+  m_LocalScale: {x: 0.09, y: 0.045, z: 0.045}
+  m_Children:
+  - {fileID: 1303501370}
+  - {fileID: 1573561696}
+  - {fileID: 342370250}
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+--- !u!114 &1862086744
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1862086735}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e436eccd482ecae44bb062d551d6362b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1862086745
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1862086735}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f0e48db6aeec6643a69524be8543526, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  duration: 30
+  endcolor: {r: 0, g: 0, b: 0, a: 0}
+  startcolor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!4 &1877357349 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: be4d7bf906486eb448ebf6a6993137cc, type: 3}
@@ -10891,7 +11442,6 @@ ParticleSystem:
         m_RotationOrder: 4
       minMaxState: 0
     startColor:
-      serializedVersion: 2
       maxGradient:
         key0:
           serializedVersion: 2
@@ -10978,8 +11528,12 @@ ParticleSystem:
         atime7: 0
         m_NumColorKeys: 2
         m_NumAlphaKeys: 2
-      minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 1, g: 1, b: 1, a: 1}
+      minColor:
+        serializedVersion: 2
+        rgba: 4294967295
+      maxColor:
+        serializedVersion: 2
+        rgba: 4294967295
       minMaxState: 0
     startSize:
       scalar: 0.06
@@ -11467,7 +12021,6 @@ ParticleSystem:
   ColorModule:
     enabled: 1
     gradient:
-      serializedVersion: 2
       maxGradient:
         key0:
           serializedVersion: 2
@@ -11554,8 +12107,12 @@ ParticleSystem:
         atime7: 0
         m_NumColorKeys: 2
         m_NumAlphaKeys: 2
-      minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 1, g: 1, b: 1, a: 1}
+      minColor:
+        serializedVersion: 2
+        rgba: 4294967295
+      maxColor:
+        serializedVersion: 2
+        rgba: 4294967295
       minMaxState: 1
   UVModule:
     enabled: 0
@@ -12260,7 +12817,6 @@ ParticleSystem:
   ColorBySpeedModule:
     enabled: 0
     gradient:
-      serializedVersion: 2
       maxGradient:
         key0:
           serializedVersion: 2
@@ -12347,8 +12903,12 @@ ParticleSystem:
         atime7: 0
         m_NumColorKeys: 2
         m_NumAlphaKeys: 2
-      minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 1, g: 1, b: 1, a: 1}
+      minColor:
+        serializedVersion: 2
+        rgba: 4294967295
+      maxColor:
+        serializedVersion: 2
+        rgba: 4294967295
       minMaxState: 1
     range: {x: 0, y: 0.02}
   CollisionModule:
@@ -12468,7 +13028,6 @@ ParticleSystem:
         m_RotationOrder: 4
       minMaxState: 0
     minKillSpeed: 0
-    maxKillSpeed: 10000
     radiusScale: 1
     collidesWith:
       serializedVersion: 2

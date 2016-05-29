@@ -90,7 +90,11 @@ public class OrbPlacement : Singleton<OrbPlacement>
     void targetFound()
     {
         Holoscanner.RemoteMeshManager rmm = this.GetComponentInParent<Holoscanner.RemoteMeshManager>();
-        if (startOrb) { rmm.StartGameRequest(); startOrb = false; }
+        if (startOrb) {
+            rmm.StartGameRequest();
+            startOrb = false;
+            GameObject.Find("TitleScreen").GetComponent<TitleScreenScript>().gameStarted();
+        }
         else
             rmm.SendTargetFoundMessage(targetID);
         //rmm.SendTargetRequest(); 
