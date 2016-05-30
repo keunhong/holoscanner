@@ -7,6 +7,7 @@ public class Fade : MonoBehaviour {
     public Color startcolor;
     bool istextrender = true;
     IEnumerator coroutine;
+    int currstep = 0;
     public enum FadeState
     {
         FADING_IN,
@@ -15,30 +16,37 @@ public class Fade : MonoBehaviour {
         IN
     };
     public FadeState state { get; private set; }
+    public Color getCurrentColor()
+    {
+        if (istextrender) return gameObject.GetComponent<TextMesh>().color;
+        else return gameObject.GetComponent<Renderer>().material.color;
+    }
     IEnumerator doFadeIn()
     {
         state = FadeState.FADING_IN;
         gameObject.GetComponent<Renderer>().enabled = true;
-        for (int i = 0; i < duration; i++)
+        for (; currstep < duration; currstep++)
         {
-            Color c = Color.Lerp(startcolor, endcolor, (i + 1.0f) / duration);
+            Color c = Color.Lerp(startcolor, endcolor, (currstep + 1.0f) / duration);
             if (istextrender) gameObject.GetComponent<TextMesh>().color = c;
             else gameObject.GetComponent<Renderer>().material.color = c;
             yield return null;
         }
+        currstep = duration - 1;
         state = FadeState.IN;
         coroutine = null;
     }
     IEnumerator doFadeOut()
     {
         state = FadeState.FADING_OUT;
-        for (int i = 0; i < duration; i++)
+        for (; currstep >= 0; currstep--)
         {
-            Color c = Color.Lerp(startcolor, endcolor, 1 - (i + 1.0f) / duration);
+            Color c = Color.Lerp(startcolor, endcolor, (currstep + 1.0f) / duration);
             if (istextrender) gameObject.GetComponent<TextMesh>().color = c;
             else gameObject.GetComponent<Renderer>().material.color = c;
             yield return null;
         }
+        currstep = 0;
         gameObject.GetComponent<Renderer>().enabled = false;
         state = FadeState.OUT;
         coroutine = null;
@@ -55,11 +63,18 @@ public class Fade : MonoBehaviour {
         coroutine = doFadeOut();
         StartCoroutine(coroutine);
     }
+    public void stopAnimation()
+    {
+        if (coroutine != null) StopCoroutine(coroutine);
+        coroutine = null;
+    }
     public void show(bool showobject)
     {
+        if (!showobject) stopAnimation();
         gameObject.GetComponent<Renderer>().enabled = showobject;
         if (istextrender) gameObject.GetComponent<TextMesh>().color = showobject?endcolor:startcolor;
         else gameObject.GetComponent<Renderer>().material.color = showobject?endcolor:startcolor;
+        currstep = showobject ? duration - 1 : 0;
     }
 	// Use this for initialization
 	void Start () {
@@ -70,6 +85,7 @@ public class Fade : MonoBehaviour {
         if (istextrender) endcolor = gameObject.GetComponent<TextMesh>().color;
         else endcolor = gameObject.GetComponent<Renderer>().material.color;
         state = FadeState.OUT;
+        currstep = 0;
     }
 	
 	// Update is called once per frame
