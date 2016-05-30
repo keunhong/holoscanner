@@ -23,6 +23,7 @@ Install a virtualenv. Pyenv is recommended.
 ```
 pyenv install 3.5.1
 pyenv virtualenv 3.5.1 holoscanner-env
+pip install -r requirements.txt
 ```
 
 # Running
@@ -54,6 +55,6 @@ python -m holoscanner.server
 The web server must be launched separately with
 
 ```
-python -m holoscanner.viewer.server
+python -m holoscanner.dashboard.server
 ```
 
