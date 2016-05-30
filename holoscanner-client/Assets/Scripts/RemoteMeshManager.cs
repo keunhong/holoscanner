@@ -96,6 +96,7 @@ namespace Holoscanner
                         ss.UpdateScores(msg.GameState);
                         break;
                     case Proto.Message.Types.Type.START_GAME:
+                        GameObject.Find("TitleScreen").GetComponent<TitleScreenScript>().gameStarted();
                         break;
                     case Proto.Message.Types.Type.END_GAME:
                         gameOver = true;

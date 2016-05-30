@@ -96,7 +96,7 @@ public class OrbPlacement : Singleton<OrbPlacement>
         if (startOrb) {
             rmm.StartGameRequest();
             startOrb = false;
-            GameObject.Find("TitleScreen").GetComponent<TitleScreenScript>().gameStarted();
+            GameObject.Find("TitleScreen").GetComponent<TitleScreenScript>().waitingForPlayers();
         }
         else
             rmm.SendTargetFoundMessage(targetID);
