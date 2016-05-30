@@ -16,6 +16,7 @@ namespace Holoscanner
         public List<Vector3> targets;
         public List<uint> targetIDs;
         public bool anchorSet = false;
+        public bool gameOver = false;
         /// <summary>
         /// Used for voice commands.
         /// </summary>
@@ -96,6 +97,9 @@ namespace Holoscanner
                         break;
                     case Proto.Message.Types.Type.START_GAME:
                         break;
+                    case Proto.Message.Types.Type.END_GAME:
+                        gameOver = true;
+                        break;
                     
                         // TODO: others
                 }
@@ -155,6 +159,7 @@ namespace Holoscanner
         {
             while (true)
             {
+                if (gameOver) break;
                 if (anchorSet)
                 {
                     Holoscanner.Proto.Message msg = new Holoscanner.Proto.Message();
@@ -185,6 +190,7 @@ namespace Holoscanner
         {
             while (true)
             {
+                if (gameOver) break;
                 if (anchorSet)
                 {
                     Debug.Log("Sending meshes...");
