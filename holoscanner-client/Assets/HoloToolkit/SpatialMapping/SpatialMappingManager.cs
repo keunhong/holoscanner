@@ -17,12 +17,17 @@ namespace HoloToolkit.Unity
 
         [Tooltip("The material to use for rendering spatial mapping data.")]
         public Material surfaceMaterial;
+        
 
         [Tooltip("Determines if spatial mapping data will be rendered.")]
         public bool drawVisualMeshes = false;
 
         [Tooltip("Determines if spatial mapping data will cast shadows.")]
         public bool castShadows = false;
+
+
+        [Tooltip("The material to use for rendering spatial mapping data visible.")]
+        public Material surfaceMaterialVisible;
 
         /// <summary>
         /// Used for gathering real-time Spatial Mapping data on the HoloLens.
@@ -55,6 +60,16 @@ namespace HoloToolkit.Unity
         {
             surfaceObserver = gameObject.GetComponent<SpatialMappingObserver>();
             Source = surfaceObserver;
+        }
+
+        public void ShowMeshes()
+        {
+            SetSurfaceMaterial(surfaceMaterialVisible);
+        }
+
+        public void HideMeshes()
+        {
+            SetSurfaceMaterial(surfaceMaterial);
         }
 
         // Use for initialization.
@@ -137,6 +152,8 @@ namespace HoloToolkit.Unity
                 }
             }
         }
+
+
 
         /// <summary>
         /// Specifies whether or not the SpatialMapping meshes are to be rendered.

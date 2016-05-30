@@ -367,6 +367,16 @@ Prefab:
       propertyPath: PhysicsLayer
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 114000011154029958, guid: 2ed75ffdf9031c94e8bce4b3d17b9928,
+        type: 2}
+      propertyPath: surfaceMatrialVisible
+      value: 
+      objectReference: {fileID: 2100000, guid: d698790d3facd3d4289a13fa1243030a, type: 2}
+    - target: {fileID: 114000011154029958, guid: 2ed75ffdf9031c94e8bce4b3d17b9928,
+        type: 2}
+      propertyPath: surfaceMaterialVisible
+      value: 
+      objectReference: {fileID: 2100000, guid: d698790d3facd3d4289a13fa1243030a, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2ed75ffdf9031c94e8bce4b3d17b9928, type: 2}
   m_IsPrefabParent: 0
@@ -724,6 +734,7 @@ ParticleSystem:
         m_RotationOrder: 4
       minMaxState: 0
     startColor:
+      serializedVersion: 2
       maxGradient:
         key0:
           serializedVersion: 2
@@ -810,12 +821,8 @@ ParticleSystem:
         atime7: 0
         m_NumColorKeys: 2
         m_NumAlphaKeys: 2
-      minColor:
-        serializedVersion: 2
-        rgba: 4294967295
-      maxColor:
-        serializedVersion: 2
-        rgba: 4294967295
+      minColor: {r: 1, g: 1, b: 1, a: 1}
+      maxColor: {r: 1, g: 1, b: 1, a: 1}
       minMaxState: 0
     startSize:
       scalar: 0.099999994
@@ -1303,6 +1310,7 @@ ParticleSystem:
   ColorModule:
     enabled: 1
     gradient:
+      serializedVersion: 2
       maxGradient:
         key0:
           serializedVersion: 2
@@ -1389,12 +1397,8 @@ ParticleSystem:
         atime7: 0
         m_NumColorKeys: 2
         m_NumAlphaKeys: 2
-      minColor:
-        serializedVersion: 2
-        rgba: 4294967295
-      maxColor:
-        serializedVersion: 2
-        rgba: 4294967295
+      minColor: {r: 1, g: 1, b: 1, a: 1}
+      maxColor: {r: 1, g: 1, b: 1, a: 1}
       minMaxState: 1
   UVModule:
     enabled: 0
@@ -2099,6 +2103,7 @@ ParticleSystem:
   ColorBySpeedModule:
     enabled: 0
     gradient:
+      serializedVersion: 2
       maxGradient:
         key0:
           serializedVersion: 2
@@ -2185,12 +2190,8 @@ ParticleSystem:
         atime7: 0
         m_NumColorKeys: 2
         m_NumAlphaKeys: 2
-      minColor:
-        serializedVersion: 2
-        rgba: 4294967295
-      maxColor:
-        serializedVersion: 2
-        rgba: 4294967295
+      minColor: {r: 1, g: 1, b: 1, a: 1}
+      maxColor: {r: 1, g: 1, b: 1, a: 1}
       minMaxState: 1
     range: {x: 0, y: 0.02}
   CollisionModule:
@@ -2310,6 +2311,7 @@ ParticleSystem:
         m_RotationOrder: 4
       minMaxState: 0
     minKillSpeed: 0
+    maxKillSpeed: 10000
     radiusScale: 1
     collidesWith:
       serializedVersion: 2
@@ -2800,6 +2802,7 @@ ParticleSystem:
         m_RotationOrder: 4
       minMaxState: 0
     startColor:
+      serializedVersion: 2
       maxGradient:
         key0:
           serializedVersion: 2
@@ -2886,12 +2889,8 @@ ParticleSystem:
         atime7: 0
         m_NumColorKeys: 2
         m_NumAlphaKeys: 2
-      minColor:
-        serializedVersion: 2
-        rgba: 4294967295
-      maxColor:
-        serializedVersion: 2
-        rgba: 4294967295
+      minColor: {r: 1, g: 1, b: 1, a: 1}
+      maxColor: {r: 1, g: 1, b: 1, a: 1}
       minMaxState: 0
     startSize:
       scalar: 0.004
@@ -3384,6 +3383,7 @@ ParticleSystem:
   ColorModule:
     enabled: 1
     gradient:
+      serializedVersion: 2
       maxGradient:
         key0:
           serializedVersion: 2
@@ -3470,12 +3470,8 @@ ParticleSystem:
         atime7: 0
         m_NumColorKeys: 2
         m_NumAlphaKeys: 2
-      minColor:
-        serializedVersion: 2
-        rgba: 4294967295
-      maxColor:
-        serializedVersion: 2
-        rgba: 4294967295
+      minColor: {r: 1, g: 1, b: 1, a: 1}
+      maxColor: {r: 1, g: 1, b: 1, a: 1}
       minMaxState: 1
   UVModule:
     enabled: 0
@@ -4180,6 +4176,7 @@ ParticleSystem:
   ColorBySpeedModule:
     enabled: 0
     gradient:
+      serializedVersion: 2
       maxGradient:
         key0:
           serializedVersion: 2
@@ -4266,12 +4263,8 @@ ParticleSystem:
         atime7: 0
         m_NumColorKeys: 2
         m_NumAlphaKeys: 2
-      minColor:
-        serializedVersion: 2
-        rgba: 4294967295
-      maxColor:
-        serializedVersion: 2
-        rgba: 4294967295
+      minColor: {r: 1, g: 1, b: 1, a: 1}
+      maxColor: {r: 1, g: 1, b: 1, a: 1}
       minMaxState: 1
     range: {x: 0, y: 0.02}
   CollisionModule:
@@ -4391,6 +4384,7 @@ ParticleSystem:
         m_RotationOrder: 4
       minMaxState: 0
     minKillSpeed: 0
+    maxKillSpeed: 10000
     radiusScale: 1
     collidesWith:
       serializedVersion: 2
@@ -4738,6 +4732,7 @@ ParticleSystem:
         m_RotationOrder: 4
       minMaxState: 0
     startColor:
+      serializedVersion: 2
       maxGradient:
         key0:
           serializedVersion: 2
@@ -4824,12 +4819,8 @@ ParticleSystem:
         atime7: 0
         m_NumColorKeys: 2
         m_NumAlphaKeys: 2
-      minColor:
-        serializedVersion: 2
-        rgba: 4294967295
-      maxColor:
-        serializedVersion: 2
-        rgba: 4294967295
+      minColor: {r: 1, g: 1, b: 1, a: 1}
+      maxColor: {r: 1, g: 1, b: 1, a: 1}
       minMaxState: 0
     startSize:
       scalar: 0.08
@@ -5337,6 +5328,7 @@ ParticleSystem:
   ColorModule:
     enabled: 1
     gradient:
+      serializedVersion: 2
       maxGradient:
         key0:
           serializedVersion: 2
@@ -5423,12 +5415,8 @@ ParticleSystem:
         atime7: 0
         m_NumColorKeys: 2
         m_NumAlphaKeys: 2
-      minColor:
-        serializedVersion: 2
-        rgba: 4294967295
-      maxColor:
-        serializedVersion: 2
-        rgba: 4294967295
+      minColor: {r: 1, g: 1, b: 1, a: 1}
+      maxColor: {r: 1, g: 1, b: 1, a: 1}
       minMaxState: 1
   UVModule:
     enabled: 0
@@ -6133,6 +6121,7 @@ ParticleSystem:
   ColorBySpeedModule:
     enabled: 0
     gradient:
+      serializedVersion: 2
       maxGradient:
         key0:
           serializedVersion: 2
@@ -6219,12 +6208,8 @@ ParticleSystem:
         atime7: 0
         m_NumColorKeys: 2
         m_NumAlphaKeys: 2
-      minColor:
-        serializedVersion: 2
-        rgba: 4294967295
-      maxColor:
-        serializedVersion: 2
-        rgba: 4294967295
+      minColor: {r: 1, g: 1, b: 1, a: 1}
+      maxColor: {r: 1, g: 1, b: 1, a: 1}
       minMaxState: 1
     range: {x: 0, y: 0.02}
   CollisionModule:
@@ -6344,6 +6329,7 @@ ParticleSystem:
         m_RotationOrder: 4
       minMaxState: 0
     minKillSpeed: 0
+    maxKillSpeed: 10000
     radiusScale: 1
     collidesWith:
       serializedVersion: 2
@@ -7104,6 +7090,7 @@ ParticleSystem:
         m_RotationOrder: 4
       minMaxState: 0
     startColor:
+      serializedVersion: 2
       maxGradient:
         key0:
           serializedVersion: 2
@@ -7190,12 +7177,8 @@ ParticleSystem:
         atime7: 0
         m_NumColorKeys: 2
         m_NumAlphaKeys: 2
-      minColor:
-        serializedVersion: 2
-        rgba: 4294967295
-      maxColor:
-        serializedVersion: 2
-        rgba: 4294967295
+      minColor: {r: 1, g: 1, b: 1, a: 1}
+      maxColor: {r: 1, g: 1, b: 1, a: 1}
       minMaxState: 0
     startSize:
       scalar: 0.002
@@ -7703,6 +7686,7 @@ ParticleSystem:
   ColorModule:
     enabled: 1
     gradient:
+      serializedVersion: 2
       maxGradient:
         key0:
           serializedVersion: 2
@@ -7789,12 +7773,8 @@ ParticleSystem:
         atime7: 0
         m_NumColorKeys: 2
         m_NumAlphaKeys: 2
-      minColor:
-        serializedVersion: 2
-        rgba: 4294967295
-      maxColor:
-        serializedVersion: 2
-        rgba: 4294967295
+      minColor: {r: 1, g: 1, b: 1, a: 1}
+      maxColor: {r: 1, g: 1, b: 1, a: 1}
       minMaxState: 1
   UVModule:
     enabled: 0
@@ -8499,6 +8479,7 @@ ParticleSystem:
   ColorBySpeedModule:
     enabled: 0
     gradient:
+      serializedVersion: 2
       maxGradient:
         key0:
           serializedVersion: 2
@@ -8585,12 +8566,8 @@ ParticleSystem:
         atime7: 0
         m_NumColorKeys: 2
         m_NumAlphaKeys: 2
-      minColor:
-        serializedVersion: 2
-        rgba: 4294967295
-      maxColor:
-        serializedVersion: 2
-        rgba: 4294967295
+      minColor: {r: 1, g: 1, b: 1, a: 1}
+      maxColor: {r: 1, g: 1, b: 1, a: 1}
       minMaxState: 1
     range: {x: 0, y: 0.02}
   CollisionModule:
@@ -8710,6 +8687,7 @@ ParticleSystem:
         m_RotationOrder: 4
       minMaxState: 0
     minKillSpeed: 0
+    maxKillSpeed: 10000
     radiusScale: 1
     collidesWith:
       serializedVersion: 2
@@ -9355,6 +9333,7 @@ ParticleSystem:
         m_RotationOrder: 4
       minMaxState: 0
     startColor:
+      serializedVersion: 2
       maxGradient:
         key0:
           serializedVersion: 2
@@ -9441,12 +9420,8 @@ ParticleSystem:
         atime7: 0
         m_NumColorKeys: 2
         m_NumAlphaKeys: 2
-      minColor:
-        serializedVersion: 2
-        rgba: 4294967295
-      maxColor:
-        serializedVersion: 2
-        rgba: 4294967295
+      minColor: {r: 1, g: 1, b: 1, a: 1}
+      maxColor: {r: 1, g: 1, b: 1, a: 1}
       minMaxState: 0
     startSize:
       scalar: 0.006
@@ -9939,6 +9914,7 @@ ParticleSystem:
   ColorModule:
     enabled: 1
     gradient:
+      serializedVersion: 2
       maxGradient:
         key0:
           serializedVersion: 2
@@ -10025,12 +10001,8 @@ ParticleSystem:
         atime7: 0
         m_NumColorKeys: 2
         m_NumAlphaKeys: 2
-      minColor:
-        serializedVersion: 2
-        rgba: 4294967295
-      maxColor:
-        serializedVersion: 2
-        rgba: 4294967295
+      minColor: {r: 1, g: 1, b: 1, a: 1}
+      maxColor: {r: 1, g: 1, b: 1, a: 1}
       minMaxState: 1
   UVModule:
     enabled: 0
@@ -10735,6 +10707,7 @@ ParticleSystem:
   ColorBySpeedModule:
     enabled: 0
     gradient:
+      serializedVersion: 2
       maxGradient:
         key0:
           serializedVersion: 2
@@ -10821,12 +10794,8 @@ ParticleSystem:
         atime7: 0
         m_NumColorKeys: 2
         m_NumAlphaKeys: 2
-      minColor:
-        serializedVersion: 2
-        rgba: 4294967295
-      maxColor:
-        serializedVersion: 2
-        rgba: 4294967295
+      minColor: {r: 1, g: 1, b: 1, a: 1}
+      maxColor: {r: 1, g: 1, b: 1, a: 1}
       minMaxState: 1
     range: {x: 0, y: 0.02}
   CollisionModule:
@@ -10946,6 +10915,7 @@ ParticleSystem:
         m_RotationOrder: 4
       minMaxState: 0
     minKillSpeed: 0
+    maxKillSpeed: 10000
     radiusScale: 1
     collidesWith:
       serializedVersion: 2
@@ -11442,6 +11412,7 @@ ParticleSystem:
         m_RotationOrder: 4
       minMaxState: 0
     startColor:
+      serializedVersion: 2
       maxGradient:
         key0:
           serializedVersion: 2
@@ -11528,12 +11499,8 @@ ParticleSystem:
         atime7: 0
         m_NumColorKeys: 2
         m_NumAlphaKeys: 2
-      minColor:
-        serializedVersion: 2
-        rgba: 4294967295
-      maxColor:
-        serializedVersion: 2
-        rgba: 4294967295
+      minColor: {r: 1, g: 1, b: 1, a: 1}
+      maxColor: {r: 1, g: 1, b: 1, a: 1}
       minMaxState: 0
     startSize:
       scalar: 0.06
@@ -12021,6 +11988,7 @@ ParticleSystem:
   ColorModule:
     enabled: 1
     gradient:
+      serializedVersion: 2
       maxGradient:
         key0:
           serializedVersion: 2
@@ -12107,12 +12075,8 @@ ParticleSystem:
         atime7: 0
         m_NumColorKeys: 2
         m_NumAlphaKeys: 2
-      minColor:
-        serializedVersion: 2
-        rgba: 4294967295
-      maxColor:
-        serializedVersion: 2
-        rgba: 4294967295
+      minColor: {r: 1, g: 1, b: 1, a: 1}
+      maxColor: {r: 1, g: 1, b: 1, a: 1}
       minMaxState: 1
   UVModule:
     enabled: 0
@@ -12817,6 +12781,7 @@ ParticleSystem:
   ColorBySpeedModule:
     enabled: 0
     gradient:
+      serializedVersion: 2
       maxGradient:
         key0:
           serializedVersion: 2
@@ -12903,12 +12868,8 @@ ParticleSystem:
         atime7: 0
         m_NumColorKeys: 2
         m_NumAlphaKeys: 2
-      minColor:
-        serializedVersion: 2
-        rgba: 4294967295
-      maxColor:
-        serializedVersion: 2
-        rgba: 4294967295
+      minColor: {r: 1, g: 1, b: 1, a: 1}
+      maxColor: {r: 1, g: 1, b: 1, a: 1}
       minMaxState: 1
     range: {x: 0, y: 0.02}
   CollisionModule:
@@ -13028,6 +12989,7 @@ ParticleSystem:
         m_RotationOrder: 4
       minMaxState: 0
     minKillSpeed: 0
+    maxKillSpeed: 10000
     radiusScale: 1
     collidesWith:
       serializedVersion: 2
