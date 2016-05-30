@@ -77,10 +77,13 @@ public class OrbPlacement : Singleton<OrbPlacement>
     {
         if (foundOnThisHololens) playFastChime();
         else playSlowChime();
-        GameObject go = GameObject.Find("Scoreboard");
-        ScoreScript ss = go.GetComponent<ScoreScript>();
-        ss.setScoreboardLocation(getPositionAhead());
-        ss.showScoreboard();
+        if (!startOrb)
+        {
+            GameObject go = GameObject.Find("Scoreboard");
+            ScoreScript ss = go.GetComponent<ScoreScript>();
+            ss.setScoreboardLocation(getPositionAhead());
+            ss.showScoreboard();
+        }
         setComponentsEnabled(false);
         yield return new WaitForSecondsRealtime(2.4f);
 

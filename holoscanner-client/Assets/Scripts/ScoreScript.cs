@@ -3,64 +3,21 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class ScoreScript : MonoBehaviour {
-    Color endtextcolor, endscoreboardcolor;
-    int state = 0;
-    void enableScoreboard(bool enable)
-    {
-        //gameObject.GetComponent<Renderer>().enabled = enable;
-        /*List<TextMesh> renderers = new List<TextMesh>();
-        gameObject.GetComponentsInChildren<TextMesh>(renderers);
-        foreach (TextMesh r in renderers) r.color = enable? endtextcolor : Color.black;*/
-    }
-    void setColors(float t)
-    {
-        /*Color newcol = Color.Lerp(Color.black, endscoreboardcolor, t);
-        newcol.a = t;
-        gameObject.GetComponent<Renderer>().material.color = newcol;
-        //Debug.Log(newcol.ToString());*/
-        List<TextMesh> renderers = new List<TextMesh>();
-        gameObject.GetComponentsInChildren<TextMesh>(renderers);
-        Color newcol = Color.Lerp(Color.black, endtextcolor, t);
-        foreach (TextMesh r in renderers)
-        {
-            r.color = newcol;
-        }
-    }
+    int state = -1;
     public void showScoreboard()
     {
-        setColors(0);
-        enableScoreboard(true);
-        StartCoroutine(fadeIn());
-    }
-    IEnumerator fadeIn()
-    {
-        for (int i = 0; i < 30; i++)
-        {
-            setColors((i + 1) / 30.0f);
-            yield return null;
-        }
+        List<Fade> fades = new List<Fade>();
+        gameObject.GetComponentsInChildren<Fade>(fades);
+        foreach (Fade f in fades) f.fadeIn();
+        if (gameObject.GetComponent<Fade>() != null) gameObject.GetComponent<Fade>().fadeIn();
         state = 1;
-    }
-    IEnumerator fadeOut()
-    {
-        for (int i = 0; i < 30; i++)
-        {
-            setColors(1 - (i + 1) / 30.0f);
-            yield return null;
-        }
-        enableScoreboard(false);
-        state = 0;
     }
     public void setScoreboardLocation(Vector3 pos)
     {
-        gameObject.transform.transform.position = pos;
+        gameObject.transform.position = pos;
     }
     // Use this for initialization
     void Start () {
-        endscoreboardcolor = gameObject.GetComponent<MeshRenderer>().material.color;
-        endtextcolor = gameObject.GetComponentInChildren<TextMesh>().color;
-
-        enableScoreboard(false);
 	}
     IEnumerator holdScoreboad()
     {
@@ -71,13 +28,25 @@ public class ScoreScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	    if (state == 1)
+        if (state == -1)
+        {
+            List<Fade> fades = new List<Fade>();
+            gameObject.GetComponentsInChildren<Fade>(fades);
+            foreach (Fade f in fades) f.show(false);
+            if (gameObject.GetComponent<Fade>() != null) gameObject.GetComponent<Fade>().show(false);
+            state = 0;
+        }
+	    else if (state == 1)
         {
             StartCoroutine(holdScoreboad());
-        } else if (state == 3)
+        }
+        else if (state == 3)
         {
             state = 4;
-            StartCoroutine(fadeOut());
+            List<Fade> fades = new List<Fade>();
+            gameObject.GetComponentsInChildren<Fade>(fades);
+            foreach (Fade f in fades) f.fadeOut();
+            if (gameObject.GetComponent<Fade>() != null) gameObject.GetComponent<Fade>().fadeOut();
         }
 	}
 
