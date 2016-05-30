@@ -63,7 +63,6 @@ public class OrbPlacement : Singleton<OrbPlacement>
             em.enabled = enable;
         }
         GameObject.Find("MagicBlast1").GetComponent<ParticleSystem>().Play();
-        Debug.Log("Setting playsound to:" + enable);
         gameObject.GetComponent<RandomNote>().playSound = enable;
         isEnabled = enable;
 

@@ -175,7 +175,6 @@ namespace Holoscanner
                     msg.ClientPosition.Rotation.Y = t_ori.y;
                     msg.ClientPosition.Rotation.Z = t_ori.z;
                     msg.ClientPosition.Rotation.W = t_ori.w;
-                    Debug.Log("Sending position");
                     NetworkCommunication.Instance.SendData(Google.Protobuf.MessageExtensions.ToByteArray(msg));
                 }
                 yield return new WaitForSecondsRealtime(0.05f);
