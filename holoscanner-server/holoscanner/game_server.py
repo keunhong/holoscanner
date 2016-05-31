@@ -126,8 +126,10 @@ class HsClientProtocol(asyncio.Protocol):
     def connection_made(self, transport):
         self.transport = transport
         logger.info('Sending {} messages'.format(len(self.messages)))
+
         for msg in self.messages:
             self.send_message(msg)
+            logger.info('{}, {}'.format(len(msg.mesh.vertices), msg.mesh.is_last))
 
     def data_received(self, data):
         data = data[HEADER_SIZE:]

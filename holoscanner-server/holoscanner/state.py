@@ -1,3 +1,5 @@
+import time
+import os
 import threading
 import random
 import numpy as np
@@ -88,6 +90,7 @@ class Client:
 
         self.meshes.append(mesh)
 
+
         return cleared
 
     def clear_meshes(self):
@@ -140,7 +143,7 @@ class GameState:
         with self.clients_lock:
             if client_id in self.clients:
                 del self.clients[client_id]
-                self.clear_game_state()
+                # self.clear_game_state()
         self.send_to_websocket_clients(self.create_game_state_message())
 
     def send_to_websocket_clients(self, message):
@@ -156,6 +159,13 @@ class GameState:
     def new_mesh(self, client_id, mesh_pb):
         with self.clients_lock:
             client = self.clients[client_id]
+
+            # filename = '{}_{}_{}.bin'.format(
+            #     client_id, time.time(), len(client.meshes))
+            # with open(os.path.join(config.MESHES_SAVE_DIR, filename), 'wb') as f:
+            #     bytes = mesh_pb.SerializeToString()
+            #     f.write(bytes)
+
             mesh = Mesh(mesh_pb, mesh_pb.is_last)
             was_cleared = client.new_mesh(mesh)
             if was_cleared:
@@ -197,6 +207,9 @@ class GameState:
             self.target_pbs.clear()
             self.floor = -5
             self.ceiling = 5
+        with self.clients_lock:
+            for client in self.clients.values():
+                client.score = 0
         self.send_to_websocket_clients(self.create_game_state_message())
 
     def update_planes(self):
@@ -230,9 +243,7 @@ class GameState:
 
     def update_targets(self, num_targets, keep_first=True):
         if not self.is_game_started():
-            logger.info('Game has not started;'
-                        'skipping target generation. {}'.format(
-                self.game_state_summary()))
+            logger.info('Game has not started; skipping target generation.')
             return
 
         with self.gs_lock:
@@ -248,12 +259,37 @@ class GameState:
             logger.info('Not computing targets: not enough mesh data.')
             return
 
-        global_hull_mask, offsetx, offsetz = util.compute_hull_mask(
-            faces, vertices, remove_holes=True, closing=False)
+        global_hull_mask, global_xmin, global_zmin, global_xmax, global_zmax = \
+            util.compute_hull_mask(
+                faces, vertices, remove_holes=True, closing=True)
         erosion_size = 0.04 * min(global_hull_mask.shape)
         global_hull_mask = morphology.binary_erosion(
             global_hull_mask, selem=morphology.square(erosion_size))
         logger.debug('Eroding global mask by {}'.format(erosion_size))
+
+        up_dot_normals = []
+        for normal in normals:
+            up_dot_normal = np.abs(np.dot(normal, [0, 1, 0]))
+            up_dot_normals.append(up_dot_normal)
+        up_dot_normals = np.array(up_dot_normals)
+        wall_faces = faces[up_dot_normals < 0.001]
+
+        wall_vertices = np.array([vertices[f] for f in wall_faces.flatten()])
+        per_vertex_up_dot = np.ndarray((vertices.shape[0],))
+        for i, face in enumerate(faces):
+            per_vertex_up_dot[face[0]] = up_dot_normals[i]
+            per_vertex_up_dot[face[1]] = up_dot_normals[i]
+            per_vertex_up_dot[face[2]] = up_dot_normals[i]
+        wall_vert_up_dots = np.array(
+            [per_vertex_up_dot[f] for f in wall_faces.flatten()])
+
+        hist_bins = (int(global_hull_mask.shape[0] / 10),
+                     int(global_hull_mask.shape[1] / 10))
+        wall_hist, wall_xedges, wall_zedges = np.histogram2d(wall_vertices[:, 0],
+                                              wall_vertices[:, 2],
+                                              weights=1 / (
+                                              wall_vert_up_dots + 0.001),
+                                              bins=hist_bins)
 
         near_floor_inds = set(np.where(
             (vertices[:, 1] - self.floor) < 0.2)[0])
@@ -273,13 +309,13 @@ class GameState:
                 ceiling_faces.append(face)
 
         floor_faces = np.array(floor_faces, dtype=np.uint32)
-        floor_hull_mask, _, _ = util.compute_hull_mask(
+        floor_hull_mask, _, _, _, _ = util.compute_hull_mask(
             floor_faces, vertices, remove_holes=False)
         floor_sample_mask = global_hull_mask & ~floor_hull_mask
         floor_cand_x, floor_cand_z = np.where(floor_sample_mask)
 
         ceiling_faces = np.array(ceiling_faces, dtype=np.uint32)
-        ceiling_hull_mask, _, _ = util.compute_hull_mask(
+        ceiling_hull_mask, _, _, _, _ = util.compute_hull_mask(
             ceiling_faces, vertices, remove_holes=False)
         ceiling_sample_mask = global_hull_mask & ~ceiling_hull_mask
         ceiling_cand_x, ceiling_cand_z = np.where(ceiling_sample_mask)
@@ -291,21 +327,32 @@ class GameState:
         imsave('/home/kpar/www/ceiling_cand.png', ceiling_sample_mask)
 
         with self.gs_lock:
-            for i in range(num_targets):
+            target_count = 0
+            iters = 0
+            while target_count < num_targets:
+                if iters >= 10000:
+                    break
+                iters += 1
                 # Randomly generate on ceiling or floor.
                 is_floor = random.random() < 0.5
                 if is_floor and len(floor_cand_x) > 0:
                     point_idx = random.randint(0, len(floor_cand_x) - 1)
-                    x = floor_cand_x[point_idx] / config.HULL_SCALE + offsetx
-                    z = floor_cand_z[point_idx] / config.HULL_SCALE + offsetz
+                    x = floor_cand_x[point_idx] / config.HULL_SCALE + global_xmin
+                    z = floor_cand_z[point_idx] / config.HULL_SCALE + global_zmin
                     y = self.floor + 0.15
                 elif not is_floor and len(ceiling_cand_x) > 0:
                     point_idx = random.randint(0, len(ceiling_cand_x) - 1)
-                    x = ceiling_cand_x[point_idx] / config.HULL_SCALE + offsetx
-                    z = ceiling_cand_z[point_idx] / config.HULL_SCALE + offsetz
+                    x = ceiling_cand_x[point_idx] / config.HULL_SCALE + global_xmin
+                    z = ceiling_cand_z[point_idx] / config.HULL_SCALE + global_zmin
                     y = self.ceiling - 0.15
                 else:
                     continue
+
+                xind = np.searchsorted(wall_xedges, x) - 1
+                zind = np.searchsorted(wall_zedges, z) - 1
+                if wall_hist[xind, zind] > np.percentile(wall_hist, 80):
+                    continue
+
                 target_pb = pb.Target()
                 target_pb.target_id = self.target_counter
                 target_pb.position.x = x
@@ -313,9 +360,9 @@ class GameState:
                 target_pb.position.z = z
                 self.target_counter += 1
                 self.target_pbs[target_pb.target_id] = target_pb
+                target_count += 1
 
-        logger.info('Generated {} targets. {}'.format(
-            len(self.target_pbs), self.game_state_summary()))
+        logger.info('Generated {} targets.'.format(len(self.target_pbs)))
 
     def target_found(self, client_id, target_id):
         logger.info('Deleting target_id={} ({} targets exist)'.format(

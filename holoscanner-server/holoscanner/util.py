@@ -3,7 +3,7 @@ import numpy as np
 from PIL import Image, ImageDraw
 from scipy.signal import argrelextrema
 from scipy.ndimage.filters import gaussian_filter1d
-from scipy.misc import imsave
+from scipy.misc import imsave, imresize
 from skimage import morphology
 from holoscanner import config
 
@@ -32,8 +32,10 @@ def compute_hull_mask(faces, vertices, scale=config.HULL_SCALE,
     transformed[:, 0] -= vertices[:, 0].min()
     transformed[:, 2] -= vertices[:, 2].min()
     transformed *= scale
-    offsetx = vertices[:, 0].min()
-    offsety = vertices[:, 2].min()
+    xmin = vertices[:, 0].min()
+    zmin = vertices[:, 2].min()
+    xmax = vertices[:, 0].max()
+    zmax = vertices[:, 2].max()
     width = int(math.ceil(vertices[:, 0].max() -
                           vertices[:, 0].min()) * scale) + 1
     height = int(math.ceil(vertices[:, 2].max() -
@@ -47,12 +49,12 @@ def compute_hull_mask(faces, vertices, scale=config.HULL_SCALE,
 
     im = np.array(im) == 255
     if closing:
+        imsave('/home/kpar/www/test.png', im)
         im = morphology.binary_closing(im, morphology.square(40))
-    imsave('/home/kpar/www/test.png', im)
+        imsave('/home/kpar/www/test2.png', im)
     if remove_holes and len(np.unique(im) >= 2):
         im = morphology.remove_small_holes(im, min_size=scale ** 2)
-        imsave('/home/kpar/www/test2.png', im)
-    return im.T, offsetx, offsety
+    return im.T, xmin, zmin, xmax, zmax
 
 
 def find_floor_and_ceiling(y_coords, nbins, sigma=None):
@@ -67,4 +69,3 @@ def find_floor_and_ceiling(y_coords, nbins, sigma=None):
     floor_y, ceiling_y = candate_planes.min(), candate_planes.max()
 
     return floor_y, ceiling_y
-

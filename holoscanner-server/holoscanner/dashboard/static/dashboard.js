@@ -47,7 +47,7 @@ gSocket.onmessage = function (e) {
   console.log(e);
   if (e.data instanceof ArrayBuffer) {
     let pbMessage = Holoscanner.Proto.Message.decode(e.data);
-    console.log(pbMessage);
+    // console.log(pbMessage);
 
     switch (pbMessage.type) {
       case Holoscanner.Proto.Message.Type.MESH:
@@ -63,13 +63,26 @@ gSocket.onmessage = function (e) {
         }
         break;
       case Message.Type.CLIENT_POSITION:
-        console.log(pbMessage.client_position);
+        handleClientPosition(pbMessage.device_id, pbMessage.client_position);
         break;
       default:
         console.log('Unknown message type ' + pbMessage);
     }
   }
 };
+
+let gModelQuat = new THREE.Quaternion();
+gModelQuat.setFromAxisAngle(new THREE.Vector3( 0, 0, 1 ), -Math.PI / 2);
+
+function handleClientPosition(deviceId, pbClientPosition) {
+  if (deviceId in gClients) {
+    let client = gClients[deviceId];
+    let p = pbClientPosition.position;
+    let r = pbClientPosition.rotation;
+    client["marker"].quaternion.set(r.x, r.y, r.z, r.w).multiply(gModelQuat);
+    client["marker"].position.set(-p.x, p.y, -p.z);
+  }
+}
 
 function resetAll() {
   clearAllMeshes();
@@ -80,13 +93,18 @@ function resetAll() {
 
 function handleNewMesh(deviceId, pbMesh) {
   if (!(deviceId in gClients)) {
+    let geometry = new THREE.ConeGeometry( 0.1, 0.5, 10, 50 );
+    let material = new THREE.MeshPhongMaterial( {color: 0xffff00} );
+    let marker = new THREE.Mesh(geometry, material);
+    gScene.add(marker);
     let clientIndex = gNumClients++;
     gClients[deviceId] = {
       "meshes": [],
       "newMeshes": [],
       "color": CLIENT_COLORS[clientIndex % CLIENT_COLORS.length],
       "index": clientIndex,
-      "visible": true
+      "visible": true,
+      "marker": marker
     };
   }
 
@@ -188,6 +206,7 @@ function handleGameState(pbGameState) {
       for (let mesh of gClients[clientId]["meshes"]) {
         gScene.remove(mesh);
       }
+      gScene.remove(gClients[clientId]["marker"]);
       delete gClients[clientId];
     }
   }
