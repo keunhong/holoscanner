@@ -37,12 +37,14 @@ Shader "HoloToolkit/Wireframe"
             struct v2g 
             {
                 float4 viewPos : SV_POSITION;
+				float4 origPos : TEXCOORD0;
             };
 
             v2g vert(appdata_base v)
             {
                 v2g o;
                 o.viewPos = mul(UNITY_MATRIX_MVP, v.vertex);
+				o.origPos = v.vertex;
                 return o;
             }
 
@@ -53,6 +55,7 @@ Shader "HoloToolkit/Wireframe"
                 float4 viewPos : SV_POSITION;
                 float inverseW : TEXCOORD0;
                 float3 dist : TEXCOORD1;
+				float3 normal : TEXCOORD2;
             };
 
             [maxvertexcount(3)]
@@ -75,6 +78,8 @@ Shader "HoloToolkit/Wireframe"
                 // by the other two vertices.
 
                 g2f o;
+
+				o.normal = normalize(cross(normalize(i[2].origPos.xyz - i[0].origPos.xyz), normalize(i[1].origPos.xyz - i[0].origPos.xyz)));
 
                 o.viewPos = i[0].viewPos;
                 o.inverseW = 1.0 / o.viewPos.w;
@@ -104,7 +109,8 @@ Shader "HoloToolkit/Wireframe"
 
                 // Fade out the alpha but not the color so we don't get any weird halo effects from
                 // a fade to a different color.
-                float4 color = I * _WireColor + (1 - I) * _BaseColor;
+				float4 normal_color = float4(i.normal.x * 0.5 + 0.5, i.normal.y * 0.5 + 0.5, i.normal.z * 0.5 + 0.5, 1.0);
+                float4 color = I * _WireColor + (1 - I) * normal_color;
                 color.a = I;
                 return color;
             }
