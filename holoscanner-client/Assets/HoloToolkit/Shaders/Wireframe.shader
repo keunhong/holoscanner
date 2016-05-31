@@ -1,3 +1,5 @@
+// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
+
 ///
 /// Basic wireframe shader that can be used for rendering spatial mapping meshes.
 ///

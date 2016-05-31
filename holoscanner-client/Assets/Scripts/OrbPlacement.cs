@@ -25,7 +25,7 @@ public class OrbPlacement : Singleton<OrbPlacement>
         StartCoroutine(Explode());
        
         targetFound();
-       // GameObject.Find("SpatialMapping").GetComponent<SpatialMappingManager>().ShowMeshes();
+        GameObject.Find("SpatialMapping").GetComponent<SpatialMappingManager>().ShowMeshes();
     }
     public Vector3 getPositionAhead()
     {

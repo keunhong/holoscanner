@@ -37,15 +37,15 @@ namespace Holoscanner
         {
             ss = GameObject.Find("Scoreboard").GetComponent<ScoreScript>();
             // Create our keyword collection.
-            keywordCollection = new Dictionary<string, System.Action>();
+           // keywordCollection = new Dictionary<string, System.Action>();
      //       keywordCollection.Add("send meshes", () => StartCoroutine(SendMeshes()));
 
             // Tell the KeywordRecognizer about our keywords.
-            keywordRecognizer = new KeywordRecognizer(keywordCollection.Keys.ToArray());
+           // keywordRecognizer = new KeywordRecognizer(keywordCollection.Keys.ToArray());
 
             // Register a callback for the KeywordRecognizer and start recognizing.
-            keywordRecognizer.OnPhraseRecognized += KeywordRecognizer_OnPhraseRecognized;
-            keywordRecognizer.Start();
+         //   keywordRecognizer.OnPhraseRecognized += KeywordRecognizer_OnPhraseRecognized;
+         //   keywordRecognizer.Start();
         
         }
 
