@@ -107,6 +107,7 @@ namespace Holoscanner
                     case Proto.Message.Types.Type.END_GAME:
                         gameOver = true;
                         GameObject.Find("EndgameScreen").GetComponent<EndgameScript>().endGame();
+                        GameObject.Find("orb").GetComponent<OrbPlacement>().setComponentsEnabled(false);
                         break;
                     
                         // TODO: others
