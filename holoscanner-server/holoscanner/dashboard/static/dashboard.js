@@ -31,6 +31,7 @@ let gCeilingPlane = new THREE.Mesh(
       transparent: true,
       opacity: 0.2
     }));
+gCeilingPlane.visible = false;
 gCeilingPlane.rotation.x = Math.PI / 2;
 
 let gSocket = new ReconnectingWebSocket(SOCKET_URL, null, {
@@ -44,7 +45,6 @@ gSocket.onclose = function (e) {
   resetAll();
 };
 gSocket.onmessage = function (e) {
-  console.log(e);
   if (e.data instanceof ArrayBuffer) {
     let pbMessage = Holoscanner.Proto.Message.decode(e.data);
     // console.log(pbMessage);
@@ -72,15 +72,19 @@ gSocket.onmessage = function (e) {
 };
 
 let gModelQuat = new THREE.Quaternion();
-gModelQuat.setFromAxisAngle(new THREE.Vector3( 0, 0, 1 ), -Math.PI / 2);
+let gModelQuat2 = new THREE.Quaternion();
+gModelQuat.setFromAxisAngle(new THREE.Vector3(0, 0, 1), -Math.PI / 2);
+gModelQuat2.setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI / 2);
 
 function handleClientPosition(deviceId, pbClientPosition) {
   if (deviceId in gClients) {
     let client = gClients[deviceId];
     let p = pbClientPosition.position;
     let r = pbClientPosition.rotation;
-    client["marker"].quaternion.set(r.x, r.y, r.z, r.w).multiply(gModelQuat);
-    client["marker"].position.set(-p.x, p.y, -p.z);
+    client["marker"].quaternion.set(r.x, r.y, r.z, r.w)
+        .multiply(gModelQuat2)
+        .multiply(gModelQuat);
+    client["marker"].position.set(p.x, p.y, p.z);
   }
 }
 
@@ -93,15 +97,16 @@ function resetAll() {
 
 function handleNewMesh(deviceId, pbMesh) {
   if (!(deviceId in gClients)) {
+    let clientIndex = gNumClients++;
+    let color = CLIENT_COLORS[clientIndex % CLIENT_COLORS.length];
     let geometry = new THREE.ConeGeometry( 0.1, 0.5, 10, 50 );
-    let material = new THREE.MeshPhongMaterial( {color: 0xffff00} );
+    let material = new THREE.MeshPhongMaterial( {color: color} );
     let marker = new THREE.Mesh(geometry, material);
     gScene.add(marker);
-    let clientIndex = gNumClients++;
     gClients[deviceId] = {
       "meshes": [],
       "newMeshes": [],
-      "color": CLIENT_COLORS[clientIndex % CLIENT_COLORS.length],
+      "color": color,
       "index": clientIndex,
       "visible": true,
       "marker": marker
