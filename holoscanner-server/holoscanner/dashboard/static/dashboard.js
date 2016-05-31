@@ -111,7 +111,7 @@ function handleClientPosition(deviceId, pbClientPosition) {
     client["marker"].quaternion.set(r.x, r.y, r.z, r.w)
         // .multiply(gModelQuat2)
         .multiply(gModelQuat);
-    client["marker"].position.set(p.x, p.y, p.z);
+    client["marker"].position.set(p.x, p.y, -p.z);
   }
 }
 
@@ -126,22 +126,23 @@ function handleNewMesh(deviceId, pbMesh) {
   let meshGeometry = new THREE.Geometry();
   for (let vertex of pbMesh.vertices) {
     meshGeometry.vertices.push(
-        new THREE.Vector3(vertex.x, vertex.y, vertex.z));
+        new THREE.Vector3(vertex.x, vertex.y, -vertex.z));
   }
   for (let i = 0; i < pbMesh.triangles.length / 3; i++) {
     meshGeometry.faces.push(
         new THREE.Face3(
-            pbMesh.triangles[i * 3],
+            pbMesh.triangles[i * 3 + 2],
             pbMesh.triangles[i * 3 + 1],
-            pbMesh.triangles[i * 3 + 2]));
+            pbMesh.triangles[i * 3 + 0]));
   }
+  meshGeometry.computeFaceNormals();
   let meshMaterial = new THREE.MeshLambertMaterial({
     color: gClients[deviceId]["color"],
     side: ($('#mesh-doubleside-checkbox').prop('checked'))
         ? THREE.DoubleSide
         : THREE.FrontSide
   });
-  meshGeometry.computeFaceNormals();
+  // meshGeometry.computeFaceNormals();
   let meshObj = new THREE.Mesh(meshGeometry, meshMaterial);
   meshObj.scale.x = meshObj.scale.y = meshObj.scale.z = 1.0;
   meshObj.device_id = deviceId;
@@ -258,7 +259,7 @@ function handleGameState(pbGameState) {
     material.transparent = true;
     material.opacity = 0.5;
     targetMesh.position.set(
-        pbTarget.position.x, pbTarget.position.y, pbTarget.position.z);
+        pbTarget.position.x, pbTarget.position.y, -pbTarget.position.z);
     targetMesh.target_id = pbTarget.target_id;
     gScene.add(targetMesh);
     gTargets.push(targetMesh);
@@ -294,7 +295,8 @@ function initRenderer() {
 
   let camera = new THREE.PerspectiveCamera(
       75, container.width() / container.height(), 0.1, 1000);
-  camera.position.set(0, 0, 5);
+  camera.position.set(0, 0, -5);
+  camera.lookAt(0, 0, 0);
 
   gScene.add(camera);
   gScene.add(gFloorPlane);
