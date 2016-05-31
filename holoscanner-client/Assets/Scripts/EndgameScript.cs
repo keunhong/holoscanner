@@ -8,9 +8,10 @@ public class EndgameScript : MonoBehaviour
     IEnumerator timingcoroutine;
     string[] instructions =
     {
-        "Achieve Zen by finding the orbs\nbefore the other players",
-        "Let sound guide you along your journey",
-        "Air tap orb to start game"
+        "The journey is over, \nbut we have a secret to share...",
+        "This game was a ruse, \na cunning affair.",
+        "The orbs you found\n were deliberately placed...","...to move you around\n and scan the space.",
+        "Now take a look around\n at what you've scanned!"
     };
     int instructionindex = 0;
     enum TitleState
@@ -31,7 +32,7 @@ public class EndgameScript : MonoBehaviour
 
     IEnumerator timing()
     {
-        for (; instructionindex < instructions.Length - 1; instructionindex++)
+        for (; instructionindex < instructions.Length; instructionindex++)
         {
             yield return new WaitForSeconds(5.0f);
             state = TitleState.INSTRUCTIONSOUTTRIGGER;
@@ -49,9 +50,14 @@ public class EndgameScript : MonoBehaviour
     void Start()
     {
         state = TitleState.GAMESTART;
-        instructionstext = GameObject.Find("InstructionText");
+        instructionstext = GameObject.Find("EndText");
     }
 
+    IEnumerator activateMeshes()
+    {
+        yield return new WaitForSecondsRealtime(1);
+        GameObject.Find("SpatialMapping").GetComponent<HoloToolkit.Unity.SpatialMappingManager>().ShowMeshes();
+    }
     // Update is called once per frame
     void Update()
     {
@@ -92,8 +98,10 @@ public class EndgameScript : MonoBehaviour
         }
         else if (state == TitleState.WAITTRIGGERED)
         {
-            // TODO: Fix location
+            gameObject.GetComponent<HoloToolkit.Unity.Billboard>().enabled = false;
+            gameObject.GetComponent<HoloToolkit.Unity.SimpleTagalong>().enabled = false;
             state = TitleState.WAITOUT;
+            StartCoroutine(activateMeshes());
         }
     }
 }
