@@ -5,6 +5,7 @@ import threading
 from enum import Enum
 from holoscanner import base_logger
 from holoscanner import proto
+from holoscanner import config
 from holoscanner.proto.holoscanner_pb2 import Message
 from holoscanner.state import game_state
 
@@ -29,7 +30,7 @@ def pack_message(message):
 def save_mesh(mesh):
     print('Processing Mesh...')
     mesh_id = 0
-    filedir = '/home/kpar/src/team8/holoscanner-server/meshes/'
+    filedir = config.MESHES_DIR
     filename = 'mesh_{}.bin'.format(mesh_id)
     while os.path.exists(os.path.join(filedir, filename)):
         mesh_id += 1

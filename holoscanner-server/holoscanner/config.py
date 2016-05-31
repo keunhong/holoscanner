@@ -13,6 +13,7 @@ VIEWER_PORT = 8890
 PROJECT_DIR = os.path.dirname(os.path.realpath(__file__))
 MESHES_DIR = os.path.join(PROJECT_DIR, '..', 'meshes')
 MESHES_SAVE_DIR = os.path.join(PROJECT_DIR, '..', 'client_meshes')
+IMAGE_SAVE_DIR = '/home/kpar/www/'
 
 LOG_FORMAT = '%(asctime)s\t%(levelname)s\t%(message)s\t[%(name)s]'
 LOG_LEVEL = logging.INFO

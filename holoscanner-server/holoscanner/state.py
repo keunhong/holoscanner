@@ -320,11 +320,11 @@ class GameState:
         ceiling_sample_mask = global_hull_mask & ~ceiling_hull_mask
         ceiling_cand_x, ceiling_cand_z = np.where(ceiling_sample_mask)
 
-        imsave('/home/kpar/www/global_map.png', global_hull_mask)
-        imsave('/home/kpar/www/floor_map.png', floor_hull_mask)
-        imsave('/home/kpar/www/floor_cand.png', floor_sample_mask)
-        imsave('/home/kpar/www/ceiling_map.png', ceiling_hull_mask)
-        imsave('/home/kpar/www/ceiling_cand.png', ceiling_sample_mask)
+        imsave(os.path.join(config.IMAGE_SAVE_DIR, 'global_map.png'), global_hull_mask)
+        imsave(os.path.join(config.IMAGE_SAVE_DIR, 'floor_map.png'), floor_hull_mask)
+        imsave(os.path.join(config.IMAGE_SAVE_DIR, 'floor_cand.png'), floor_sample_mask)
+        imsave(os.path.join(config.IMAGE_SAVE_DIR, 'ceiling_map.png'), ceiling_hull_mask)
+        imsave(os.path.join(config.IMAGE_SAVE_DIR, 'ceiling_cand.png'), ceiling_sample_mask)
 
         with self.gs_lock:
             target_count = 0
