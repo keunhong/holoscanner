@@ -74,6 +74,7 @@ class Client:
         self.meshes = []
         self.is_ready = is_ready
         self.is_next_mesh_new = True
+        self.nickname = client_id
 
     def send_message(self, message):
         self.protocol.send_message(message)
@@ -90,7 +91,6 @@ class Client:
 
         self.meshes.append(mesh)
 
-
         return cleared
 
     def clear_meshes(self):
@@ -102,6 +102,7 @@ class Client:
         client_pb.device_id = self.client_id
         client_pb.score = self.score
         client_pb.is_ready = self.is_ready
+        client_pb.nickname = self.nickname
         return client_pb
 
     def __repr__(self):
@@ -129,10 +130,10 @@ class GameState:
 
     def assign_name(self, client, index):
         names = ['Blue', 'Orange', 'Green', 'Pink', 'Yellow', 'Red', 'Purple']
-        client.client_id = names[index % len(names)]
+        client.nickname = names[index % len(names)]
         msg = pb.Message()
         msg.type = pb.Message.CLIENT_SET_NICKNAME
-        msg.device_id = client.client_id
+        msg.device_id = client.nickname
         client.send_message(msg)
 
     def new_hololens_client(self, client_id, ip, protocol):
@@ -164,6 +165,14 @@ class GameState:
             for client in self.clients.values():
                 if not client.client_id == config.SERVER_DEVICE_ID:
                     client.send_message(message)
+
+    def check_end_game(self):
+        for client in self.clients.values():
+            if client.score >= 10:
+                msg = pb.Message()
+                msg.type = pb.Message.END_GAME
+                self.send_to_hololens_clients(msg)
+                self.send_to_websocket_clients(msg)
 
     def new_mesh(self, client_id, mesh_pb):
         with self.clients_lock:
@@ -250,7 +259,7 @@ class GameState:
         faces = np.array(faces, dtype=np.uint32)
         return vertices, normals, faces
 
-    def update_targets(self, num_targets, keep_first=True):
+    def update_targets(self, num_targets, keep_first=True, force=False):
         if not self.is_game_started():
             logger.info('Game has not started; skipping target generation.')
             return
@@ -264,7 +273,7 @@ class GameState:
                 self.target_pbs[first_target.target_id] = first_target
 
         vertices, normals, faces = self.get_concatenated_meshes()
-        if vertices.shape[0] < 10:
+        if not force and vertices.shape[0] < 10:
             logger.info('Not computing targets: not enough mesh data.')
             return
 
@@ -292,13 +301,15 @@ class GameState:
         wall_vert_up_dots = np.array(
             [per_vertex_up_dot[f] for f in wall_faces.flatten()])
 
-        hist_bins = (int(global_hull_mask.shape[0] / 10),
-                     int(global_hull_mask.shape[1] / 10))
+        hist_bins = (int(global_hull_mask.shape[0] / 3),
+                     int(global_hull_mask.shape[1] / 3))
         wall_hist, wall_xedges, wall_zedges = np.histogram2d(wall_vertices[:, 0],
                                               wall_vertices[:, 2],
                                               weights=1 / (
                                               wall_vert_up_dots + 0.001),
                                               bins=hist_bins)
+
+        imsave('/home/kpar/www/wall_hist.png', wall_hist)
 
         near_floor_inds = set(np.where(
             (vertices[:, 1] - self.floor) < 0.2)[0])
@@ -339,7 +350,7 @@ class GameState:
             target_count = 0
             iters = 0
             while target_count < num_targets:
-                if iters >= 10000:
+                if iters >= 1000:
                     break
                 iters += 1
                 # Randomly generate on ceiling or floor.
@@ -359,7 +370,7 @@ class GameState:
 
                 xind = np.searchsorted(wall_xedges, x) - 1
                 zind = np.searchsorted(wall_zedges, z) - 1
-                if wall_hist[xind, zind] > np.percentile(wall_hist, 80):
+                if wall_hist[xind, zind] > np.percentile(wall_hist, 70):
                     continue
 
                 target_pb = pb.Target()
@@ -405,6 +416,8 @@ class GameState:
         self.send_to_websocket_clients(self.create_game_state_message())
         self.send_to_hololens_clients(
             self.create_game_state_message(max_targets=1))
+
+        self.check_end_game()
 
     def client_position_updated(self, client_id, client_position_pb):
         msg = pb.Message()

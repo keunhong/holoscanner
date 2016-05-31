@@ -45,7 +45,10 @@ class DashboardProtocol(WebSocketServerProtocol):
         elif message.type == Message.CLEAR_GAME_STATE:
             game_state.clear_game_state()
         elif message.type == Message.UPDATE_TARGETS:
-            game_state.update_targets(config.NUM_TARGETS_GEN, keep_first=False)
+            game_state.update_targets(
+                config.NUM_TARGETS_GEN,
+                keep_first=False,
+                force=True)
             game_state.send_to_websocket_clients(
                 game_state.create_game_state_message())
         elif message.type == Message.TARGET_FOUND:
