@@ -74,6 +74,7 @@ class Client:
         self.meshes = []
         self.is_ready = is_ready
         self.is_next_mesh_new = True
+        self.nickname = client_id
 
     def send_message(self, message):
         self.protocol.send_message(message)
@@ -90,7 +91,6 @@ class Client:
 
         self.meshes.append(mesh)
 
-
         return cleared
 
     def clear_meshes(self):
@@ -102,6 +102,7 @@ class Client:
         client_pb.device_id = self.client_id
         client_pb.score = self.score
         client_pb.is_ready = self.is_ready
+        client_pb.nickname = self.nickname
         return client_pb
 
     def __repr__(self):
@@ -129,10 +130,10 @@ class GameState:
 
     def assign_name(self, client, index):
         names = ['Blue', 'Orange', 'Green', 'Pink', 'Yellow', 'Red', 'Purple']
-        client.client_id = names[index % len(names)]
+        client.nickname = names[index % len(names)]
         msg = pb.Message()
         msg.type = pb.Message.CLIENT_SET_NICKNAME
-        msg.device_id = client.client_id
+        msg.device_id = client.nickname
         client.send_message(msg)
 
     def new_hololens_client(self, client_id, ip, protocol):

@@ -72,9 +72,7 @@ gSocket.onmessage = function (e) {
 };
 
 let gModelQuat = new THREE.Quaternion();
-let gModelQuat2 = new THREE.Quaternion();
 gModelQuat.setFromAxisAngle(new THREE.Vector3(0, 0, 1), -Math.PI / 2);
-gModelQuat2.setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI / 2);
 
 function handleClientPosition(deviceId, pbClientPosition) {
   if (deviceId in gClients) {
@@ -82,7 +80,6 @@ function handleClientPosition(deviceId, pbClientPosition) {
     let p = pbClientPosition.position;
     let r = pbClientPosition.rotation;
     client["marker"].quaternion.set(r.x, r.y, r.z, r.w)
-        .multiply(gModelQuat2)
         .multiply(gModelQuat);
     client["marker"].position.set(p.x, p.y, p.z);
   }
