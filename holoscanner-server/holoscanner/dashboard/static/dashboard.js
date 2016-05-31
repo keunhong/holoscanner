@@ -2,6 +2,25 @@ let SOCKET_URL = 'ws://drell.cs.washington.edu:8889';
 let CLIENT_COLORS = [
   '#64b5f6', '#ffb74d', '#aed581', '#f48fb1'
 ];
+let CLIENT_COLORS_BRIGHT = [
+  '#cfe8fc', '#ffe0b3', '#e6f2d9', '#fad1df'
+];
+
+let COLORS_DICT = {
+  '__server__': '#fff',
+  'Blue': '#64b5f6',
+  'Orange': '#ffb74d',
+  'Green': '#aed581',
+  'Pink': '#f48fb1'
+};
+
+let BRIGHT_COLORS_DICT = {
+  '__server__': '#fff',
+  'Blue': '#cfe8fc',
+  'Orange': '#ffe0b3',
+  'Green': '#e6f2d9',
+  'Pink': '#fad1df'
+};
 
 let ProtoBuf = dcodeIO.ProtoBuf;
 let builder = ProtoBuf.loadProtoFile("static/holoscanner.proto");
@@ -65,6 +84,14 @@ gSocket.onmessage = function (e) {
       case Message.Type.CLIENT_POSITION:
         handleClientPosition(pbMessage.device_id, pbMessage.client_position);
         break;
+      case Message.Type.END_GAME:
+          console.log(pbMessage);
+          let nickname = '';
+          if (pbMessage.device_id in gClients) {
+            nickname  = gClients[pbMessage.device_id]["nickname"];
+          }
+        alert(nickname + "(" +  pbMessage.device_id + ") has won!");
+        break;
       default:
         console.log('Unknown message type ' + pbMessage);
     }
@@ -72,7 +99,9 @@ gSocket.onmessage = function (e) {
 };
 
 let gModelQuat = new THREE.Quaternion();
+let gModelQuat2 = new THREE.Quaternion();
 gModelQuat.setFromAxisAngle(new THREE.Vector3(0, 0, 1), -Math.PI / 2);
+gModelQuat2.setFromAxisAngle(new THREE.Vector3(0, 1, 0), -Math.PI / 2);
 
 function handleClientPosition(deviceId, pbClientPosition) {
   if (deviceId in gClients) {
@@ -80,6 +109,7 @@ function handleClientPosition(deviceId, pbClientPosition) {
     let p = pbClientPosition.position;
     let r = pbClientPosition.rotation;
     client["marker"].quaternion.set(r.x, r.y, r.z, r.w)
+        // .multiply(gModelQuat2)
         .multiply(gModelQuat);
     client["marker"].position.set(p.x, p.y, p.z);
   }
@@ -93,23 +123,6 @@ function resetAll() {
 }
 
 function handleNewMesh(deviceId, pbMesh) {
-  if (!(deviceId in gClients)) {
-    let clientIndex = gNumClients++;
-    let color = CLIENT_COLORS[clientIndex % CLIENT_COLORS.length];
-    let geometry = new THREE.ConeGeometry( 0.1, 0.5, 10, 50 );
-    let material = new THREE.MeshPhongMaterial( {color: color} );
-    let marker = new THREE.Mesh(geometry, material);
-    gScene.add(marker);
-    gClients[deviceId] = {
-      "meshes": [],
-      "newMeshes": [],
-      "color": color,
-      "index": clientIndex,
-      "visible": true,
-      "marker": marker
-    };
-  }
-
   let meshGeometry = new THREE.Geometry();
   for (let vertex of pbMesh.vertices) {
     meshGeometry.vertices.push(
@@ -162,6 +175,28 @@ function handleGameState(pbGameState) {
   let scoreboardElem = $('#scoreboard')
       .empty();
   for (let pbClient of pbGameState.clients) {
+    if (!(pbClient.device_id in gClients)) {
+      let clientIndex = gNumClients++;
+      let color = COLORS_DICT[pbClient.nickname];
+      gClients[pbClient.device_id] = {
+        "meshes": [],
+        "newMeshes": [],
+        "color": color,
+        "index": clientIndex,
+        "visible": true,
+        "pb": pbClient
+      };
+
+      if (pbClient.device_id !== '__server__') {
+        let markerColor = BRIGHT_COLORS_DICT[pbClient.nickname];
+        let markerMaterial = new THREE.MeshPhongMaterial({color: markerColor});
+        let markerGeometry = new THREE.ConeGeometry(0.1, 0.5, 10, 50);
+        let marker = new THREE.Mesh(markerGeometry, markerMaterial);
+        gScene.add(marker);
+        gClients[pbClient.device_id]["marker"] = marker;
+      }
+    }
+
     console.log(pbClient);
     let clientColor = (pbClient.device_id in gClients)
         ? gClients[pbClient.device_id]["color"]
@@ -170,10 +205,13 @@ function handleGameState(pbGameState) {
         .addClass('scoreboard-client')
         .css('color', clientColor);
 
-    let clientLabel = "[" + pbClient.device_id + "]: " + pbClient.score;
+    let clientLabel = $('<label>')
+        .text("" + pbClient.nickname + " (" + pbClient.device_id + "): " + pbClient.score);
     if (pbClient.device_id !== '__server__'
         && pbClient.device_id in gClients) {
+
       let client = gClients[pbClient.device_id];
+      client["nickname"] = pbClient.nickname;
       let clientCheckbox = $("<input type='checkbox'>")
           .prop('id', 'client-' + client["index"] + '-checkbox')
           .prop('checked', client["visible"])
@@ -184,9 +222,7 @@ function handleGameState(pbGameState) {
             }
           });
       clientDiv.append(clientCheckbox);
-      clientLabel = $('<label>')
-          .prop('for', clientCheckbox.attr('id'))
-          .append(clientLabel);
+      clientLabel.prop('for', clientCheckbox.attr('id'));
     }
     clientDiv.append(clientLabel);
     if (pbClient.is_ready) {
