@@ -66,7 +66,7 @@ class Mesh:
 
 
 class Client:
-    def __init__(self, client_id, ip, protocol, is_ready=False):
+    def __init__(self, client_id, ip, protocol, nickname='Anonymous', is_ready=False):
         self.client_id = client_id
         self.ip = ip
         self.score = 0
@@ -74,7 +74,7 @@ class Client:
         self.meshes = []
         self.is_ready = is_ready
         self.is_next_mesh_new = True
-        self.nickname = client_id
+        self.nickname = nickname
 
     def send_message(self, message):
         self.protocol.send_message(message)
@@ -116,6 +116,7 @@ class GameState:
         config.SERVER_DEVICE_ID: Client(config.SERVER_DEVICE_ID,
                                         ip='127.0.0.1',
                                         protocol=None,
+                                        nickname='Servy McServerface',
                                         is_ready=True)
     }
 
@@ -140,7 +141,8 @@ class GameState:
         logger.info('Hololens client {} joined'.format(ip))
         with self.clients_lock:
             if client_id not in self.clients:
-                self.clients[client_id] = Client(client_id, ip, protocol)
+                self.clients[client_id] = Client(client_id, ip, protocol,
+                                                 nickname=client_id)
                 self.assign_name(self.clients[client_id], len(self.clients)-2) # -1 for 0 indexing, -1 for server
         self.send_to_websocket_clients(self.create_game_state_message())
         return client_id
@@ -168,11 +170,14 @@ class GameState:
 
     def check_end_game(self):
         for client in self.clients.values():
-            if client.score >= 10:
+            if client.score >= 2 and client.client_id != config.SERVER_DEVICE_ID:
+                logger.info('{} has won, GAME OVER.'.format(client.nickname))
                 msg = pb.Message()
                 msg.type = pb.Message.END_GAME
+                msg.device_id = client.client_id
                 self.send_to_hololens_clients(msg)
                 self.send_to_websocket_clients(msg)
+                break
 
     def new_mesh(self, client_id, mesh_pb):
         with self.clients_lock:
