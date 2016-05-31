@@ -15,6 +15,7 @@ namespace Holoscanner
     {
         public List<Vector3> targets;
         public List<uint> targetIDs;
+        private ScoreScript ss;
         public bool anchorSet = false;
         public bool gameOver = false;
         public bool gamestarted { get; private set; }
@@ -34,6 +35,7 @@ namespace Holoscanner
         // Use this for initialization.
         private void Start()
         {
+            ss = GameObject.Find("Scoreboard").GetComponent<ScoreScript>();
             // Create our keyword collection.
             keywordCollection = new Dictionary<string, System.Action>();
      //       keywordCollection.Add("send meshes", () => StartCoroutine(SendMeshes()));
@@ -92,13 +94,15 @@ namespace Holoscanner
                             OrbPlacement op = this.gameObject.GetComponentInChildren<OrbPlacement>();
                             StartCoroutine(op.replaceTarget(targets[0], targetIDs[0]));                          
                         }
-                        GameObject go = GameObject.Find("Scoreboard");
-                        ScoreScript ss = go.GetComponent<ScoreScript>();
                         ss.UpdateScores(msg.GameState);
                         break;
                     case Proto.Message.Types.Type.START_GAME:
                         gamestarted = true;
                         GameObject.Find("TitleScreen").GetComponent<TitleScreenScript>().gameStarted();
+                        break;
+                    case Proto.Message.Types.Type.CLIENT_SET_NICKNAME:
+                        ss.clientName = msg.DeviceId;
+                        Debug.Log("New name " + msg.DeviceId);
                         break;
                     case Proto.Message.Types.Type.END_GAME:
                         gameOver = true;

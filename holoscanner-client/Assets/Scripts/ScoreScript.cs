@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public class ScoreScript : MonoBehaviour {
     int state = -1;
+    public string clientName;
+    Dictionary<string, Color> colormap;
     public void showScoreboard()
     {
         List<Fade> fades = new List<Fade>();
@@ -18,7 +20,14 @@ public class ScoreScript : MonoBehaviour {
     }
     // Use this for initialization
     void Start () {
-	}
+        colormap = new Dictionary<string, Color>()
+        {
+            { "Blue", new Color(0.392f, 0.71f, 0.965f) },
+            { "Orange", new Color(1.0f, 0.718f, 0.302f) },
+            { "Green", new Color(0.682f, 0.835f, 0.506f)},
+            { "Pink", new Color(0.957f, 0.561f, 0.694f) }
+        };
+    }
     IEnumerator holdScoreboad()
     {
         state = 2;
@@ -54,16 +63,28 @@ public class ScoreScript : MonoBehaviour {
     {
         List<TextMesh> textels = new List<TextMesh>();
         gameObject.GetComponentsInChildren<TextMesh>(textels);
+        List<Fade> fades = new List<Fade>();
+        gameObject.GetComponentsInChildren(fades);
         List<Holoscanner.Proto.Client> sc = new List<Holoscanner.Proto.Client>(gs.Clients);
-        sc.Sort((a, b) => a.Score.CompareTo(b.Score));
+        sc.Sort((a, b) => b.Score.CompareTo(a.Score));
+        int j = 0;
         for (int i = 0; i < textels.Count; i++)
         {
-            if (i < gs.Clients.Count)
+            if (j < sc.Count)
             {
-                string s = gs.Clients[i].DeviceId + ": " + gs.Clients[i].Score.ToString();
-                Debug.Log(s);
-                textels[i].text = s;
-                textels[i].color = new Color(1.0f, 1.0f, 1.0f);
+                if (sc[j].DeviceId == "__server__")
+                {
+                    j++;
+                    i--;
+                    continue;
+                }
+                string s = sc[j].DeviceId + ": " + sc[j].Score.ToString();
+                textels[j].text = s;
+                if (sc[j].DeviceId == clientName) textels[i].fontStyle = FontStyle.Bold;
+                else textels[i].fontStyle = FontStyle.Normal;
+                textels[i].color = colormap.ContainsKey(sc[j].DeviceId)?colormap[sc[j].DeviceId]:Color.white;
+                fades[i].endcolor = textels[i].color;
+                j++;
             } else
             {
                 textels[i].text = "";
