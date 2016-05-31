@@ -78,11 +78,11 @@ public class ScoreScript : MonoBehaviour {
                     i--;
                     continue;
                 }
-                string s = sc[j].DeviceId + ": " + sc[j].Score.ToString();
+                string s = sc[j].Nickname + ": " + sc[j].Score.ToString();
                 textels[j].text = s;
-                if (sc[j].DeviceId == clientName) textels[i].fontStyle = FontStyle.Bold;
+                if (sc[j].Nickname == clientName) textels[i].fontStyle = FontStyle.Bold;
                 else textels[i].fontStyle = FontStyle.Normal;
-                textels[i].color = colormap.ContainsKey(sc[j].DeviceId)?colormap[sc[j].DeviceId]:Color.white;
+                textels[i].color = colormap.ContainsKey(sc[j].Nickname)?colormap[sc[j].Nickname]:Color.white;
                 fades[i].endcolor = textels[i].color;
                 j++;
             } else
