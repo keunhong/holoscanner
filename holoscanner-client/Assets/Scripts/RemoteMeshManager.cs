@@ -172,10 +172,10 @@ namespace Holoscanner
                     Holoscanner.Proto.Message msg = new Holoscanner.Proto.Message();
                     msg.Type = Holoscanner.Proto.Message.Types.Type.CLIENT_POSITION;
                     Transform t = GameObject.Find("HologramCollection").transform;
-                    Vector3 t_pos = t.TransformPoint(GameObject.Find("Main Camera").transform.position);
+                    Vector3 t_pos = t.InverseTransformPoint(GameObject.Find("Main Camera").transform.position);
                     Vector3 axis; float angle;
                     GameObject.Find("Main Camera").transform.rotation.ToAngleAxis(out angle, out axis);
-                    axis = t.TransformDirection(axis);
+                    axis = t.InverseTransformDirection(axis);
                     Quaternion t_ori = Quaternion.AngleAxis(angle, axis);
                     msg.ClientPosition = new Proto.ClientPosition();
                     msg.ClientPosition.Position = new Proto.Vec3D();

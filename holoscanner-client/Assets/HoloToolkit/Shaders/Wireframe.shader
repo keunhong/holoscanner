@@ -44,7 +44,8 @@ Shader "HoloToolkit/Wireframe"
             {
                 v2g o;
                 o.viewPos = mul(UNITY_MATRIX_MVP, v.vertex);
-				o.origPos = v.vertex;
+				o.origPos = mul(unity_ObjectToWorld,v.vertex);
+				o.origPos /= o.origPos.w;
                 return o;
             }
 
