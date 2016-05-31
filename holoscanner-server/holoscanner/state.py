@@ -127,11 +127,20 @@ class GameState:
     target_counter = 1
     target_pbs = OrderedDict()
 
+    def assign_name(self, client, index):
+        names = ['Blue', 'Orange', 'Green', 'Pink', 'Yellow', 'Red', 'Purple']
+        client.client_id = names[index % len(names)]
+        msg = pb.Message()
+        msg.type = pb.Message.CLIENT_SET_NICKNAME
+        msg.device_id = client.client_id
+        client.send_message(msg)
+
     def new_hololens_client(self, client_id, ip, protocol):
         logger.info('Hololens client {} joined'.format(ip))
         with self.clients_lock:
             if client_id not in self.clients:
                 self.clients[client_id] = Client(client_id, ip, protocol)
+                self.assign_name(self.clients[client_id], len(self.clients)-2) # -1 for 0 indexing, -1 for server
         self.send_to_websocket_clients(self.create_game_state_message())
         return client_id
 
