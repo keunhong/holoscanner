@@ -17,6 +17,7 @@ namespace Holoscanner
         public List<uint> targetIDs;
         public bool anchorSet = false;
         public bool gameOver = false;
+        public bool gamestarted { get; private set; }
         /// <summary>
         /// Used for voice commands.
         /// </summary>
@@ -96,6 +97,7 @@ namespace Holoscanner
                         ss.UpdateScores(msg.GameState);
                         break;
                     case Proto.Message.Types.Type.START_GAME:
+                        gamestarted = true;
                         GameObject.Find("TitleScreen").GetComponent<TitleScreenScript>().gameStarted();
                         break;
                     case Proto.Message.Types.Type.END_GAME:

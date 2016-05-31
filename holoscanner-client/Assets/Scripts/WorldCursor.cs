@@ -4,12 +4,19 @@ public class WorldCursor : MonoBehaviour
 {
     private MeshRenderer meshRenderer;
     float last_depth = 1.0f;
+    int numTooltipShows = 0;
+    bool tooltipshowing = false;
+    private GameObject tooltip;
+    private Holoscanner.RemoteMeshManager manager;
 
     // Use this for initialization
     void Start()
     {
         // Grab the mesh renderer that's on the same object as this script.
         meshRenderer = this.gameObject.GetComponentInChildren<MeshRenderer>();
+        tooltip = GameObject.Find("HintText");
+        tooltip.GetComponent<Fade>().show(false);
+        manager = GameObject.Find("HologramCollection").GetComponent<Holoscanner.RemoteMeshManager>();
     }
 
     // Update is called once per frame
@@ -25,8 +32,25 @@ public class WorldCursor : MonoBehaviour
         {
             // If the raycast hit a hologram...
             float depthOfCursor = hitInfo.distance;
-            if (depthOfCursor > 2.0f) { depthOfCursor = 2.0f; meshRenderer.material.color = Color.red; }
-            else { meshRenderer.material.color = Color.green; }
+            if (depthOfCursor > 2.0f) {
+                depthOfCursor = 2.0f;
+                if (numTooltipShows < 2 && !tooltipshowing)
+                {
+                    tooltip.transform.position = hitInfo.point;
+                    tooltip.GetComponent<Fade>().fadeIn();
+                    tooltipshowing = true;
+                }
+                meshRenderer.material.color = Color.red;
+            }
+            else {
+                if (tooltipshowing)
+                {
+                    tooltip.GetComponent<Fade>().fadeOut();
+                    tooltipshowing = false;
+                    if (numTooltipShows == 0 || manager.gamestarted) numTooltipShows++;
+                }
+                meshRenderer.material.color = Color.green;
+            }
             // Display the cursor mesh.
             meshRenderer.enabled = true;
             // Move the cursor to the point where the raycast hit.
