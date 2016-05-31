@@ -50,7 +50,7 @@ public class GazeGestureManager : MonoBehaviour
         
        // GameObject orb = GameObject.Find("orb");
        // if (Physics.Raycast(headPosition, gazeDirection, out hitInfo))
-        if (Physics.Raycast(headPosition, gazeDirection, out hitInfo))
+        if (Physics.Raycast(headPosition, gazeDirection, out hitInfo, 1 << 8))
         {
             // If the raycast hit a hologram, use that as the focused object.
             FocusedObject = hitInfo.collider.gameObject;

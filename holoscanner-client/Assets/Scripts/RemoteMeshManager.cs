@@ -16,6 +16,8 @@ namespace Holoscanner
         public List<Vector3> targets;
         public List<uint> targetIDs;
         public bool anchorSet = false;
+        public bool gameOver = false;
+        public bool gamestarted { get; private set; }
         /// <summary>
         /// Used for voice commands.
         /// </summary>
@@ -34,7 +36,7 @@ namespace Holoscanner
         {
             // Create our keyword collection.
             keywordCollection = new Dictionary<string, System.Action>();
-            keywordCollection.Add("send meshes", () => StartCoroutine(SendMeshes()));
+     //       keywordCollection.Add("send meshes", () => StartCoroutine(SendMeshes()));
 
             // Tell the KeywordRecognizer about our keywords.
             keywordRecognizer = new KeywordRecognizer(keywordCollection.Keys.ToArray());
@@ -70,7 +72,7 @@ namespace Holoscanner
             // FIXME: Send meshes at regular intervals
 
             // Check for new messages
-            if (!meshes_started) { StartCoroutine(SendMeshes()); meshes_started = true; }
+            if (!meshes_started) { StartCoroutine(SendMeshes()); meshes_started = true; StartCoroutine(SendPosition()); }
             if (NetworkCommunication.Instance.numMessages() > 0)
             {
                 Proto.Message msg = ProtoMeshSerializer.parseMesssage(NetworkCommunication.Instance.getMessage());
@@ -88,10 +90,18 @@ namespace Holoscanner
                         if (targets.Count > 0)
                         {
                             OrbPlacement op = this.gameObject.GetComponentInChildren<OrbPlacement>();
-                            StartCoroutine(op.replaceTarget(targets[0], targetIDs[0]));
+                            StartCoroutine(op.replaceTarget(targets[0], targetIDs[0]));                          
                         }
+                        GameObject go = GameObject.Find("Scoreboard");
+                        ScoreScript ss = go.GetComponent<ScoreScript>();
+                        ss.UpdateScores(msg.GameState);
                         break;
                     case Proto.Message.Types.Type.START_GAME:
+                        gamestarted = true;
+                        GameObject.Find("TitleScreen").GetComponent<TitleScreenScript>().gameStarted();
+                        break;
+                    case Proto.Message.Types.Type.END_GAME:
+                        gameOver = true;
                         break;
                     
                         // TODO: others
@@ -106,7 +116,6 @@ namespace Holoscanner
             //server should only send out targets once it has received the start game request from all the joined clients. in the future we can fix it so that it doesn't start until it has received this from 3 clients
 
             //for now, just request state. but change this in future:
-            SendTargetRequest();
 
             Holoscanner.Proto.Message msg = new Holoscanner.Proto.Message();
             msg.Type = Holoscanner.Proto.Message.Types.Type.CLIENT_READY;
@@ -149,29 +158,70 @@ namespace Holoscanner
             return q;
         }
 
+        public IEnumerator SendPosition()
+        {
+            while (true)
+            {
+                if (gameOver) break;
+                if (anchorSet)
+                {
+                    Holoscanner.Proto.Message msg = new Holoscanner.Proto.Message();
+                    msg.Type = Holoscanner.Proto.Message.Types.Type.CLIENT_POSITION;
+                    Transform t = GameObject.Find("HologramCollection").transform;
+                    Vector3 t_pos = t.TransformPoint(GameObject.Find("Main Camera").transform.position);
+                    Vector3 axis; float angle;
+                    GameObject.Find("Main Camera").transform.rotation.ToAngleAxis(out angle, out axis);
+                    axis = t.TransformDirection(axis);
+                    Quaternion t_ori = Quaternion.AngleAxis(angle, axis);
+                    msg.ClientPosition = new Proto.ClientPosition();
+                    msg.ClientPosition.Position = new Proto.Vec3D();
+                    msg.ClientPosition.Rotation = new Proto.Vec4D();
+                    msg.ClientPosition.Position.X = t_pos.x;
+                    msg.ClientPosition.Position.Y = t_pos.y;
+                    msg.ClientPosition.Position.Z = t_pos.z;
+                    msg.ClientPosition.Rotation.X = t_ori.x;
+                    msg.ClientPosition.Rotation.Y = t_ori.y;
+                    msg.ClientPosition.Rotation.Z = t_ori.z;
+                    msg.ClientPosition.Rotation.W = t_ori.w;
+                    NetworkCommunication.Instance.SendData(Google.Protobuf.MessageExtensions.ToByteArray(msg));
+                }
+                yield return new WaitForSecondsRealtime(0.05f);
+            }
+        }
+
         public IEnumerator SendMeshes()
         {
             while (true)
             {
+                if (gameOver) break;
                 if (anchorSet)
                 {
                     Debug.Log("Sending meshes...");
 #if !UNITY_EDITOR
-            List<MeshFilter> MeshFilters = SpatialMappingManager.Instance.GetMeshFilters();
-              
+                    if (SpatialMappingManager.Instance == null || SpatialMappingManager.Instance.GetMeshFilters() == null)
+                    {
+                        Debug.Log("Spatial Stuff was NULL!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                        yield return null; continue;
+                    }
+                    List<MeshFilter> MeshFilters = SpatialMappingManager.Instance.GetMeshFilters();
+                    
                     for (int index = 0; index < MeshFilters.Count; index++)
-            {
-              
+                     {
+                        if (MeshFilters[index] == null)
+                        {
+                            Debug.Log("index null");
+                            continue;
+                        }
                         int id = int.Parse(MeshFilters[index].transform.gameObject.name.Substring("Surface-".Length));
-                     
                         Matrix4x4 t = MeshFilters[index].transform.localToWorldMatrix;
                     
-                        if (worldtransform != null) {
-                      
+                        if (worldtransform != null)
+                        {
                             t = worldtransform.worldToLocalMatrix*t;
-                          
                         }
-                NetworkCommunication.Instance.SendData(ProtoMeshSerializer.Serialize(MeshFilters[index].sharedMesh, QuaternionFromMatrix(t), t.GetColumn(3), (uint) id, index==MeshFilters.Count-1,index==0));
+                        byte[] data = ProtoMeshSerializer.Serialize(MeshFilters[index].sharedMesh, QuaternionFromMatrix(t), t.GetColumn(3), (uint)id, index == MeshFilters.Count - 1, index == 0);
+                        yield return null;
+                NetworkCommunication.Instance.SendData(data);
                    
                         yield return null;
             }

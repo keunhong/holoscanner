@@ -21,11 +21,26 @@ public class OrbPlacement : Singleton<OrbPlacement>
         // TODO: Get the candidate position
         if (foundOnThisHololens) return;
         Debug.Log("Successfully clicked on orb!");
-        StartCoroutine(Explode());
         foundOnThisHololens = true;
+        StartCoroutine(Explode());
+       
         targetFound();
+       // GameObject.Find("SpatialMapping").GetComponent<SpatialMappingManager>().ShowMeshes();
     }
+    public Vector3 getPositionAhead()
+    {
+        var headPosition = Camera.main.transform.position;
+        var gazeDirection = Camera.main.transform.forward;
 
+        RaycastHit hitInfo;
+        if (Physics.Raycast(headPosition, gazeDirection, out hitInfo, 2))
+        {
+            return hitInfo.point - gazeDirection/20;
+        } else
+        {
+            return headPosition + 2*gazeDirection;
+        }
+    }
     public void setComponentsEnabled(bool enable)
     {
         if (isEnabled == enable)
@@ -33,6 +48,8 @@ public class OrbPlacement : Singleton<OrbPlacement>
             Debug.Log("Warning: Trying to set state to what it already was...returning");
             return;
         }
+        GameObject.Find("MagicBlast1").GetComponent<ParticleSystem>().Stop();
+        GameObject.Find("MagicBlast1").GetComponent<ParticleSystem>().Clear();
         gameObject.GetComponent<MeshCollider>().enabled = enable;
         foreach (ParticleSystem sys in GameObject.Find("EnergyBall3").GetComponents<ParticleSystem>())
         {
@@ -46,9 +63,7 @@ public class OrbPlacement : Singleton<OrbPlacement>
             ParticleSystem.EmissionModule em = sys.emission;
             em.enabled = enable;
         }
-        GameObject.Find("MagicBlast1").GetComponent<ParticleSystem>().Clear();
         GameObject.Find("MagicBlast1").GetComponent<ParticleSystem>().Play();
-        Debug.Log("Setting playsound to:" + enable);
         gameObject.GetComponent<RandomNote>().playSound = enable;
         isEnabled = enable;
 
@@ -60,6 +75,15 @@ public class OrbPlacement : Singleton<OrbPlacement>
     }
     IEnumerator Explode()
     {
+        if (foundOnThisHololens) playFastChime();
+        else playSlowChime();
+        if (!startOrb)
+        {
+            GameObject go = GameObject.Find("Scoreboard");
+            ScoreScript ss = go.GetComponent<ScoreScript>();
+            ss.setScoreboardLocation(getPositionAhead());
+            ss.showScoreboard();
+        }
         setComponentsEnabled(false);
         yield return new WaitForSecondsRealtime(2.4f);
 
@@ -69,10 +93,24 @@ public class OrbPlacement : Singleton<OrbPlacement>
     void targetFound()
     {
         Holoscanner.RemoteMeshManager rmm = this.GetComponentInParent<Holoscanner.RemoteMeshManager>();
-        if (startOrb) { rmm.StartGameRequest(); startOrb = false; }
+        if (startOrb) {
+            rmm.StartGameRequest();
+            startOrb = false;
+            GameObject.Find("TitleScreen").GetComponent<TitleScreenScript>().waitingForPlayers();
+        }
         else
             rmm.SendTargetFoundMessage(targetID);
         //rmm.SendTargetRequest(); 
+    }
+
+    void playSlowChime()
+    {
+        GameObject.Find("MagicBlast1").GetComponents < AudioSource >()[1].Play();
+    }
+
+    void playFastChime()
+    {
+        GameObject.Find("MagicBlast1").GetComponents < AudioSource >()[0].Play();
     }
 
     public IEnumerator replaceTarget(Vector3 t_pos, uint t_id)
@@ -97,7 +135,8 @@ public class OrbPlacement : Singleton<OrbPlacement>
         // And when a new user join we will send the anchor transform we have.
         SharingSessionTracker.Instance.SessionJoined += Instance_SessionJoined;
 
-
+        gameObject.GetComponent<RandomNote>().playSound = false;
+        gameObject.GetComponent<MeshCollider>().enabled = false;
     }
 
     private void Instance_SessionJoined(object sender, SharingSessionTracker.SessionJoinedEventArgs e)
@@ -158,4 +197,7 @@ public class OrbPlacement : Singleton<OrbPlacement>
     {
         // We'll use this later.
     }
-}
+
+
+
+} 
