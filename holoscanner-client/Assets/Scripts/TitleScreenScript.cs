@@ -114,7 +114,7 @@ public class TitleScreenScript : MonoBehaviour
         else if (state == TitleState.WAITOUT && instructionstext.GetComponent<Fade>().state == Fade.FadeState.OUT)
         {
             state = TitleState.WAITIN;
-            waitingtext.transform.Translate(new Vector3(0, 0.005f, 0));
+            waitingtext.transform.Translate(new Vector3(0, 0.01f, 0));
             waitingtext.GetComponent<Fade>().fadeIn();
         }
     }
