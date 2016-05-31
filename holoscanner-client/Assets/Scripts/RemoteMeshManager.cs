@@ -173,7 +173,7 @@ namespace Holoscanner
                 {
                     Holoscanner.Proto.Message msg = new Holoscanner.Proto.Message();
                     msg.Type = Holoscanner.Proto.Message.Types.Type.CLIENT_POSITION;
-                    Transform t = GameObject.Find("HologramCollection").transform;
+                    Transform t = GameObject.Find("SpatialMapping").transform;
                     Vector3 t_pos = t.InverseTransformPoint(GameObject.Find("Main Camera").transform.position);
                     Vector3 axis; float angle;
                     GameObject.Find("Main Camera").transform.rotation.ToAngleAxis(out angle, out axis);
