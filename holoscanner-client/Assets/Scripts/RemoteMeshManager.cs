@@ -102,6 +102,7 @@ namespace Holoscanner
                         break;
                     case Proto.Message.Types.Type.CLIENT_SET_NICKNAME:
                         ss.clientName = msg.DeviceId;
+                        ss.showPlayerColor();
                         Debug.Log("New name " + msg.DeviceId);
                         break;
                     case Proto.Message.Types.Type.END_GAME:

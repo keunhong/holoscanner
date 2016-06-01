@@ -14,6 +14,27 @@ public class ScoreScript : MonoBehaviour {
         if (gameObject.GetComponent<Fade>() != null) gameObject.GetComponent<Fade>().fadeIn();
         state = 1;
     }
+    public void showPlayerColor()
+    {
+        var headPosition = Camera.main.transform.position;
+        var gazeDirection = Camera.main.transform.forward;
+        setScoreboardLocation(headPosition + 1.5f*gazeDirection);
+        List<TextMesh> textels = new List<TextMesh>();
+        gameObject.GetComponentsInChildren<TextMesh>(textels);
+        List<Fade> fades = new List<Fade>();
+        gameObject.GetComponentsInChildren(fades);
+        for (int i = 0; i < textels.Count; i++)
+        {
+            if (i > 0) textels[i].text = "";
+            else
+            {
+                textels[i].text = "You are " + clientName + " player";
+                textels[i].color = colormap.ContainsKey(clientName) ? colormap[clientName] : Color.white;
+                fades[i].endcolor = textels[i].color;
+            }
+        }
+        showScoreboard();
+    }
     public void setScoreboardLocation(Vector3 pos)
     {
         gameObject.transform.position = pos;
