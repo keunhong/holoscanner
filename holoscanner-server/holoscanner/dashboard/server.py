@@ -20,5 +20,5 @@ def index():
 
 
 if __name__=='__main__':
-    app.run(host=config.VIEWER_ADDR,
-            port=config.VIEWER_PORT)
+    app.run(host=config.DASHBOARD_ADDR,
+            port=config.DASHBOARD_PORT)

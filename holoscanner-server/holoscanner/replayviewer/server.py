@@ -20,5 +20,5 @@ def index():
 
 
 if __name__=='__main__':
-    app.run(host=config.VIEWER_ADDR,
-            port=config.VIEWER_PORT)
+    app.run(host=config.REPLAYVIEWER_ADDR,
+            port=config.REPLAYVIEWER_PORT)
