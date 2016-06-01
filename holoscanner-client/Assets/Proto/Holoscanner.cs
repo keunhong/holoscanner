@@ -54,15 +54,15 @@ namespace Holoscanner.Proto {
             "QVJHRVRTEGZiBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
-          new pbr::GeneratedCodeInfo(null, new pbr::GeneratedCodeInfo[] {
-            new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.Vec3D), global::Holoscanner.Proto.Vec3D.Parser, new[]{ "X", "Y", "Z" }, null, null, null),
-            new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.Vec4D), global::Holoscanner.Proto.Vec4D.Parser, new[]{ "X", "Y", "Z", "W" }, null, null, null),
-            new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.Client), global::Holoscanner.Proto.Client.Parser, new[]{ "DeviceId", "Score", "IsReady", "Nickname" }, null, null, null),
-            new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.ClientPosition), global::Holoscanner.Proto.ClientPosition.Parser, new[]{ "Position", "Rotation" }, null, null, null),
-            new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.Mesh), global::Holoscanner.Proto.Mesh.Parser, new[]{ "MeshId", "Timestamp", "IsLast", "IsFirst", "CamPosition", "CamRotation", "Vertices", "Triangles" }, null, null, null),
-            new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.Target), global::Holoscanner.Proto.Target.Parser, new[]{ "TargetId", "Position" }, null, null, null),
-            new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.GameState), global::Holoscanner.Proto.GameState.Parser, new[]{ "FloorY", "CeilingY", "Targets", "Clients" }, null, null, null),
-            new pbr::GeneratedCodeInfo(typeof(global::Holoscanner.Proto.Message), global::Holoscanner.Proto.Message.Parser, new[]{ "Type", "DeviceId", "Mesh", "ClientPosition", "GameState", "TargetId" }, null, new[]{ typeof(global::Holoscanner.Proto.Message.Types.Type) }, null)
+          new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
+            new pbr::GeneratedClrTypeInfo(typeof(global::Holoscanner.Proto.Vec3D), global::Holoscanner.Proto.Vec3D.Parser, new[]{ "X", "Y", "Z" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Holoscanner.Proto.Vec4D), global::Holoscanner.Proto.Vec4D.Parser, new[]{ "X", "Y", "Z", "W" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Holoscanner.Proto.Client), global::Holoscanner.Proto.Client.Parser, new[]{ "DeviceId", "Score", "IsReady", "Nickname" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Holoscanner.Proto.ClientPosition), global::Holoscanner.Proto.ClientPosition.Parser, new[]{ "Position", "Rotation" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Holoscanner.Proto.Mesh), global::Holoscanner.Proto.Mesh.Parser, new[]{ "MeshId", "Timestamp", "IsLast", "IsFirst", "CamPosition", "CamRotation", "Vertices", "Triangles" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Holoscanner.Proto.Target), global::Holoscanner.Proto.Target.Parser, new[]{ "TargetId", "Position" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Holoscanner.Proto.GameState), global::Holoscanner.Proto.GameState.Parser, new[]{ "FloorY", "CeilingY", "Targets", "Clients" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Holoscanner.Proto.Message), global::Holoscanner.Proto.Message.Parser, new[]{ "Type", "DeviceId", "Mesh", "ClientPosition", "GameState", "TargetId" }, null, new[]{ typeof(global::Holoscanner.Proto.Message.Types.Type) }, null)
           }));
     }
     #endregion
@@ -446,7 +446,7 @@ namespace Holoscanner.Proto {
     public string DeviceId {
       get { return deviceId_; }
       set {
-        deviceId_ = pb::Preconditions.CheckNotNull(value, "value");
+        deviceId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
       }
     }
 
@@ -476,7 +476,7 @@ namespace Holoscanner.Proto {
     public string Nickname {
       get { return nickname_; }
       set {
-        nickname_ = pb::Preconditions.CheckNotNull(value, "value");
+        nickname_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
       }
     }
 
@@ -1366,7 +1366,7 @@ namespace Holoscanner.Proto {
 
     /// <summary>Field number for the "type" field.</summary>
     public const int TypeFieldNumber = 1;
-    private global::Holoscanner.Proto.Message.Types.Type type_ = global::Holoscanner.Proto.Message.Types.Type.ACK;
+    private global::Holoscanner.Proto.Message.Types.Type type_ = 0;
     /// <summary>
     ///  These should always be set.
     /// </summary>
@@ -1383,7 +1383,7 @@ namespace Holoscanner.Proto {
     public string DeviceId {
       get { return deviceId_; }
       set {
-        deviceId_ = pb::Preconditions.CheckNotNull(value, "value");
+        deviceId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
       }
     }
 
@@ -1452,7 +1452,7 @@ namespace Holoscanner.Proto {
 
     public override int GetHashCode() {
       int hash = 1;
-      if (Type != global::Holoscanner.Proto.Message.Types.Type.ACK) hash ^= Type.GetHashCode();
+      if (Type != 0) hash ^= Type.GetHashCode();
       if (DeviceId.Length != 0) hash ^= DeviceId.GetHashCode();
       if (mesh_ != null) hash ^= Mesh.GetHashCode();
       if (clientPosition_ != null) hash ^= ClientPosition.GetHashCode();
@@ -1466,7 +1466,7 @@ namespace Holoscanner.Proto {
     }
 
     public void WriteTo(pb::CodedOutputStream output) {
-      if (Type != global::Holoscanner.Proto.Message.Types.Type.ACK) {
+      if (Type != 0) {
         output.WriteRawTag(8);
         output.WriteEnum((int) Type);
       }
@@ -1494,7 +1494,7 @@ namespace Holoscanner.Proto {
 
     public int CalculateSize() {
       int size = 0;
-      if (Type != global::Holoscanner.Proto.Message.Types.Type.ACK) {
+      if (Type != 0) {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Type);
       }
       if (DeviceId.Length != 0) {
@@ -1519,7 +1519,7 @@ namespace Holoscanner.Proto {
       if (other == null) {
         return;
       }
-      if (other.Type != global::Holoscanner.Proto.Message.Types.Type.ACK) {
+      if (other.Type != 0) {
         Type = other.Type;
       }
       if (other.DeviceId.Length != 0) {
@@ -1597,26 +1597,26 @@ namespace Holoscanner.Proto {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     public static partial class Types {
       public enum Type {
-        ACK = 0,
-        FIN = 1,
-        MESH = 10,
+        [pbr::OriginalName("ACK")] Ack = 0,
+        [pbr::OriginalName("FIN")] Fin = 1,
+        [pbr::OriginalName("MESH")] Mesh = 10,
         /// <summary>
         ///  Game state messages.
         /// </summary>
-        GAME_STATE = 13,
-        GAME_STATE_REQUEST = 14,
-        TARGET_FOUND = 20,
-        START_GAME = 21,
-        END_GAME = 22,
-        CLIENT_POSITION = 40,
-        CLIENT_READY = 41,
-        CLIENT_SET_NICKNAME = 42,
+        [pbr::OriginalName("GAME_STATE")] GameState = 13,
+        [pbr::OriginalName("GAME_STATE_REQUEST")] GameStateRequest = 14,
+        [pbr::OriginalName("TARGET_FOUND")] TargetFound = 20,
+        [pbr::OriginalName("START_GAME")] StartGame = 21,
+        [pbr::OriginalName("END_GAME")] EndGame = 22,
+        [pbr::OriginalName("CLIENT_POSITION")] ClientPosition = 40,
+        [pbr::OriginalName("CLIENT_READY")] ClientReady = 41,
+        [pbr::OriginalName("CLIENT_SET_NICKNAME")] ClientSetNickname = 42,
         /// <summary>
         ///  Control messages from/to dashabord.
         /// </summary>
-        CLEAR_MESHES = 100,
-        CLEAR_GAME_STATE = 101,
-        UPDATE_TARGETS = 102,
+        [pbr::OriginalName("CLEAR_MESHES")] ClearMeshes = 100,
+        [pbr::OriginalName("CLEAR_GAME_STATE")] ClearGameState = 101,
+        [pbr::OriginalName("UPDATE_TARGETS")] UpdateTargets = 102,
       }
 
     }

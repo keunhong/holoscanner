@@ -1,0 +1,87 @@
+syntax = "proto3";
+package Holoscanner.Proto;
+
+message Vec3D {
+    float x = 1;
+    float y = 2;
+    float z = 3;
+}
+
+message Vec4D {
+    float x = 1;
+    float y = 2;
+    float z = 3;
+    float w = 4;
+}
+
+message Client {
+    string device_id = 1;
+    uint32 score = 10;
+    bool is_ready = 20;
+    string nickname = 30;
+}
+
+message ClientPosition {
+    Vec3D position = 100;
+    Vec4D rotation = 101;
+}
+
+message Mesh {
+    uint32 mesh_id = 2;
+    uint64 timestamp = 3;
+    bool is_last = 4;
+    bool is_first = 5;
+
+    // We need the camera position in case we want to do space carving.
+    Vec3D cam_position = 100;
+    Vec4D cam_rotation = 101;
+
+    repeated Vec3D vertices = 200;
+    repeated int32 triangles = 201 [packed=true];
+}
+
+message Target {
+    uint32 target_id = 1;
+    Vec3D position = 2;
+}
+
+message GameState {
+    float floor_y = 1;
+    float ceiling_y = 2;
+    repeated Target targets = 10;
+    repeated Client clients = 20;
+}
+
+message Message {
+    enum Type {
+        ACK = 0;
+        FIN = 1;
+
+        MESH = 10;
+
+        // Game state messages.
+        GAME_STATE = 13;
+        GAME_STATE_REQUEST = 14;
+        TARGET_FOUND = 20;
+        START_GAME = 21;
+        END_GAME = 22;
+        CLIENT_POSITION = 40;
+        CLIENT_READY = 41;
+        CLIENT_SET_NICKNAME = 42;
+
+        // Control messages from/to dashabord.
+        CLEAR_MESHES = 100;
+        CLEAR_GAME_STATE = 101;
+        UPDATE_TARGETS = 102;
+    }
+
+    // These should always be set.
+    Type type = 1;
+    string device_id = 2;
+
+    // One or less of the following will be filled in.
+    Mesh mesh = 100;
+    ClientPosition client_position = 101;
+    GameState game_state = 500;
+    uint32 target_id = 600;
+}
