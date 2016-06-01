@@ -108,9 +108,9 @@ function handleClientPosition(deviceId, pbClientPosition) {
     let client = gClients[deviceId];
     let p = pbClientPosition.position;
     let r = pbClientPosition.rotation;
-    client["marker"].quaternion.set(r.x, r.y, r.z, r.w)
-        // .multiply(gModelQuat2)
-        .multiply(gModelQuat);
+    let t = new THREE.Quaternion(r.x, r.y, -r.z, r.w);
+    t.multiply(gModelQuat);
+    client["marker"].quaternion.set(t.x, t.y, t.z, t.w);
     client["marker"].position.set(p.x, p.y, -p.z);
   }
 }

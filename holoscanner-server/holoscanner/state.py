@@ -170,7 +170,7 @@ class GameState:
 
     def check_end_game(self):
         for client in self.clients.values():
-            if client.score >= 2 and client.client_id != config.SERVER_DEVICE_ID:
+            if client.score >= 10 and client.client_id != config.SERVER_DEVICE_ID:
                 logger.info('{} has won, GAME OVER.'.format(client.nickname))
                 msg = pb.Message()
                 msg.type = pb.Message.END_GAME
