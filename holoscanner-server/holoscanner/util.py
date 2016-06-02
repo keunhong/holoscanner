@@ -3,12 +3,11 @@ import numpy as np
 from PIL import Image, ImageDraw
 from scipy.signal import argrelextrema
 from scipy.ndimage.filters import gaussian_filter1d
-from scipy.misc import imsave, imresize, toimage
+from scipy.misc import imsave, toimage
 from scipy.stats import binned_statistic_2d
 from skimage import morphology
 from holoscanner import config
 from holoscanner import base_logger
-
 
 logger = base_logger.getChild(__name__)
 
@@ -86,21 +85,21 @@ def compute_2d_normals(vertices, per_vertex_normals, floor, ceiling,
                  int(global_hull_mask.shape[1] / 2))
     print(hist_bins)
 
-    hist, binx, binz = np.histogram2d(wall_vertices[:, 0], wall_vertices[:, 2],
-                                bins=hist_bins)
+    hist, binx, binz = np.histogram2d(
+        wall_vertices[:, 0], wall_vertices[:, 2], bins=hist_bins)
     hist[hist < np.percentile(hist, 94)] = 0
-    normal_mean_x, _, _, _ = binned_statistic_2d(wall_vertices[:, 0],
-                                                 wall_vertices[:, 2],
-                                                 values=wall_vertex_normals[:,
-                                                        0],
-                                                 statistic='mean',
-                                                 bins=hist_bins)
-    normal_mean_z, _, _, _ = binned_statistic_2d(wall_vertices[:, 0],
-                                                 wall_vertices[:, 2],
-                                                 values=wall_vertex_normals[:,
-                                                        2],
-                                                 statistic='mean',
-                                                 bins=hist_bins)
+    normal_mean_x, _, _, _ = binned_statistic_2d(
+        wall_vertices[:, 0],
+        wall_vertices[:, 2],
+        values=wall_vertex_normals[:, 0],
+        statistic='mean',
+        bins=hist_bins)
+    normal_mean_z, _, _, _ = binned_statistic_2d(
+        wall_vertices[:, 0],
+        wall_vertices[:, 2],
+        values=wall_vertex_normals[:, 2],
+        statistic='mean',
+        bins=hist_bins)
     normal_mean_x[hist == 0] = np.nan
     normal_mean_z[hist == 0] = np.nan
 
@@ -151,3 +150,12 @@ def bfs_sdf(normal_mean_x, normal_mean_z):
 
 def save_im(dir, im):
     toimage(im, cmin=im.min(), cmax=im.max()).save(dir)
+
+
+def compute_per_vertex_normals(vertices, normals, faces):
+    per_vertex_normals = np.zeros((vertices.shape[0], 3))
+    for i, face in enumerate(faces):
+        per_vertex_normals[face[0]] = normals[i]
+        per_vertex_normals[face[1]] = normals[i]
+        per_vertex_normals[face[2]] = normals[i]
+    return per_vertex_normals

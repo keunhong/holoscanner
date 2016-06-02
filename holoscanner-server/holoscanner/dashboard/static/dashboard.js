@@ -24,6 +24,7 @@ let Message = Holoscanner.Proto.Message;
 let gRenderer = new THREE.WebGLRenderer();
 let gScene = new THREE.Scene();
 let axisHelper = new THREE.AxisHelper(5);
+axisHelper.position.set(-5.1, -3, -5.1);
 gScene.add(axisHelper);
 
 let gNumClients = 0;

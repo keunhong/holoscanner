@@ -31,8 +31,11 @@ class DashboardProtocol(WebSocketServerProtocol):
             self.send_message(game_state.create_game_state_message())
 
         while True:
-            msg = yield from self.message_queue.get()
-            self.send_message(msg)
+            try:
+                msg = yield from self.message_queue.get()
+                self.send_message(msg)
+            except TimeoutError:
+                pass
 
     @asyncio.coroutine
     def onMessage(self, payload, isBinary):

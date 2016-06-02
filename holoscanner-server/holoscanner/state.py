@@ -16,6 +16,9 @@ from holoscanner import util
 
 logger = base_logger.getChild(__name__)
 
+CLIENT_NICKNAMES = ['Blue', 'Orange', 'Green', 'Pink', 'Yellow', 'Red',
+                    'Purple']
+
 
 class Mesh:
     def __init__(self, mesh_pb, is_last=False):
@@ -29,9 +32,9 @@ class Mesh:
 
         if mesh_pb.cam_rotation:
             rotation_mat = util.quat_to_mat(mesh_pb.cam_rotation.x,
-                                       mesh_pb.cam_rotation.y,
-                                       mesh_pb.cam_rotation.z,
-                                       mesh_pb.cam_rotation.w)
+                                            mesh_pb.cam_rotation.y,
+                                            mesh_pb.cam_rotation.z,
+                                            mesh_pb.cam_rotation.w)
             self.vertices = rotation_mat.dot(self.vertices.T).T
             self.vertices[:, 0] += mesh_pb.cam_position.x
             self.vertices[:, 1] += mesh_pb.cam_position.y
@@ -58,7 +61,9 @@ class Mesh:
             v1 = self.vertices[self.faces[i * 3 + 0]]
             v2 = self.vertices[self.faces[i * 3 + 1]]
             v3 = self.vertices[self.faces[i * 3 + 2]]
-            normals[i] = np.cross(v1 - v2, v3 - v2)
+            normal = np.cross(v1 - v2, v3 - v2)
+            normal /= linalg.norm(normal)
+            normals[i] = normal
         return normals
 
     def __repr__(self):
@@ -67,7 +72,8 @@ class Mesh:
 
 
 class Client:
-    def __init__(self, client_id, ip, protocol, nickname='Anonymous', is_ready=False):
+    def __init__(self, client_id, ip, protocol, nickname='Anonymous',
+                 is_ready=False):
         self.client_id = client_id
         self.ip = ip
         self.score = 0
@@ -112,7 +118,6 @@ class Client:
 
 
 class GameState:
-
     clients = {
         config.SERVER_DEVICE_ID: Client(config.SERVER_DEVICE_ID,
                                         ip='127.0.0.1',
@@ -132,8 +137,7 @@ class GameState:
     target_pbs = OrderedDict()
 
     def assign_name(self, client, index):
-        names = ['Blue', 'Orange', 'Green', 'Pink', 'Yellow', 'Red', 'Purple']
-        client.nickname = names[index % len(names)]
+        client.nickname = CLIENT_NICKNAMES[index % len(CLIENT_NICKNAMES)]
         msg = pb.Message()
         msg.type = pb.Message.CLIENT_SET_NICKNAME
         msg.device_id = client.nickname
@@ -158,7 +162,6 @@ class GameState:
         with self.clients_lock:
             if client_id in self.clients:
                 del self.clients[client_id]
-                # self.clear_game_state()
         self.send_to_websocket_clients(self.create_game_state_message())
 
     def send_to_websocket_clients(self, message):
@@ -188,7 +191,8 @@ class GameState:
 
             filename = '{}_{}_{}.bin'.format(
                 client_id, time.time(), len(client.meshes))
-            with open(os.path.join(config.MESHES_SAVE_DIR, filename), 'wb') as f:
+            with open(os.path.join(config.MESHES_SAVE_DIR, filename),
+                      'wb') as f:
                 bytes = mesh_pb.SerializeToString()
                 f.write(bytes)
 
@@ -197,16 +201,7 @@ class GameState:
             if was_cleared:
                 logger.info('Starting to receive meshes from client {}'.format(
                     client_id))
-            # logger.info('New mesh from client {}, '
-            #             'nvertices={}, '
-            #             'nfaces={}, '
-            #             'is_last={}'.format(
-            #     client_id, mesh.nvertices, mesh.nfaces, mesh_pb.is_last))
-            # if was_cleared:
-            #     msg = pb.Message()
-            #     msg.type = pb.Message.CLEAR_MESHES
-            #     msg.device_id = client_id
-            #     self.send_to_websocket_clients(msg)
+
         self.send_to_websocket_clients(
             proto.create_mesh_message(client_id, mesh.to_proto()))
 
@@ -285,42 +280,38 @@ class GameState:
             logger.info('Not computing targets: not enough mesh data.')
             return
 
-        per_vertex_normals = np.zeros((vertices.shape[0], 3))
-        for i, face in enumerate(faces):
-            v1 = vertices[face[0]]
-            v2 = vertices[face[1]]
-            v3 = vertices[face[2]]
-            normal = np.cross(v1 - v2, v3 - v2)
-            normal /= linalg.norm(normal)
-            per_vertex_normals[face[0]] = normal
-            per_vertex_normals[face[1]] = normal
-            per_vertex_normals[face[2]] = normal
+        per_vertex_normals = util.compute_per_vertex_normals(
+            vertices, normals, faces)
 
+        # Global map computation.
         global_hull_mask, global_xmin, global_zmin, global_xmax, global_zmax = \
             util.compute_hull_mask(
                 faces, vertices, remove_holes=True, closing=True)
-        erosion_size = 0.04 * min(global_hull_mask.shape)
+        erosion_size = int(0.04 * min(global_hull_mask.shape))
         global_hull_mask = morphology.binary_erosion(
             global_hull_mask, selem=morphology.square(erosion_size))
         logger.debug('Eroding global mask by {}'.format(erosion_size))
 
-        normal_mean_x, normal_mean_z, wall_xedges, wall_zedges =\
+        # Wall SDF computation.
+        normal_mean_x, normal_mean_z, wall_xedges, wall_zedges = \
             util.compute_2d_normals(vertices, per_vertex_normals,
                                     self.floor, self.ceiling, global_hull_mask)
         wall_sdf = util.bfs_sdf(normal_mean_x, normal_mean_z)
-        util.save_im(os.path.join(config.IMAGE_SAVE_DIR, 'wall_sdf.png'), wall_sdf)
-        logger.info(wall_sdf.min())
-        logger.info(wall_sdf.max())
+        util.save_im(os.path.join(config.IMAGE_SAVE_DIR, 'wall_sdf.png'),
+                     wall_sdf)
+        logger.info('Wall SDF computed min={}, max={}'.format(
+            wall_sdf.min(), wall_sdf.max()))
         if len(np.unique(wall_sdf)) <= 1:
-            logger.warning('WALL SDF HAS NOT ENOUGH UNIQUE VALUES. {}'.format(
-                np.unique(wall_sdf)))
+            logger.warning('Wall SDF does not have enough values!'
+                           'unique={}'.format(np.unique(wall_sdf)))
             wall_exclude_mask = np.zeros(wall_sdf.shape, dtype=np.bool)
         else:
             wall_exclude_mask = morphology.binary_dilation(
-                wall_sdf <= 0, selem=morphology.square(erosion_size/4))
+                wall_sdf <= 0, selem=morphology.square(erosion_size / 4))
         util.save_im(os.path.join(config.IMAGE_SAVE_DIR, 'wall_mask.png'),
                      wall_exclude_mask)
 
+        # Floor/Ceiling hole detection.
         near_floor_inds = set(np.where(
             (vertices[:, 1] - self.floor) < 0.2)[0])
         near_ceiling_inds = set(np.where(
@@ -330,8 +321,8 @@ class GameState:
         ceiling_faces = []
         for face in faces:
             if (face[0] in near_floor_inds or
-                    face[1] in near_floor_inds or
-                    face[2] in near_floor_inds):
+                        face[1] in near_floor_inds or
+                        face[2] in near_floor_inds):
                 floor_faces.append(face)
             if (face[0] in near_ceiling_inds or
                         face[1] in near_ceiling_inds or
@@ -350,11 +341,16 @@ class GameState:
         ceiling_sample_mask = global_hull_mask & ~ceiling_hull_mask
         ceiling_cand_x, ceiling_cand_z = np.where(ceiling_sample_mask)
 
-        imsave(os.path.join(config.IMAGE_SAVE_DIR, 'global_map.png'), global_hull_mask)
-        imsave(os.path.join(config.IMAGE_SAVE_DIR, 'floor_map.png'), floor_hull_mask)
-        imsave(os.path.join(config.IMAGE_SAVE_DIR, 'floor_cand.png'), floor_sample_mask)
-        imsave(os.path.join(config.IMAGE_SAVE_DIR, 'ceiling_map.png'), ceiling_hull_mask)
-        imsave(os.path.join(config.IMAGE_SAVE_DIR, 'ceiling_cand.png'), ceiling_sample_mask)
+        imsave(os.path.join(config.IMAGE_SAVE_DIR, 'global_map.png'),
+               global_hull_mask)
+        imsave(os.path.join(config.IMAGE_SAVE_DIR, 'floor_map.png'),
+               floor_hull_mask)
+        imsave(os.path.join(config.IMAGE_SAVE_DIR, 'floor_cand.png'),
+               floor_sample_mask)
+        imsave(os.path.join(config.IMAGE_SAVE_DIR, 'ceiling_map.png'),
+               ceiling_hull_mask)
+        imsave(os.path.join(config.IMAGE_SAVE_DIR, 'ceiling_cand.png'),
+               ceiling_sample_mask)
 
         with self.gs_lock:
             target_count = 0
@@ -367,19 +363,25 @@ class GameState:
                 is_floor = random.random() < 0.5
                 if is_floor and len(floor_cand_x) > 0:
                     point_idx = random.randint(0, len(floor_cand_x) - 1)
-                    x = floor_cand_x[point_idx] / config.HULL_SCALE + global_xmin
-                    z = floor_cand_z[point_idx] / config.HULL_SCALE + global_zmin
+                    x = floor_cand_x[
+                            point_idx] / config.HULL_SCALE + global_xmin
+                    z = floor_cand_z[
+                            point_idx] / config.HULL_SCALE + global_zmin
                     y = self.floor + 0.15
                 elif not is_floor and len(ceiling_cand_x) > 0:
                     point_idx = random.randint(0, len(ceiling_cand_x) - 1)
-                    x = ceiling_cand_x[point_idx] / config.HULL_SCALE + global_xmin
-                    z = ceiling_cand_z[point_idx] / config.HULL_SCALE + global_zmin
+                    x = ceiling_cand_x[
+                            point_idx] / config.HULL_SCALE + global_xmin
+                    z = ceiling_cand_z[
+                            point_idx] / config.HULL_SCALE + global_zmin
                     y = self.ceiling - 0.15
                 else:
                     continue
 
-                xind = max(0, min(np.searchsorted(wall_xedges, x), len(wall_xedges) - 2))
-                zind = max(0, min(np.searchsorted(wall_zedges, z), len(wall_zedges) - 2))
+                xind = max(0, min(np.searchsorted(wall_xedges, x),
+                                  len(wall_xedges) - 2))
+                zind = max(0, min(np.searchsorted(wall_zedges, z),
+                                  len(wall_zedges) - 2))
                 if wall_exclude_mask[xind, zind]:
                     continue
 
@@ -404,7 +406,8 @@ class GameState:
                 _, target = item
                 o = old_target.position
                 t = target.position
-                return (o.x  - t.x) ** 2 + (o.y - t.y) ** 2 + (o.z - t.z) ** 2
+                return (o.x - t.x) ** 2 + (o.y - t.y) ** 2 + (o.z - t.z) ** 2
+
             self.clients[client_id].score += 1
             logger.info('Client {} found target_id={}, score={}'.format(
                 client_id, target_id, self.clients[client_id].score))
