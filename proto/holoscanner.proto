@@ -65,6 +65,7 @@ message Message {
         TARGET_FOUND = 20;
         START_GAME = 21;
         END_GAME = 22;
+        VERIFIED = 23;
         CLIENT_POSITION = 40;
         CLIENT_READY = 41;
         CLIENT_SET_NICKNAME = 42;
