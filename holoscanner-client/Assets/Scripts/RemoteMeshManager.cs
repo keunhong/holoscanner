@@ -105,6 +105,9 @@ namespace Holoscanner
                         ss.showPlayerColor();
                         Debug.Log("New name " + msg.DeviceId);
                         break;
+                    case Proto.Message.Types.Type.VERIFIED:
+                        GameObject.Find("TitleScreen").GetComponent<TitleScreenScript>().showTitle();
+                        break;
                     case Proto.Message.Types.Type.END_GAME:
                         gameOver = true;
                         GameObject.Find("EndgameScreen").GetComponent<EndgameScript>().endGame();

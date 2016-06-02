@@ -15,6 +15,8 @@ public class TitleScreenScript : MonoBehaviour
     int instructionindex = 0;
     enum TitleState
     {
+        SETUP,
+        STARTTITLE,
         INITIAL,                   // Just started
         SCREENIN,                  // fading in screen
         SCREEN,                    // faded in screen
@@ -71,6 +73,11 @@ public class TitleScreenScript : MonoBehaviour
         waitingtext = GameObject.Find("WaitingText");
     }
 
+    public void showTitle()
+    {
+        state = TitleState.STARTTITLE;
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -80,6 +87,10 @@ public class TitleScreenScript : MonoBehaviour
             gameObject.GetComponent<Fade>().show(false);
             instructionstext.GetComponent<Fade>().show(false);
             waitingtext.GetComponent<Fade>().show(false);
+            state = TitleState.SETUP;
+        }
+        else if (state == TitleState.STARTTITLE)
+        {
             state = TitleState.SCREENIN;
             gameObject.GetComponent<Fade>().fadeIn();
             titletext.GetComponent<Fade>().fadeIn();
