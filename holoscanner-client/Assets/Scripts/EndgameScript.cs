@@ -43,6 +43,7 @@ public class EndgameScript : MonoBehaviour
     public void endGame()
     {
         state = TitleState.INITIAL;
+        GetComponent<AudioSource>().Play();
     }
 
     TitleState state;
