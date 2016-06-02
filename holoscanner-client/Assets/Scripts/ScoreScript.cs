@@ -16,9 +16,9 @@ public class ScoreScript : MonoBehaviour {
     }
     public void showPlayerColor()
     {
-        var headPosition = Camera.main.transform.position;
+        /*var headPosition = Camera.main.transform.position;
         var gazeDirection = Camera.main.transform.forward;
-        setScoreboardLocation(headPosition + 1.5f*gazeDirection);
+        setScoreboardLocation(headPosition + 2.0f*gazeDirection);
         List<TextMesh> textels = new List<TextMesh>();
         gameObject.GetComponentsInChildren<TextMesh>(textels);
         List<Fade> fades = new List<Fade>();
@@ -33,7 +33,7 @@ public class ScoreScript : MonoBehaviour {
                 fades[i].endcolor = textels[i].color;
             }
         }
-        showScoreboard();
+        showScoreboard();*/
     }
     public void setScoreboardLocation(Vector3 pos)
     {
@@ -52,7 +52,7 @@ public class ScoreScript : MonoBehaviour {
     IEnumerator holdScoreboad()
     {
         state = 2;
-        yield return new WaitForSeconds(3.0f);
+        yield return new WaitForSeconds(4.0f);
         state = 3;
     }
 	
@@ -99,10 +99,16 @@ public class ScoreScript : MonoBehaviour {
                     i--;
                     continue;
                 }
-                string s = sc[j].Nickname + ": " + sc[j].Score.ToString();
-                textels[j].text = s;
-                if (sc[j].Nickname == clientName) textels[i].fontStyle = FontStyle.Bold;
-                else textels[i].fontStyle = FontStyle.Normal;
+                if (sc[j].Nickname == clientName)
+                {
+                    textels[i].text = "You: " + sc[j].Score.ToString();
+                    textels[i].fontStyle = FontStyle.Bold;
+                }
+                else {
+                    textels[i].fontStyle = FontStyle.Normal;
+                    string s = sc[j].Nickname + ": " + sc[j].Score.ToString();
+                    textels[j].text = s;
+                }
                 textels[i].color = colormap.ContainsKey(sc[j].Nickname)?colormap[sc[j].Nickname]:Color.white;
                 fades[i].endcolor = textels[i].color;
                 j++;

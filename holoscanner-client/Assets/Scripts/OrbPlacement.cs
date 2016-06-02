@@ -9,6 +9,7 @@ using System.Collections;
 public class OrbPlacement : Singleton<OrbPlacement>
 {
 
+    bool firstorb = true;
     public uint targetID;
     bool foundOnThisHololens = false;
     bool audioOn = true;
@@ -144,7 +145,7 @@ public class OrbPlacement : Singleton<OrbPlacement>
         if (GotTransform)
         {
             CustomMessages.Instance.SendStageTransform(transform.localPosition, transform.localRotation);
-            GameObject.Find("HologramCollection").GetComponent<Holoscanner.RemoteMeshManager>().anchorSet = true;
+            //GameObject.Find("HologramCollection").GetComponent<Holoscanner.RemoteMeshManager>().anchorSet = true;
             Debug.Log("Trying to set the anchor correctly.");
         }
         
@@ -153,18 +154,26 @@ public class OrbPlacement : Singleton<OrbPlacement>
 
     void Update()
     {
+        RemoteMeshManager rmm = GameObject.Find("HologramCollection").GetComponent<Holoscanner.RemoteMeshManager>();
         if (GotTransform)
         {
             if (ImportExportAnchorManager.Instance.AnchorEstablished)
             {
                 // Here, activate the sound.
-                GameObject.Find("HologramCollection").GetComponent<Holoscanner.RemoteMeshManager>().anchorSet = true;
+                //rmm.anchorSet = true;
                 Debug.Log("Trying to set the anchor correctly.");
             }
         }
         else
         {
             //transform.position = Vector3.Lerp(transform.position, ProposeTransformPosition(), 0.2f);
+        }
+        if (firstorb && rmm.verified && rmm.anchorSet)
+        {
+            firstorb = false;
+            Debug.Log("first show " + rmm.verified);
+            setComponentsEnabled(true);
+            GameObject.Find("TitleScreen").GetComponent<TitleScreenScript>().showTitle();
         }
     }
 
@@ -189,7 +198,7 @@ public class OrbPlacement : Singleton<OrbPlacement>
         // swap its materials.
 
         GotTransform = true;
-        GameObject.Find("HologramCollection").GetComponent<Holoscanner.RemoteMeshManager>().anchorSet = true;
+        //GameObject.Find("HologramCollection").GetComponent<Holoscanner.RemoteMeshManager>().anchorSet = true;
         Debug.Log("Trying to set the anchor correctly.");
     }
 

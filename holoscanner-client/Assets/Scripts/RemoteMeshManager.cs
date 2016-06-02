@@ -17,6 +17,7 @@ namespace Holoscanner
         public List<uint> targetIDs;
         private ScoreScript ss;
         public bool anchorSet = false;
+        public bool verified = false;
         public bool gameOver = false;
         public bool gamestarted { get; private set; }
         /// <summary>
@@ -35,6 +36,8 @@ namespace Holoscanner
         // Use this for initialization.
         private void Start()
         {
+            verified = false;
+            anchorSet = false;
             ss = GameObject.Find("Scoreboard").GetComponent<ScoreScript>();
             // Create our keyword collection.
            // keywordCollection = new Dictionary<string, System.Action>();
@@ -106,7 +109,7 @@ namespace Holoscanner
                         Debug.Log("New name " + msg.DeviceId);
                         break;
                     case Proto.Message.Types.Type.VERIFIED:
-                        GameObject.Find("TitleScreen").GetComponent<TitleScreenScript>().showTitle();
+                        verified = true;
                         break;
                     case Proto.Message.Types.Type.END_GAME:
                         gameOver = true;

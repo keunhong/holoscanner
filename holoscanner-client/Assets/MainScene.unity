@@ -4774,6 +4774,7 @@ MonoBehaviour:
   targets: []
   targetIDs: 
   anchorSet: 0
+  verified: 1
   gameOver: 0
   worldtransform: {fileID: 0}
   meshes_started: 0
