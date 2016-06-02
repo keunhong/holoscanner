@@ -311,10 +311,15 @@ class GameState:
         util.save_im(os.path.join(config.IMAGE_SAVE_DIR, 'wall_sdf.png'), wall_sdf)
         logger.info(wall_sdf.min())
         logger.info(wall_sdf.max())
-        wall_mask = morphology.binary_dilation(
-            wall_sdf <= 0, selem=morphology.square(erosion_size/4))
-        util.save_im(os.path.join(config.IMAGE_SAVE_DIR, 'wall_mask.png'), wall_mask)
-        # wall_mask = wall_sdf <= 0
+        if len(np.unique(wall_sdf)) <= 1:
+            logger.warning('WALL SDF HAS NOT ENOUGH UNIQUE VALUES. {}'.format(
+                np.unique(wall_sdf)))
+            wall_exclude_mask = np.zeros(wall_sdf.shape, dtype=np.bool)
+        else:
+            wall_exclude_mask = morphology.binary_dilation(
+                wall_sdf <= 0, selem=morphology.square(erosion_size/4))
+        util.save_im(os.path.join(config.IMAGE_SAVE_DIR, 'wall_mask.png'),
+                     wall_exclude_mask)
 
         near_floor_inds = set(np.where(
             (vertices[:, 1] - self.floor) < 0.2)[0])
@@ -375,7 +380,7 @@ class GameState:
 
                 xind = max(0, min(np.searchsorted(wall_xedges, x), len(wall_xedges) - 2))
                 zind = max(0, min(np.searchsorted(wall_zedges, z), len(wall_zedges) - 2))
-                if wall_mask[xind, zind]:
+                if wall_exclude_mask[xind, zind]:
                     continue
 
                 target_pb = pb.Target()
