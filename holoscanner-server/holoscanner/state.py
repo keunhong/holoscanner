@@ -308,13 +308,13 @@ class GameState:
             util.compute_2d_normals(vertices, per_vertex_normals,
                                     self.floor, self.ceiling, global_hull_mask)
         wall_sdf = util.bfs_sdf(normal_mean_x, normal_mean_z)
-        util.save_im(os.path.join(config.IMAGE_SAVE_DIR, 'wall_normal_mean_x.png'), normal_mean_x)
-        util.save_im(os.path.join(config.IMAGE_SAVE_DIR, 'wall_normal_mean_z.png'), normal_mean_z)
-        util.save_im(os.path.join(config.IMAGE_SAVE_DIR, 'wall_sdf.png'), wall_sdf > 0)
+        util.save_im(os.path.join(config.IMAGE_SAVE_DIR, 'wall_sdf.png'), wall_sdf)
         logger.info(wall_sdf.min())
         logger.info(wall_sdf.max())
-        wall_mask = morphology.binary_closing(
-            wall_sdf <= 0, selem=morphology.square(erosion_size))
+        wall_mask = morphology.binary_dilation(
+            wall_sdf <= 0, selem=morphology.square(erosion_size/4))
+        util.save_im(os.path.join(config.IMAGE_SAVE_DIR, 'wall_mask.png'), wall_mask)
+        # wall_mask = wall_sdf <= 0
 
         near_floor_inds = set(np.where(
             (vertices[:, 1] - self.floor) < 0.2)[0])
