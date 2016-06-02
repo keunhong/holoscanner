@@ -20,14 +20,22 @@ html, body {
     border-radius: 10px;
     background: #333;
     color: #fff;
-    vertical-align: middle;
+    /*vertical-align: middle;*/
+    text-align: center;
 }
 
 #controls label {
     margin: 0;
 }
 
-#controls button {
+.control-checkboxes input {
+    vertical-align: middle;
+    margin: 0;
+}
+
+.control-checkboxes {
+    margin-top: 3px;
+    line-height: 1em;
 }
 
 #scoreboard-container {

@@ -183,7 +183,20 @@ class GameState:
                 msg.device_id = client.client_id
                 self.send_to_hololens_clients(msg)
                 self.send_to_websocket_clients(msg)
-                break
+                return True
+        return False
+
+    def force_end_game(self):
+        clients = list(self.clients.values())
+        scores = [c.score for c in clients]
+        winner = clients[np.argsort(scores)[-1]]
+        logger.info('Forcing game end with {} (score={})'.format(
+            winner.client_id, winner.score))
+        msg = pb.Message()
+        msg.type = pb.Message.END_GAME
+        msg.device_id = winner.client_id
+        self.send_to_hololens_clients(msg)
+        self.send_to_websocket_clients(msg)
 
     def new_mesh(self, client_id, mesh_pb):
         with self.clients_lock:
@@ -218,7 +231,7 @@ class GameState:
         return client_meshes
 
     def clear_meshes(self):
-        logger.info('Clearing meshes.')
+        logger.info('Clearing all meshes.')
         with self.clients_lock:
             for client in self.clients.values():
                 client.clear_meshes()
@@ -355,9 +368,7 @@ class GameState:
         with self.gs_lock:
             target_count = 0
             iters = 0
-            while target_count < num_targets:
-                if iters >= 1000:
-                    break
+            while target_count < num_targets and iters < 1000:
                 iters += 1
                 # Randomly generate on ceiling or floor.
                 is_floor = random.random() < 0.5
@@ -394,7 +405,12 @@ class GameState:
                 self.target_pbs[target_pb.target_id] = target_pb
                 target_count += 1
 
-        logger.info('Generated {} targets.'.format(len(self.target_pbs)))
+        if target_count == 0:
+            logger.info('Could not generate more targets, ending game!')
+            self.force_end_game()
+
+        logger.info('Generated {} targets for a total of {}.'.format(
+            target_count, len(self.target_pbs)))
 
     def target_found(self, client_id, target_id):
         logger.info('Deleting target_id={} ({} targets exist)'.format(
@@ -427,10 +443,11 @@ class GameState:
             self.game_state_summary()
 
         self.send_to_websocket_clients(self.create_game_state_message())
-        self.send_to_hololens_clients(
-            self.create_game_state_message(max_targets=1))
 
-        self.check_end_game()
+        if not self.check_end_game():
+            self.send_to_hololens_clients(
+                self.create_game_state_message(max_targets=1))
+
 
     def client_position_updated(self, client_id, client_position_pb):
         msg = pb.Message()

@@ -44,10 +44,13 @@ class DashboardProtocol(WebSocketServerProtocol):
         message = Message()
         message.ParseFromString(payload)
         if message.type == Message.CLEAR_MESHES:
+            logger.info('Dashboard: Clearing meshes.')
             game_state.clear_meshes()
         elif message.type == Message.CLEAR_GAME_STATE:
+            logger.info('Dashboard: Clearing game state.')
             game_state.clear_game_state()
         elif message.type == Message.UPDATE_TARGETS:
+            logger.info('Dashboard: Force updating targets.')
             game_state.update_targets(
                 config.NUM_TARGETS_GEN,
                 keep_first=False,
@@ -55,9 +58,16 @@ class DashboardProtocol(WebSocketServerProtocol):
             game_state.send_to_websocket_clients(
                 game_state.create_game_state_message())
         elif message.type == Message.TARGET_FOUND:
+            logger.info('Dashboard: Target {} manually acquired.'.format(
+                message.target_id))
             game_state.target_found('__server__', message.target_id)
             game_state.send_to_websocket_clients(
                 game_state.create_game_state_message())
+        elif message.type == Message.VERIFIED:
+            logger.info('Dashboard: Sending verified message to clients.')
+            msg = Message()
+            msg.type = Message.VERIFIED
+            game_state.send_to_hololens_clients(msg)
 
     def onClose(self, wasClean, code, reason):
         logger.debug("WebSocket connection closed: {0}".format(reason))
