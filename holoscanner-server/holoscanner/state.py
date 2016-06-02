@@ -113,8 +113,8 @@ class Client:
         return client_pb
 
     def __repr__(self):
-        return 'Client(id={}, score={})'.format(
-            self.client_id, self.score)
+        return 'Client(nickname={}, id={}, score={})'.format(
+            self.nickname, self.client_id, self.score)
 
 
 class GameState:
@@ -135,6 +135,10 @@ class GameState:
     ceiling = 5
     target_counter = 1
     target_pbs = OrderedDict()
+
+    def get_client(self, client_id):
+        with self.clients_lock:
+            return self.clients[client_id]
 
     def assign_name(self, client, index):
         client.nickname = CLIENT_NICKNAMES[index % len(CLIENT_NICKNAMES)]
@@ -176,7 +180,7 @@ class GameState:
 
     def check_end_game(self):
         for client in self.clients.values():
-            if client.score >= 5 and client.client_id != config.SERVER_DEVICE_ID:
+            if client.score >= 10 and client.client_id != config.SERVER_DEVICE_ID:
                 logger.info('{} has won, GAME OVER.'.format(client.nickname))
                 msg = pb.Message()
                 msg.type = pb.Message.END_GAME
@@ -366,7 +370,7 @@ class GameState:
                ceiling_sample_mask)
 
         with self.gs_lock:
-            target_count = 0
+            target_count = len(self.target_pbs)
             iters = 0
             while target_count < num_targets and iters < 1000:
                 iters += 1

@@ -57,6 +57,7 @@ class HsServerProtocol(asyncio.Protocol):
                     'adding as client_id={}'.format(ip, port, self.client_id))
 
     def connection_lost(self, exc):
+        logger.warning('Hololens {} lost connection!'.format(self.client_id))
         game_state.remove_hololens_client(self.client_id)
 
     def handle_bytes(self, data):
