@@ -3,9 +3,10 @@ import os
 import threading
 import random
 import numpy as np
+from numpy import linalg
 from collections import OrderedDict
 from skimage import morphology
-from scipy.misc import imsave
+from scipy.misc import imsave, toimage
 
 from holoscanner import config
 from holoscanner import proto
@@ -123,6 +124,7 @@ class GameState:
     clients_lock = threading.RLock()
     gs_lock = threading.RLock()
     listeners = []
+    client_counter = 0
 
     floor = -5
     ceiling = 5
@@ -143,7 +145,8 @@ class GameState:
             if client_id not in self.clients:
                 self.clients[client_id] = Client(client_id, ip, protocol,
                                                  nickname=client_id)
-                self.assign_name(self.clients[client_id], len(self.clients)-2) # -1 for 0 indexing, -1 for server
+                self.assign_name(self.clients[client_id], self.client_counter)
+                self.client_counter += 1
         self.send_to_websocket_clients(self.create_game_state_message())
         return client_id
 
@@ -170,7 +173,7 @@ class GameState:
 
     def check_end_game(self):
         for client in self.clients.values():
-            if client.score >= 10 and client.client_id != config.SERVER_DEVICE_ID:
+            if client.score >= 5 and client.client_id != config.SERVER_DEVICE_ID:
                 logger.info('{} has won, GAME OVER.'.format(client.nickname))
                 msg = pb.Message()
                 msg.type = pb.Message.END_GAME
@@ -183,11 +186,11 @@ class GameState:
         with self.clients_lock:
             client = self.clients[client_id]
 
-            # filename = '{}_{}_{}.bin'.format(
-            #     client_id, time.time(), len(client.meshes))
-            # with open(os.path.join(config.MESHES_SAVE_DIR, filename), 'wb') as f:
-            #     bytes = mesh_pb.SerializeToString()
-            #     f.write(bytes)
+            filename = '{}_{}_{}.bin'.format(
+                client_id, time.time(), len(client.meshes))
+            with open(os.path.join(config.MESHES_SAVE_DIR, filename), 'wb') as f:
+                bytes = mesh_pb.SerializeToString()
+                f.write(bytes)
 
             mesh = Mesh(mesh_pb, mesh_pb.is_last)
             was_cleared = client.new_mesh(mesh)
@@ -282,6 +285,17 @@ class GameState:
             logger.info('Not computing targets: not enough mesh data.')
             return
 
+        per_vertex_normals = np.zeros((vertices.shape[0], 3))
+        for i, face in enumerate(faces):
+            v1 = vertices[face[0]]
+            v2 = vertices[face[1]]
+            v3 = vertices[face[2]]
+            normal = np.cross(v1 - v2, v3 - v2)
+            normal /= linalg.norm(normal)
+            per_vertex_normals[face[0]] = normal
+            per_vertex_normals[face[1]] = normal
+            per_vertex_normals[face[2]] = normal
+
         global_hull_mask, global_xmin, global_zmin, global_xmax, global_zmax = \
             util.compute_hull_mask(
                 faces, vertices, remove_holes=True, closing=True)
@@ -290,31 +304,17 @@ class GameState:
             global_hull_mask, selem=morphology.square(erosion_size))
         logger.debug('Eroding global mask by {}'.format(erosion_size))
 
-        up_dot_normals = []
-        for normal in normals:
-            up_dot_normal = np.abs(np.dot(normal, [0, 1, 0]))
-            up_dot_normals.append(up_dot_normal)
-        up_dot_normals = np.array(up_dot_normals)
-        wall_faces = faces[up_dot_normals < 0.001]
-
-        wall_vertices = np.array([vertices[f] for f in wall_faces.flatten()])
-        per_vertex_up_dot = np.ndarray((vertices.shape[0],))
-        for i, face in enumerate(faces):
-            per_vertex_up_dot[face[0]] = up_dot_normals[i]
-            per_vertex_up_dot[face[1]] = up_dot_normals[i]
-            per_vertex_up_dot[face[2]] = up_dot_normals[i]
-        wall_vert_up_dots = np.array(
-            [per_vertex_up_dot[f] for f in wall_faces.flatten()])
-
-        hist_bins = (int(global_hull_mask.shape[0] / 3),
-                     int(global_hull_mask.shape[1] / 3))
-        wall_hist, wall_xedges, wall_zedges = np.histogram2d(wall_vertices[:, 0],
-                                              wall_vertices[:, 2],
-                                              weights=1 / (
-                                              wall_vert_up_dots + 0.001),
-                                              bins=hist_bins)
-
-        imsave('/home/kpar/www/wall_hist.png', wall_hist)
+        normal_mean_x, normal_mean_z, wall_xedges, wall_zedges =\
+            util.compute_2d_normals(vertices, per_vertex_normals,
+                                    self.floor, self.ceiling, global_hull_mask)
+        wall_sdf = util.bfs_sdf(normal_mean_x, normal_mean_z)
+        util.save_im(os.path.join(config.IMAGE_SAVE_DIR, 'wall_normal_mean_x.png'), normal_mean_x)
+        util.save_im(os.path.join(config.IMAGE_SAVE_DIR, 'wall_normal_mean_z.png'), normal_mean_z)
+        util.save_im(os.path.join(config.IMAGE_SAVE_DIR, 'wall_sdf.png'), wall_sdf > 0)
+        logger.info(wall_sdf.min())
+        logger.info(wall_sdf.max())
+        wall_mask = morphology.binary_closing(
+            wall_sdf <= 0, selem=morphology.square(erosion_size))
 
         near_floor_inds = set(np.where(
             (vertices[:, 1] - self.floor) < 0.2)[0])
@@ -373,9 +373,9 @@ class GameState:
                 else:
                     continue
 
-                xind = np.searchsorted(wall_xedges, x) - 1
-                zind = np.searchsorted(wall_zedges, z) - 1
-                if wall_hist[xind, zind] > np.percentile(wall_hist, 70):
+                xind = max(0, min(np.searchsorted(wall_xedges, x), len(wall_xedges) - 2))
+                zind = max(0, min(np.searchsorted(wall_zedges, z), len(wall_zedges) - 2))
+                if wall_mask[xind, zind]:
                     continue
 
                 target_pb = pb.Target()

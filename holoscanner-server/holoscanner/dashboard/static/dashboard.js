@@ -1,10 +1,4 @@
 let SOCKET_URL = 'ws://drell.cs.washington.edu:8889';
-let CLIENT_COLORS = [
-  '#64b5f6', '#ffb74d', '#aed581', '#f48fb1'
-];
-let CLIENT_COLORS_BRIGHT = [
-  '#cfe8fc', '#ffe0b3', '#e6f2d9', '#fad1df'
-];
 
 let COLORS_DICT = {
   '__server__': '#fff',
@@ -29,6 +23,8 @@ let Message = Holoscanner.Proto.Message;
 
 let gRenderer = new THREE.WebGLRenderer();
 let gScene = new THREE.Scene();
+let axisHelper = new THREE.AxisHelper(5);
+gScene.add(axisHelper);
 
 let gNumClients = 0;
 let gClients = {};
@@ -100,17 +96,13 @@ gSocket.onmessage = function (e) {
 
 let gModelQuat = new THREE.Quaternion();
 let gModelQuat2 = new THREE.Quaternion();
-gModelQuat.setFromAxisAngle(new THREE.Vector3(0, 0, 1), -Math.PI / 2);
-gModelQuat2.setFromAxisAngle(new THREE.Vector3(0, 1, 0), -Math.PI / 2);
+gModelQuat.setFromAxisAngle(new THREE.Vector3(0, 0, 1), Math.PI / 2);
+gModelQuat2.setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI / 2);
 
 function handleClientPosition(deviceId, pbClientPosition) {
   if (deviceId in gClients) {
     let client = gClients[deviceId];
     let p = pbClientPosition.position;
-    let r = pbClientPosition.rotation;
-    let t = new THREE.Quaternion(r.x, r.y, -r.z, r.w);
-    t.multiply(gModelQuat);
-    client["marker"].quaternion.set(t.x, t.y, t.z, t.w);
     client["marker"].position.set(p.x, p.y, -p.z);
   }
 }
@@ -191,7 +183,7 @@ function handleGameState(pbGameState) {
       if (pbClient.device_id !== '__server__') {
         let markerColor = BRIGHT_COLORS_DICT[pbClient.nickname];
         let markerMaterial = new THREE.MeshPhongMaterial({color: markerColor});
-        let markerGeometry = new THREE.ConeGeometry(0.1, 0.5, 10, 50);
+        let markerGeometry = new THREE.BoxGeometry(0.1, 0.1, 0.1);
         let marker = new THREE.Mesh(markerGeometry, markerMaterial);
         gScene.add(marker);
         gClients[pbClient.device_id]["marker"] = marker;
