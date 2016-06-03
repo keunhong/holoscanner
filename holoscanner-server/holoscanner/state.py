@@ -180,7 +180,7 @@ class GameState:
 
     def check_end_game(self):
         for client in self.clients.values():
-            if client.score >= 10 and client.client_id != config.SERVER_DEVICE_ID:
+            if client.score >= 3 and client.client_id != config.SERVER_DEVICE_ID:
                 logger.info('{} has won, GAME OVER.'.format(client.nickname))
                 msg = pb.Message()
                 msg.type = pb.Message.END_GAME
@@ -304,7 +304,7 @@ class GameState:
         global_hull_mask, global_xmin, global_zmin, global_xmax, global_zmax = \
             util.compute_hull_mask(
                 faces, vertices, remove_holes=True, closing=True)
-        erosion_size = int(0.04 * min(global_hull_mask.shape))
+        erosion_size = int(0.05 * min(global_hull_mask.shape))
         global_hull_mask = morphology.binary_erosion(
             global_hull_mask, selem=morphology.square(erosion_size))
         logger.debug('Eroding global mask by {}'.format(erosion_size))
@@ -485,7 +485,7 @@ class GameState:
                 is_started &= client.is_ready
         return is_started
 
-    def create_game_state_message(self, max_targets=None):
+    def create_game_state_message(self, max_targets=1):
         with self.gs_lock:
             msg = pb.Message()
             msg.type = pb.Message.GAME_STATE
@@ -498,6 +498,8 @@ class GameState:
             msg.game_state.targets.extend(targets)
             msg.game_state.clients.extend(
                 [c.to_proto() for c in self.clients.values()])
+            # if max_targets is not None:
+            #     logger.info(msg.game_state)
             return msg
 
     def game_state_summary(self):

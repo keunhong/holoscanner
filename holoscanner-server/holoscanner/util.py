@@ -56,8 +56,8 @@ def compute_hull_mask(faces, vertices, scale=config.HULL_SCALE,
         imsave(os.path.join(config.IMAGE_SAVE_DIR, 'test.png'), im)
         im = morphology.binary_closing(im, morphology.square(40))
         imsave(os.path.join(config.IMAGE_SAVE_DIR, 'test2.png'), im)
-    # if remove_holes and len(np.unique(im) >= 2):
-    #     im = morphology.remove_small_holes(im, min_size=scale ** 2)
+    if remove_holes and len(np.unique(im) >= 2):
+        im = morphology.remove_small_holes(im, min_size=scale ** 2)
     return im.T, xmin, zmin, xmax, zmax
 
 
