@@ -1,3 +1,4 @@
+//let SOCKET_URL = 'ws://drell.cs.washington.edu:8889';
 let SOCKET_URL = 'ws://ledyba.cs.washington.edu:8889';
 let CLIENT_COLORS = [
   '#64b5f6', '#ffb74d', '#aed581', '#f48fb1'
@@ -64,9 +65,10 @@ gSocket.onclose = function (e) {
   resetAll();
 };
 gSocket.onmessage = function (e) {
+  console.log('on message!!');
   if (e.data instanceof ArrayBuffer) {
     let pbMessage = Holoscanner.Proto.Message.decode(e.data);
-    // console.log(pbMessage);
+     //console.log(pbMessage);
 
     switch (pbMessage.type) {
       case Holoscanner.Proto.Message.Type.MESH:
@@ -76,7 +78,7 @@ gSocket.onmessage = function (e) {
         handleGameState(pbMessage.game_state);
         break;
       case Message.Type.CLEAR_MESHES:
-        console.log(pbMessage.device_id);
+        //console.log(pbMessage.device_id);
         if (pbMessage.device_id) {
           clearMeshes(pbMessage.device_id);
         }
@@ -85,7 +87,7 @@ gSocket.onmessage = function (e) {
         handleClientPosition(pbMessage.device_id, pbMessage.client_position);
         break;
       case Message.Type.END_GAME:
-          console.log(pbMessage);
+          //console.log(pbMessage);
           let nickname = '';
           if (pbMessage.device_id in gClients) {
             nickname  = gClients[pbMessage.device_id]["nickname"];
@@ -135,6 +137,24 @@ function handleNewMesh(deviceId, pbMesh) {
             pbMesh.triangles[i * 3 + 1],
             pbMesh.triangles[i * 3 + 2]));
   }
+  //var meshjson = meshGeometry.toJSON();
+  //console.log('meshjson');
+  //console.log(meshjson);
+  //var url_str = window.location.href;
+
+  //var d = new Date();
+  //var ntime = d.getTime();
+
+  //file_name = deviceId.concat('_mesh_').concat(ntime).concat('.json');
+  /*
+  $.ajax({
+      type: 'POST',
+      url: 'http://ledyba.cs.washington.edu:8891/uploadajx',
+      data: JSON.stringify({filename:file_name, data:meshjson}),
+      dataType: 'json',
+      contentType: 'application/json; charset=utf-8'
+      });
+  */
   let meshMaterial = new THREE.MeshLambertMaterial({
     color: gClients[deviceId]["color"],
     side: ($('#mesh-doubleside-checkbox').prop('checked'))
@@ -148,13 +168,37 @@ function handleNewMesh(deviceId, pbMesh) {
   meshObj.name = deviceId + "_" + gClients[deviceId]["meshes"].length;
   meshObj.visible = gClients[deviceId]["visible"];
   gClients[deviceId]["newMeshes"].push(meshObj);
-
+  //console.log(meshObj);
+  
   if (pbMesh.is_last) {
+    let d = new Date();
+    let ntime = d.getTime();
+    
     clearMeshes(deviceId);
     gClients[deviceId]["meshes"] = gClients[deviceId]["newMeshes"];
     gClients[deviceId]["newMeshes"] = [];
+    
+    let m_id = 0;
     for (let mesh of gClients[deviceId]["meshes"]) {
       gScene.add(mesh);
+      //console.log('mesh');
+      
+      //let d = new Date();
+      //let ntime = d.getTime();
+
+      let meshjson = mesh.toJSON();
+      let file_name = mesh.device_id + '_' + ntime + '_' + m_id + '.json';
+      $.ajax({
+        type: 'POST',
+        url: 'http://ledyba.cs.washington.edu:8891/uploadajx',
+        data: JSON.stringify({filename:file_name, data:meshjson}),
+        dataType: 'json',
+        contentType: 'application/json; charset=utf-8'
+      });
+      
+      m_id+=1;
+
+      //console.log(mesh);
     }
   }
 }
@@ -261,6 +305,7 @@ function handleGameState(pbGameState) {
         pbTarget.position.x, pbTarget.position.y, pbTarget.position.z);
     targetMesh.target_id = pbTarget.target_id;
     gScene.add(targetMesh);
+    //console.log(targetMesh);
     gTargets.push(targetMesh);
   }
 }
@@ -376,3 +421,4 @@ function clearMeshes(deviceId) {
   }
   gClients[deviceId]["meshes"].length = 0;
 }
+
