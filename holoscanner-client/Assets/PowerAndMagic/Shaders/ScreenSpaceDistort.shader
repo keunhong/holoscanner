@@ -62,11 +62,11 @@
 			o.noiseUV = screenPos * _DistortionScale;
 			o.color = v.color * _Color;
 
-			#ifdef SOFTPARTICLES_ON
+			/*#ifdef SOFTPARTICLES_ON
 				o.projPos = ComputeScreenPos (o.vertex);
 				COMPUTE_EYEDEPTH(o.projPos.z);
 			#endif
-			
+			*/
 			return o;
 		}
 
@@ -76,14 +76,14 @@
 			
 			half2 offset = noise * _DistortionAmount;
 			half4 col = tex2D(_MainTex, i.mainUV + offset);
-
+			/*
 			#ifdef SOFTPARTICLES_ON
 				float sceneZ = LinearEyeDepth (SAMPLE_DEPTH_TEXTURE_PROJ(_CameraDepthTexture, UNITY_PROJ_COORD(i.projPos)));
 				float partZ = i.projPos.z;
 				float fade = saturate (_InvFade * (sceneZ-partZ));
 				i.color.a *= fade;
 			#endif
-
+			*/
 			return col * i.color;
 		}	        
 
