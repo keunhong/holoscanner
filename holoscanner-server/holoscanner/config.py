@@ -23,3 +23,13 @@ LOG_LEVEL = logging.INFO
 MESH_PLANE_FINDING_BINS = 100
 NUM_TARGETS_GEN = 50
 HULL_SCALE = 30
+
+DEVICE_COLOR_MAP = {
+    'hs-red': 'red',
+    'hs-yellow': 'yellow',
+    'hs-blue': 'blue',
+    'hs-green': 'green',
+    'hs-purple': 'purple',
+    'hs-orange': 'orange',
+    'localhost': 'white'
+}

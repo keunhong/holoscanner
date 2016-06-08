@@ -2,6 +2,7 @@ import time
 import os
 import threading
 import random
+import socket
 import numpy as np
 from numpy import linalg
 from collections import OrderedDict
@@ -140,20 +141,23 @@ class GameState:
         with self.clients_lock:
             return self.clients[client_id]
 
-    def assign_name(self, client, index):
-        client.nickname = CLIENT_NICKNAMES[index % len(CLIENT_NICKNAMES)]
+    def assign_name(self, client, hostname):
+        device_name = hostname.split('.')[0]
+        color = config.DEVICE_COLOR_MAP.get(device_name, 'black')
+        client.nickname = color
         msg = pb.Message()
         msg.type = pb.Message.CLIENT_SET_NICKNAME
         msg.device_id = client.nickname
         client.send_message(msg)
 
     def new_hololens_client(self, client_id, ip, protocol):
-        logger.info('Hololens client {} joined'.format(ip))
+        hostname = socket.gethostbyaddr(ip)[0]
+        logger.info('Hololens client {} ({}) joined'.format(ip, hostname))
         with self.clients_lock:
             if client_id not in self.clients:
                 self.clients[client_id] = Client(client_id, ip, protocol,
                                                  nickname=client_id)
-                self.assign_name(self.clients[client_id], self.client_counter)
+                self.assign_name(self.clients[client_id], hostname)
                 self.client_counter += 1
         self.send_to_websocket_clients(self.create_game_state_message())
         return client_id

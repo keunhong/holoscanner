@@ -1,19 +1,27 @@
 let SOCKET_URL = 'ws://drell.cs.washington.edu:8889';
 
 let COLORS_DICT = {
-  '__server__': '#fff',
-  'Blue': '#64b5f6',
-  'Orange': '#ffb74d',
-  'Green': '#aed581',
-  'Pink': '#f48fb1'
+  '__server__': '#ffffff',
+  'red': '#ff0000',
+  'yellow': '#ffff00',
+  'blue': '#0000ff',
+  'green': '#00ff00',
+  'purple': '#DD00FF',
+  'orange': '#FF8000',
+  'white': '#ffffff',
+  'black': '#000000'
 };
 
 let BRIGHT_COLORS_DICT = {
-  '__server__': '#fff',
-  'Blue': '#cfe8fc',
-  'Orange': '#ffe0b3',
-  'Green': '#e6f2d9',
-  'Pink': '#fad1df'
+  '__server__': '#ffffff',
+  'red': '#ff0000',
+  'yellow': '#ffff00',
+  'blue': '#0000ff',
+  'green': '#00ff00',
+  'purple': '#DD00FF',
+  'orange': '#FF8000',
+  'white': '#ffffff',
+  'black': '#000000'
 };
 
 let ProtoBuf = dcodeIO.ProtoBuf;
