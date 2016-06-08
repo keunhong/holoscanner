@@ -196,6 +196,7 @@ class GameState:
 
     def force_end_game(self):
         clients = list(self.clients.values())
+        clients = [c for c in clients if c.client_id != '__server__']
         scores = [c.score for c in clients]
         winner = clients[np.argsort(scores)[-1]]
         logger.info('Forcing game end with {} (score={})'.format(

@@ -2,24 +2,24 @@ let SOCKET_URL = 'ws://drell.cs.washington.edu:8889';
 
 let COLORS_DICT = {
   '__server__': '#ffffff',
-  'red': '#ff0000',
-  'yellow': '#ffff00',
-  'blue': '#0000ff',
-  'green': '#00ff00',
-  'purple': '#DD00FF',
-  'orange': '#FF8000',
+  'red': '#ff2222',
+  'yellow': '#ffff22',
+  'blue': '#2222ff',
+  'green': '#22ff22',
+  'purple': '#DD22FF',
+  'orange': '#FF8022',
   'white': '#ffffff',
   'black': '#000000'
 };
 
 let BRIGHT_COLORS_DICT = {
   '__server__': '#ffffff',
-  'red': '#ff0000',
-  'yellow': '#ffff00',
-  'blue': '#0000ff',
-  'green': '#00ff00',
-  'purple': '#DD00FF',
-  'orange': '#FF8000',
+  'red': '#ff5555',
+  'yellow': '#ffff55',
+  'blue': '#5555ff',
+  'green': '#55ff55',
+  'purple': '#DD55FF',
+  'orange': '#FF8055',
   'white': '#ffffff',
   'black': '#000000'
 };
