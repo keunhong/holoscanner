@@ -68,6 +68,8 @@ class DashboardProtocol(WebSocketServerProtocol):
             msg = Message()
             msg.type = Message.VERIFIED
             game_state.send_to_hololens_clients(msg)
+        elif message.type == Message.END_GAME:
+            game_state.force_end_game()
 
     def onClose(self, wasClean, code, reason):
         logger.debug("WebSocket connection closed: {0}".format(reason))

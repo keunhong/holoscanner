@@ -331,6 +331,12 @@ $(document).ready(function () {
     gSocket.send(message.toArrayBuffer());
     console.log('Game state cleared.');
   });
+  $('#end-game').click(function () {
+    let message = new Holoscanner.Proto.Message();
+    message.type = Holoscanner.Proto.Message.Type.END_GAME;
+    gSocket.send(message.toArrayBuffer());
+    console.log('Ending Game');
+  });
   $('#update-targets').click(function () {
     let message = new Holoscanner.Proto.Message();
     message.type = Holoscanner.Proto.Message.Type.UPDATE_TARGETS;
