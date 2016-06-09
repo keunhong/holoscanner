@@ -17,9 +17,6 @@ from holoscanner import util
 
 logger = base_logger.getChild(__name__)
 
-CLIENT_NICKNAMES = ['Blue', 'Orange', 'Green', 'Pink', 'Yellow', 'Red',
-                    'Purple']
-
 
 class Mesh:
     def __init__(self, mesh_pb, is_last=False):
@@ -143,7 +140,7 @@ class GameState:
 
     def assign_name(self, client, hostname):
         device_name = hostname.split('.')[0]
-        color = config.DEVICE_COLOR_MAP.get(device_name, 'black')
+        color = config.DEVICE_COLOR_MAP.get(device_name, config.DEFAULT_COLOR)
         client.nickname = color
         msg = pb.Message()
         msg.type = pb.Message.CLIENT_SET_NICKNAME

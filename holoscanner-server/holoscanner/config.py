@@ -25,11 +25,12 @@ NUM_TARGETS_GEN = 50
 HULL_SCALE = 30
 
 DEVICE_COLOR_MAP = {
-    'hs-red': 'red',
-    'hs-yellow': 'yellow',
-    'hs-blue': 'blue',
-    'hs-green': 'green',
-    'hs-purple': 'purple',
-    'hs-orange': 'orange',
-    'localhost': 'white'
+    'hs-red': 'Red',
+    'hs-yellow': 'Yellow',
+    'hs-blue': 'Blue',
+    'hs-green': 'Green',
+    'hs-purple': 'Purple',
+    'hs-orange': 'Orange',
+    'localhost': 'White'
 }
+DEFAULT_COLOR = 'Black'
