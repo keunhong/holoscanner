@@ -379,7 +379,7 @@ class GameState:
                             point_idx] / config.HULL_SCALE + global_xmin
                     z = floor_cand_z[
                             point_idx] / config.HULL_SCALE + global_zmin
-                    y = self.floor + 0.45
+                    y = self.floor + 0.80
                 elif not is_floor and len(ceiling_cand_x) > 0:
                     point_idx = random.randint(0, len(ceiling_cand_x) - 1)
                     x = ceiling_cand_x[
