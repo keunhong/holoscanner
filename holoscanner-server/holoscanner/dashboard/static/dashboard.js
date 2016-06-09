@@ -294,7 +294,7 @@ function initRenderer() {
 
   let camera = new THREE.PerspectiveCamera(
       60, container.width() / container.height(), 0.1, 1000);
-  camera.position.set(0, 0, -5);
+  camera.position.set(0, 0, -16);
   camera.lookAt(0, 0, 0);
 
   gScene.add(camera);
