@@ -2,7 +2,7 @@ let SOCKET_URL = 'ws://drell.cs.washington.edu:8889';
 
 let COLORS_DICT = {
   '__server__': '#ffffff',
-  'Red': '#ff5555',
+  'Red': '#ff8888',
   'Yellow': '#ffff55',
   'Blue': '#5555ff',
   'Green': '#55ff55',
@@ -14,7 +14,7 @@ let COLORS_DICT = {
 
 let BRIGHT_COLORS_DICT = {
   '__server__': '#ffffff',
-  'Red': '#ffaaaa',
+  'Red': '#ffcccc',
   'Yellow': '#ffffaa',
   'Blue': '#aaaaff',
   'Green': '#aaffaa',
@@ -254,11 +254,9 @@ function handleGameState(pbGameState) {
   for (let targetIdx in pbGameState.targets) {
     let pbTarget = pbGameState.targets[targetIdx];
     let geom = new THREE.SphereGeometry(0.1, 32, 32);
-    let color = (targetIdx == 0) ? 0xff0000 : 0x00ff00;
-    let material = new THREE.MeshPhongMaterial({color: color});
+    let color = (targetIdx == 0) ? 0xff00ff : 0x00ff00;
+    let material = new THREE.MeshBasicMaterial({color: color});
     let targetMesh = new THREE.Mesh(geom, material);
-    material.transparent = true;
-    material.opacity = 0.5;
     targetMesh.position.set(
         pbTarget.position.x, pbTarget.position.y, -pbTarget.position.z);
     targetMesh.target_id = pbTarget.target_id;
