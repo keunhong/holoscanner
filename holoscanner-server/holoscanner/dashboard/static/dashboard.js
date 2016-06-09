@@ -254,7 +254,7 @@ function handleGameState(pbGameState) {
   for (let targetIdx in pbGameState.targets) {
     let pbTarget = pbGameState.targets[targetIdx];
     let geom = new THREE.SphereGeometry(0.1, 32, 32);
-    let color = (targetIdx == 0) ? 0xff00ff : 0x00ff00;
+    let color = (targetIdx == 0) ? 0xffffff : 0x00ff00;
     let material = new THREE.MeshBasicMaterial({color: color});
     let targetMesh = new THREE.Mesh(geom, material);
     targetMesh.position.set(
