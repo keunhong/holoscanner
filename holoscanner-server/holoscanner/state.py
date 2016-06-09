@@ -133,6 +133,7 @@ class GameState:
     ceiling = 5
     target_counter = 1
     target_pbs = OrderedDict()
+    is_game_ended = False
 
     def get_client(self, client_id):
         with self.clients_lock:
@@ -179,19 +180,8 @@ class GameState:
                 if not client.client_id == config.SERVER_DEVICE_ID:
                     client.send_message(message)
 
-    def check_end_game(self):
-        for client in self.clients.values():
-            if client.score >= 3 and client.client_id != config.SERVER_DEVICE_ID:
-                logger.info('{} has won, GAME OVER.'.format(client.nickname))
-                msg = pb.Message()
-                msg.type = pb.Message.END_GAME
-                msg.device_id = client.client_id
-                self.send_to_hololens_clients(msg)
-                self.send_to_websocket_clients(msg)
-                return True
-        return False
-
     def force_end_game(self):
+        self.is_game_ended = True
         clients = list(self.clients.values())
         clients = [c for c in clients if c.client_id != '__server__']
         scores = [c.score for c in clients]
@@ -247,6 +237,7 @@ class GameState:
             self.target_pbs.clear()
             self.floor = -5
             self.ceiling = 5
+            self.is_game_ended = False
         with self.clients_lock:
             for client in self.clients.values():
                 client.score = 0
@@ -282,6 +273,10 @@ class GameState:
         return vertices, normals, faces
 
     def update_targets(self, num_targets, keep_first=True, force=False):
+        if self.is_game_ended:
+            logger.info('Game is ended. Skipping target generation.')
+            return
+
         if not self.is_game_started():
             logger.info('Game has not started; skipping target generation.')
             return
@@ -450,10 +445,8 @@ class GameState:
 
         self.send_to_websocket_clients(self.create_game_state_message())
 
-        if not self.check_end_game():
-            self.send_to_hololens_clients(
-                self.create_game_state_message(max_targets=1))
-
+        self.send_to_hololens_clients(
+            self.create_game_state_message(max_targets=1))
 
     def client_position_updated(self, client_id, client_position_pb):
         msg = pb.Message()
